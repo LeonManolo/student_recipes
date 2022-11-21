@@ -21,8 +21,11 @@ class Recipe(
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long? = null,
 
+    /*
     @ManyToMany(mappedBy = "likedRecipes")
     @JsonIgnoreProperties("likedRecipes")
     val likes : Set<User>? = null
+    */
+
 
 )

@@ -1,11 +1,13 @@
 package de.hsflensburg.recipe_backend.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import org.hibernate.annotations.CreationTimestamp
 import org.springframework.data.annotation.CreatedDate
 import java.util.Date
 import javax.persistence.*
 
 @Entity
+@Table(name = "users")
 class User (
 
     @Column(nullable = false)
@@ -14,7 +16,7 @@ class User (
     @Column(nullable = false)
     val lastName: String,
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     val email: String,
 
     @Column(nullable = false)
@@ -23,7 +25,7 @@ class User (
     @Column(nullable = false)
     val password: String,
 
-    @CreatedDate
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt : Date? = null,
 
@@ -32,6 +34,7 @@ class User (
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long? = null,
 
+    /*
     @ManyToMany
     @JoinTable(
         name = "recipe_like",
@@ -40,4 +43,6 @@ class User (
     )
     @JsonIgnoreProperties("likes")
     val likedRecipes : List<Recipe> = mutableListOf()
+    */
+
 )
