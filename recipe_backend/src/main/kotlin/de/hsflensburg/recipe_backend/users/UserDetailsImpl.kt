@@ -8,6 +8,10 @@ class UserDetailsImpl (
     private val email: String,
     private val password: String,
 ) : UserDetails {
+
+    fun getId(): Long {
+        return id
+    }
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return emptyList<GrantedAuthority>().toMutableList()
     }

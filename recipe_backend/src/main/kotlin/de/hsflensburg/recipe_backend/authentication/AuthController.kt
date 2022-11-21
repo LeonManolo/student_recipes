@@ -2,7 +2,9 @@ package de.hsflensburg.recipe_backend.authentication
 
 import de.hsflensburg.recipe_backend.authentication.dto.LoginDto
 import de.hsflensburg.recipe_backend.authentication.dto.RegisterDto
+import de.hsflensburg.recipe_backend.authentication.entity.RefreshToken
 import de.hsflensburg.recipe_backend.authentication.jwt.JwtUtils
+import de.hsflensburg.recipe_backend.authentication.service.RefreshTokenService
 import de.hsflensburg.recipe_backend.model.User
 import de.hsflensburg.recipe_backend.users.UserDetailsImpl
 import de.hsflensburg.recipe_backend.users.UserRepository
@@ -12,19 +14,13 @@ import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
-import java.util.function.Consumer
 import java.util.stream.Collectors
-import javax.validation.Valid
+import javax.servlet.http.HttpServletRequest
 
 
 @RestController
@@ -34,8 +30,9 @@ class AuthController(
     private val userRepository: UserRepository,
     private val jwtUtils: JwtUtils,
     private val encoder: PasswordEncoder,
+    private val refreshTokenService: RefreshTokenService,
 
-) { // TODO: User Service wird hier eingebunden
+    ) { // TODO: User Service wird hier eingebunden
 
 
     @PostMapping("/signup")
@@ -59,39 +56,63 @@ class AuthController(
 
 
     @PostMapping("/signin")
-    fun authenticateUser(@Valid @RequestBody loginDto: LoginDto): ResponseEntity<Any> {
-        val authentication: Authentication = authenticationManager
+    fun authenticateUser(@RequestBody loginDto: LoginDto): ResponseEntity<*>? {
+        val authentication = authenticationManager
             .authenticate(UsernamePasswordAuthenticationToken(loginDto.email, loginDto.password))
         SecurityContextHolder.getContext().authentication = authentication
-        val userDetails = authentication.getPrincipal() as UserDetailsImpl
-        val jwtCookie: ResponseCookie = jwtUtils.generateJwtCookie(userDetails)
-        val roles: List<String> = userDetails.authorities.stream()
+        val userDetails = authentication.principal as UserDetailsImpl
+        val jwtCookie = jwtUtils.generateJwtCookie(userDetails)
+        val roles = userDetails.authorities.stream()
             .map { item: GrantedAuthority? -> item!!.authority }
             .collect(Collectors.toList())
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).build<Any>() //TODO: change to body
-                /*
+        val refreshToken: RefreshToken = refreshTokenService.createRefreshToken(userDetails.getId())
+        val jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.token!!)
+        return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+            .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
             .body<Any>(
-                UserInfoResponse(
-                    userDetails.getId(),
-                    userDetails.username,
-                    userDetails.getEmail(),
-                    roles
-                )
+                "Signed in successfully!"
             )
-            */
-
     }
 
     @GetMapping("/test")
-    fun test(): String {
-        return "Sollte öffentlich sein"
+    fun test(): UserDetailsImpl {
+        val user = SecurityContextHolder.getContext().authentication.principal as UserDetailsImpl
+        return user
     }
 
 
     @PostMapping("/signout")
     fun logoutUser(): ResponseEntity<*>? {
-        val cookie = jwtUtils.getCleanJwtCookie()
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
-            .body<Any>("Logged out") // Todo: change
+        val principle = SecurityContextHolder.getContext().authentication.principal
+        if (principle.toString() !== "anonymousUser") {
+            val userId = (principle as UserDetailsImpl).getId()
+            refreshTokenService.deleteByUserId(userId)
+        }
+        val jwtCookie = jwtUtils.getCleanJwtCookie()
+        val jwtRefreshCookie = jwtUtils.getCleanJwtRefreshCookie()
+        return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+            .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
+            .body<Any>("You've been signed out!")
+    }
+
+    @PostMapping("/refreshtoken")
+    fun refreshtoken(request: HttpServletRequest?): ResponseEntity<*>? {
+        val refreshToken = jwtUtils.getJwtRefreshFromCookies(request!!)
+        val token = refreshTokenService.findByToken(refreshToken)
+
+        return if (!refreshToken.isNullOrEmpty() && token != null) {
+            val tokenResult = refreshTokenService.findByToken(refreshToken)
+            val user = refreshTokenService.verifyExpiration(tokenResult!!).user!!
+            val jwtCookie: ResponseCookie = jwtUtils.generateJwtCookie(user)
+            ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, refreshToken)
+                .body("Refreshed token successfully!")
+
+
+        } else ResponseEntity.badRequest().body<Any>("Refresh Token is empty!")
+
     }
 }
