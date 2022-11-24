@@ -15,7 +15,7 @@ internal class LoginRequestDtoTest {
             password = "123"
         )
 
-        assertTrue(loginDto.isValid())
+        assertFalse(loginDto.isValid())
     }
 
     @Test
