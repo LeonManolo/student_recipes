@@ -1,4 +1,4 @@
-package de.hsflensburg.recipe_backend.users
+package de.hsflensburg.recipe_backend.authentication.service
 
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException

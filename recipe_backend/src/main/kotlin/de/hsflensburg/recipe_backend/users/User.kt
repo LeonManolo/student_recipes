@@ -1,4 +1,4 @@
-package de.hsflensburg.recipe_backend.model
+package de.hsflensburg.recipe_backend.users
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.hibernate.annotations.CreationTimestamp
@@ -20,19 +20,22 @@ class User (
     val email: String,
 
     @Column(nullable = false)
-    val imageUrl: String,
-
-    @Column(nullable = false)
     val password: String,
+
+    //---------- Optional am ende am besten ----------------
+
+    @Column(nullable = true)
+    val imageUrl: String? = null,
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    val id: Long? = null,
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt : Date? = null,
 
-    //Optional am ende am besten
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long? = null,
+
 
     /*
     @ManyToMany

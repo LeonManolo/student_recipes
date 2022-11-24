@@ -1,8 +1,8 @@
 package de.hsflensburg.recipe_backend.authentication
 
+import de.hsflensburg.recipe_backend.authentication.jwt.AuthEntryPointJwt
 import de.hsflensburg.recipe_backend.authentication.jwt.JwtUtils
-import de.hsflensburg.recipe_backend.users.UserDetailsServiceImpl
-import org.springframework.beans.factory.annotation.Autowired
+import de.hsflensburg.recipe_backend.authentication.service.UserDetailsServiceImpl
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager

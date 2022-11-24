@@ -1,4 +1,4 @@
-package de.hsflensburg.recipe_backend.authentication
+package de.hsflensburg.recipe_backend.authentication.jwt
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.Logger
@@ -22,7 +22,6 @@ class AuthEntryPointJwt : AuthenticationEntryPoint {
         response: HttpServletResponse,
         authException: AuthenticationException
     ) {
-        println("TEST OB WIR HIER REIN KOMMEN")
         logger.error("Unauthorized error: {}", authException.message)
         response.contentType = MediaType.APPLICATION_JSON_VALUE
         response.status = HttpServletResponse.SC_UNAUTHORIZED

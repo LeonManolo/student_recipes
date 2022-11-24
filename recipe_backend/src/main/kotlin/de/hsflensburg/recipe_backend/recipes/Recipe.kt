@@ -1,4 +1,4 @@
-package de.hsflensburg.recipe_backend.model
+package de.hsflensburg.recipe_backend.recipes
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import javax.persistence.Column

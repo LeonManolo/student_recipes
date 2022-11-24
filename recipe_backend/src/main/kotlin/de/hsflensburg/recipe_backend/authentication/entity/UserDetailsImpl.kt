@@ -1,4 +1,4 @@
-package de.hsflensburg.recipe_backend.users
+package de.hsflensburg.recipe_backend.authentication.entity
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails

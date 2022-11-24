@@ -1,6 +1,5 @@
 package de.hsflensburg.recipe_backend.users
 
-import de.hsflensburg.recipe_backend.model.User
 import org.springframework.stereotype.Service
 
 @Service

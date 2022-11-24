@@ -1,4 +1,4 @@
-package de.hsflensburg.recipe_backend.authentication
+package de.hsflensburg.recipe_backend.authentication.jwt
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus

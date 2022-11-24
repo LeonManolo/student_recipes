@@ -1,15 +1,15 @@
 package de.hsflensburg.recipe_backend.authentication
 
-import de.hsflensburg.recipe_backend.authentication.dto.LoginDto
-import de.hsflensburg.recipe_backend.authentication.dto.RegisterDto
+import de.hsflensburg.recipe_backend.authentication.dto.LoginRequestDto
+import de.hsflensburg.recipe_backend.authentication.dto.RegisterRequestDto
 import de.hsflensburg.recipe_backend.authentication.entity.RefreshToken
+import de.hsflensburg.recipe_backend.authentication.entity.UserDetailsImpl
 import de.hsflensburg.recipe_backend.authentication.jwt.JwtUtils
 import de.hsflensburg.recipe_backend.authentication.service.RefreshTokenService
-import de.hsflensburg.recipe_backend.model.User
-import de.hsflensburg.recipe_backend.users.UserDetailsImpl
+import de.hsflensburg.recipe_backend.users.User
 import de.hsflensburg.recipe_backend.users.UserRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
@@ -18,15 +18,17 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 import java.util.*
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
+import javax.validation.Valid
 
 
 @RestController
 @RequestMapping("/api/auth")
 class AuthController(
-    @Autowired private val authenticationManager: AuthenticationManager,
+    private val authenticationManager: AuthenticationManager,
     private val userRepository: UserRepository,
     private val jwtUtils: JwtUtils,
     private val encoder: PasswordEncoder,
@@ -36,27 +38,26 @@ class AuthController(
 
 
     @PostMapping("/signup")
-    fun registerUser(@RequestBody registerDto: RegisterDto): ResponseEntity<*>? {
+    @ResponseStatus(HttpStatus.CREATED)
+    fun registerUser(@Valid @RequestBody registerDto: RegisterRequestDto) {
         if (userRepository.findByEmail(registerDto.email) != null) { // TODO: richtige existByEmail funktion aufrufen
-            return ResponseEntity.badRequest().body<Any>("Error: Username is already taken!")
-        }
+            //return ResponseEntity.badRequest().body<Any>("Error: Username is already taken!")
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists!")        }
 
         // Create new user's account
         val user = User(
             "Max",
             "Mustermann",
             registerDto.email,
-            "",
             encoder.encode(registerDto.password),
         )
 
         userRepository.save<User>(user)
-        return ResponseEntity.ok<Any>("User registered successfully!")
     }
 
 
     @PostMapping("/signin")
-    fun authenticateUser(@RequestBody loginDto: LoginDto): ResponseEntity<*>? {
+    fun authenticateUser(@RequestBody loginDto: LoginRequestDto): ResponseEntity<*>? {
         val authentication = authenticationManager
             .authenticate(UsernamePasswordAuthenticationToken(loginDto.email, loginDto.password))
         SecurityContextHolder.getContext().authentication = authentication
@@ -77,6 +78,7 @@ class AuthController(
 
     @GetMapping("/test")
     fun test(): UserDetailsImpl {
+        //TODO: helper function um die ID des user zu bekommen schreiben
         val user = SecurityContextHolder.getContext().authentication.principal as UserDetailsImpl
         return user
     }

@@ -1,7 +1,7 @@
 package de.hsflensburg.recipe_backend.authentication.repository
 
 import de.hsflensburg.recipe_backend.authentication.entity.RefreshToken
-import de.hsflensburg.recipe_backend.model.User
+import de.hsflensburg.recipe_backend.users.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository

@@ -1,5 +1,7 @@
-package de.hsflensburg.recipe_backend.users
+package de.hsflensburg.recipe_backend.authentication.service
 
+import de.hsflensburg.recipe_backend.authentication.entity.UserDetailsImpl
+import de.hsflensburg.recipe_backend.users.UserRepository
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException

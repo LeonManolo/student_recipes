@@ -1,8 +1,5 @@
-package de.hsflensburg.recipe_backend.controller
+package de.hsflensburg.recipe_backend.recipes
 
-import de.hsflensburg.recipe_backend.model.Recipe
-import de.hsflensburg.recipe_backend.model.User
-import de.hsflensburg.recipe_backend.repo.RecipeRepository
 import org.springframework.web.bind.annotation.*
 import java.util.*
 

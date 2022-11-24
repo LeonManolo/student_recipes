@@ -1,7 +1,7 @@
 package de.hsflensburg.recipe_backend.authentication.jwt
 
-import de.hsflensburg.recipe_backend.model.User
-import de.hsflensburg.recipe_backend.users.UserDetailsImpl
+import de.hsflensburg.recipe_backend.users.User
+import de.hsflensburg.recipe_backend.authentication.entity.UserDetailsImpl
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException

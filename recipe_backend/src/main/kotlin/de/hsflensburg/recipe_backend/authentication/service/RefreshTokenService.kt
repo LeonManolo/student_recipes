@@ -1,6 +1,6 @@
 package de.hsflensburg.recipe_backend.authentication.service
 
-import de.hsflensburg.recipe_backend.authentication.TokenRefreshException
+import de.hsflensburg.recipe_backend.authentication.jwt.TokenRefreshException
 import de.hsflensburg.recipe_backend.authentication.entity.RefreshToken
 import de.hsflensburg.recipe_backend.authentication.repository.RefreshTokenRepository
 import de.hsflensburg.recipe_backend.users.UserRepository
