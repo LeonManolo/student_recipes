@@ -7,15 +7,17 @@ jobs:
   backend:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Java
+      - name: Setup Actions
         uses: actions/checkout@v3
-      - run: mv -f recipe_backend/* .
+      - name: Moving directory
+        run: mv -f recipe_backend/* .
+      - name: Setup Java
       - uses: actions/setup-java@v3
         with:
           java-version: 17
           distribution: temurin
       - name: Run Tests
-      - run: ./gradlew check
+        run: ./gradlew check
 
 # Nextjs Frontend
 #  frontend:
