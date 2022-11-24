@@ -1,0 +1,36 @@
+name: Build and Test Spring Repository
+
+on: push
+
+jobs:
+# Spring Boot Backend
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Actions
+        uses: actions/checkout@v3
+      - name: Moving directory
+        run: mv -f recipe_backend/* .
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+          
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+    
+      - name: Execute Gradle build
+        run: ./gradlew build
+
+# Nextjs Frontend
+#  frontend:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - run: mv -f recipe_frontend/* .
+#      - uses: actions/setup-node@v3
+#        with:
+#          node-version: 16
+#      - run: npm build && npm test
+
