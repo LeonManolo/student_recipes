@@ -11,4 +11,8 @@ class RecipeService(private val recipeRepository: RecipeRepository) {
     fun getRecipe(id: Long) : Recipe? {
         return recipeRepository.findById(id).orElse(null)
     }
+
+    fun deleteRecipe(id: Long) {
+        recipeRepository.deleteById(id)
+    }
 }

@@ -7,7 +7,7 @@ import java.util.Date
 import javax.persistence.*
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 class User (
 
     @Column(nullable = false)

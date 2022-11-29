@@ -5,18 +5,18 @@ import java.util.*
 
 @RestController
 @RequestMapping("/api/recipes")
-class RecipeController(val recipeRepository: RecipeRepository) {
+class RecipeController(val recipeService: RecipeService) {
     @PostMapping
     fun createRecipe(@RequestBody recipe: Recipe) {
-        recipeRepository.save(recipe)
+        recipeService.createRecipe(recipe)
     }
 
     @GetMapping("/{id}")
-    fun getRecipe(@PathVariable id:Long) : Optional<Recipe> {
-        return recipeRepository.findById(id)
+    fun getRecipe(@PathVariable id:Long) : Recipe? {
+        return recipeService.getRecipe(id)
     }
     @DeleteMapping("/{id}")
     fun deleteRecipe(@PathVariable id: Long){
-        recipeRepository.deleteById(id)
+       recipeService.deleteRecipe(id)
     }
 }

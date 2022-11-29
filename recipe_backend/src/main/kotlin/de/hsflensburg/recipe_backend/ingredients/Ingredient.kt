@@ -1,4 +1,4 @@
-package de.hsflensburg.recipe_backend.ingredients.entity
+package de.hsflensburg.recipe_backend.ingredients
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
