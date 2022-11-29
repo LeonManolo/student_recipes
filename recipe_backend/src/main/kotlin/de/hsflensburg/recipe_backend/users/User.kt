@@ -7,24 +7,24 @@ import java.util.Date
 import javax.persistence.*
 
 @Entity
-@Table(name = "user")
+@Table(name = "member")
 class User (
 
-    @Column(nullable = false)
+    @Column( name = "first_name", nullable = false)
     val firstName: String,
 
-    @Column(nullable = false)
+    @Column(name = "last_name", nullable = false)
     val lastName: String,
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     val email: String,
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     val password: String,
 
     //---------- Optional am ende am besten ----------------
 
-    @Column(nullable = true)
+    @Column(name = "image" ,nullable = true)
     val imageUrl: String? = null,
 
     @Id

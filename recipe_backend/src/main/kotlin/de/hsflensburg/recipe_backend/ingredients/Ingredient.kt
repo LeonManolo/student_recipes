@@ -14,13 +14,13 @@ import javax.persistence.*
 )
 class Ingredient(
 
-    @Column(nullable = false)
+    @Column(name = "locale", nullable = false)
     val locale: LanguageSelection,
 
-    @Column(nullable = false)
+    @Column(name = "title", nullable = false)
     val title: String,
 
-    @Column(nullable = false)
+    @Column(name = "calories", nullable = false)
     val calories: Int,
 
     @Formula(value = "calories + protein")
@@ -28,18 +28,17 @@ class Ingredient(
     val calculation: Int,
 
     @Type(type = "org.hibernate.type.IntegerType")
-    @Column(nullable = false)
+    @Column(name = "protein", nullable = false)
     val protein: Int,
 
-    @Column(nullable = false)
+    @Column(name = "carbs",nullable = false)
     val carbohydrates: Int,
 
-    @Column(nullable = false)
+    @Column(name = "fat", nullable = false)
     val fat: Int,
 
     //Optional am ende am besten
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
     val id: Long? = null,
 )
