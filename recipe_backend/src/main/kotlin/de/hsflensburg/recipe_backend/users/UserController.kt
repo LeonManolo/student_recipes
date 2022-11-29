@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 class UserController(val userRepository: UserRepository) {
     @PostMapping
     fun createUser(@RequestBody user: User) {

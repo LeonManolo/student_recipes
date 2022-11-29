@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/recipes")
+@RequestMapping("/api/recipes")
 class RecipeController(val recipeRepository: RecipeRepository) {
     @PostMapping
     fun createRecipe(@RequestBody recipe: Recipe) {

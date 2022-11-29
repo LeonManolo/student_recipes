@@ -37,12 +37,12 @@ class AuthController(
     ) { // TODO: User Service wird hier eingebunden
 
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     fun registerUser(@Valid @RequestBody registerDto: RegisterRequestDto) {
         if (userRepository.findByEmail(registerDto.email) != null) { // TODO: richtige existByEmail funktion aufrufen
             //return ResponseEntity.badRequest().body<Any>("Error: Username is already taken!")
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists!")        }
+            throw ResponseStatusException(HttpStatus.CONFLICT, "Email already exists!")        }
 
         // Create new user's account
         val user = User(
@@ -56,8 +56,8 @@ class AuthController(
     }
 
 
-    @PostMapping("/signin")
-    fun authenticateUser(@RequestBody loginDto: LoginRequestDto): ResponseEntity<*>? {
+    @PostMapping("/login")
+    fun authenticateUser(@Valid @RequestBody loginDto: LoginRequestDto): ResponseEntity<*>? {
         val authentication = authenticationManager
             .authenticate(UsernamePasswordAuthenticationToken(loginDto.email, loginDto.password))
         SecurityContextHolder.getContext().authentication = authentication
@@ -99,9 +99,9 @@ class AuthController(
             .body<Any>("You've been signed out!")
     }
 
-    @PostMapping("/refreshtoken")
-    fun refreshtoken(request: HttpServletRequest?): ResponseEntity<*>? {
-        val refreshToken = jwtUtils.getJwtRefreshFromCookies(request!!)
+    @PostMapping("/refresh_token")
+    fun refreshToken(request: HttpServletRequest): ResponseEntity<*>? {
+        val refreshToken = jwtUtils.getJwtRefreshFromCookies(request)
         val token = refreshTokenService.findByToken(refreshToken)
 
         return if (!refreshToken.isNullOrEmpty() && token != null) {

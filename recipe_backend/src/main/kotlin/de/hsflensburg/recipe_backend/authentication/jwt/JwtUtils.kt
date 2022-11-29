@@ -22,60 +22,59 @@ import javax.servlet.http.HttpServletRequest
 
 @Component
 class JwtUtils {
-    @Value("\${bezkoder.app.jwtSecret}")
-    private val jwtSecret: String? = null
+    @Value("\${recipe.app.jwtSecret}")
+    private lateinit var jwtSecret: String
 
-    @Value("\${bezkoder.app.jwtExpirationMs}")
+    @Value("\${recipe.app.jwtExpirationMs}")
     private val jwtExpirationMs = 0
 
-    @Value("\${bezkoder.app.jwtCookieName}")
-    private val jwtCookie: String? = null
+    @Value("\${recipe.app.jwtCookieName}")
+    private lateinit var jwtCookie: String
 
-    @Value("\${bezkoder.app.jwtRefreshCookieName}")
-    private val jwtRefreshCookie: String? = null
+    @Value("\${recipe.app.jwtRefreshCookieName}")
+    private lateinit var jwtRefreshCookie: String
 
-    val keyString = "WQWkvQxfwugYNDD8biEu/kF0150BAVoTI4gu97lO+uo="
 
 
     fun generateJwtCookie(userPrincipal: UserDetailsImpl): ResponseCookie {
         val jwt = generateTokenFromUsername(userPrincipal.username)
-        return generateCookie(jwtCookie!!, jwt, "/api")
+        return generateCookie(jwtCookie, jwt, "/api")
     }
 
     fun generateJwtCookie(user: User): ResponseCookie {
         val jwt = generateTokenFromUsername(user.email)
-        return generateCookie(jwtCookie!!, jwt, "/api")
+        return generateCookie(jwtCookie, jwt, "/api")
     }
 
     fun generateRefreshJwtCookie(refreshToken: String): ResponseCookie? {
-        return generateCookie(jwtRefreshCookie!!, refreshToken, "/api/auth/refreshtoken")
+        return generateCookie(jwtRefreshCookie, refreshToken, "/api/auth/refreshtoken")
     }
 
     fun getJwtFromCookies(request: HttpServletRequest): String? {
-        return getCookieValueByName(request, jwtCookie!!)
+        return getCookieValueByName(request, jwtCookie)
     }
 
     fun getJwtRefreshFromCookies(request: HttpServletRequest): String? {
-        return getCookieValueByName(request, jwtRefreshCookie!!)
+        return getCookieValueByName(request, jwtRefreshCookie)
     }
 
     fun getCleanJwtCookie(): ResponseCookie {
-        return ResponseCookie.from(jwtCookie!!, "").path("/api").build() // TODO: prüfen ob richtig
+        return ResponseCookie.from(jwtCookie, "").path("/api").build() // TODO: prüfen ob richtig
     }
 
     fun getCleanJwtRefreshCookie(): ResponseCookie {
-        return ResponseCookie.from(jwtRefreshCookie!!, "").path("/api/auth/refreshtoken").build() //TODO: prüfen
+        return ResponseCookie.from(jwtRefreshCookie, "").path("/api/auth/refreshtoken").build() //TODO: prüfen
     }
 
     fun getUserNameFromJwtToken(token: String?): String {
-        val keyBytes = Decoders.BASE64.decode(keyString)
+        val keyBytes = Decoders.BASE64.decode(jwtSecret)
         val key: Key = Keys.hmacShaKeyFor(keyBytes)
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).body.subject
     }
 
     fun validateJwtToken(authToken: String?): Boolean {
         try {
-            val keyBytes = Decoders.BASE64.decode(keyString)
+            val keyBytes = Decoders.BASE64.decode(jwtSecret)
             val key: Key = Keys.hmacShaKeyFor(keyBytes)
             Jwts.parserBuilder().setSigningKey(key).build().parse(authToken)
             return true
@@ -94,7 +93,7 @@ class JwtUtils {
     }
 
     fun generateTokenFromUsername(username: String?): String {
-        val keyBytes = Decoders.BASE64.decode(keyString)
+        val keyBytes = Decoders.BASE64.decode(jwtSecret)
         val key: Key = Keys.hmacShaKeyFor(keyBytes)
 
         return Jwts.builder()

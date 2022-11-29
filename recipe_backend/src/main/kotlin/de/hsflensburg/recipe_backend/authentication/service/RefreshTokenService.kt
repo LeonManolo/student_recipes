@@ -14,7 +14,7 @@ import java.util.*
 
 @Service
 class RefreshTokenService {
-    @Value("\${bezkoder.app.jwtRefreshExpirationMs}")
+    @Value("\${recipe.app.jwtRefreshExpirationMs}")
     private val refreshTokenDurationMs: Long? = null
 
     @Autowired
