@@ -1,3 +1,6 @@
+import Image from 'next/image'
+import RecipeOverview from './RecipeOverview';
+
 // Mapped zu der Route "/recipes" ohne eine id also nicht "recipes/123"
 export default async function Recipes() {
   const recipes = await fetchRecipes();
@@ -6,8 +9,10 @@ export default async function Recipes() {
     <div>
       {/* In gescheiften Klammern kann Javascript/Typescript Code geschrieben werden */}
       <h1>Hier sollte eine liste von rezepten angezeigt werden</h1>
-      {recipes.map((element) => (
-        <div id={element.id}>Das ergebnis {element.title}</div>
+      {recipes.map((element, index) => (
+        //<div key={element.id}>Das ergebnis {element.title}</div>
+        <div key={index}><RecipeOverview>
+        </RecipeOverview></div>
       ))}
     </div>
   );
