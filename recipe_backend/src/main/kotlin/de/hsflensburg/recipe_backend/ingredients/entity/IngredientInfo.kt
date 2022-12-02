@@ -11,7 +11,7 @@ import javax.persistence.*
 class IngredientInfo(
 
     @Column(name = "amount", nullable = false)
-    val amount: Int,
+    val amount: Double,
 
     @Column(name = "unit", nullable = false)
     val unit: String,
