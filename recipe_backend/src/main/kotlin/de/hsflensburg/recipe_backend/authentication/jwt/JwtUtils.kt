@@ -1,6 +1,6 @@
 package de.hsflensburg.recipe_backend.authentication.jwt
 
-import de.hsflensburg.recipe_backend.users.User
+import de.hsflensburg.recipe_backend.users.entity.User
 import de.hsflensburg.recipe_backend.authentication.entity.UserDetailsImpl
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts

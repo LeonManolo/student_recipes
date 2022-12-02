@@ -1,5 +1,6 @@
-package de.hsflensburg.recipe_backend.ingredients
+package de.hsflensburg.recipe_backend.ingredients.entity
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import de.hsflensburg.recipe_backend.shared.LanguageSelection
@@ -27,7 +28,6 @@ class Ingredient(
     @JsonProperty(required = false)
     val calculation: Int,
 
-    @Type(type = "org.hibernate.type.IntegerType")
     @Column(name = "protein", nullable = false)
     val protein: Int,
 
@@ -36,6 +36,10 @@ class Ingredient(
 
     @Column(name = "fat", nullable = false)
     val fat: Int,
+
+    @OneToMany(mappedBy = "ingredient", cascade = [CascadeType.ALL])
+    @JsonIgnore
+    val ingredientInfos: MutableSet<IngredientInfo> = mutableSetOf(),
 
     //Optional am ende am besten
     @Id

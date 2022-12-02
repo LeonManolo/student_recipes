@@ -1,8 +1,9 @@
-package de.hsflensburg.recipe_backend.users
+package de.hsflensburg.recipe_backend.users.entity
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonIgnore
+import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import org.hibernate.annotations.CreationTimestamp
-import org.springframework.data.annotation.CreatedDate
 import java.util.Date
 import javax.persistence.*
 
@@ -20,7 +21,12 @@ class User (
     val email: String,
 
     @Column(name = "password", nullable = false)
+    @JsonIgnore
     val password: String,
+
+    @OneToMany(mappedBy = "author")
+    @JsonBackReference
+    val recipes: MutableSet<Recipe> = mutableSetOf(),
 
     //---------- Optional am ende am besten ----------------
 

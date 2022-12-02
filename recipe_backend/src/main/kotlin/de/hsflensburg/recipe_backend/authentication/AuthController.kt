@@ -6,7 +6,7 @@ import de.hsflensburg.recipe_backend.authentication.entity.RefreshToken
 import de.hsflensburg.recipe_backend.authentication.entity.UserDetailsImpl
 import de.hsflensburg.recipe_backend.authentication.jwt.JwtUtils
 import de.hsflensburg.recipe_backend.authentication.service.RefreshTokenService
-import de.hsflensburg.recipe_backend.users.User
+import de.hsflensburg.recipe_backend.users.entity.User
 import de.hsflensburg.recipe_backend.users.UserRepository
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus

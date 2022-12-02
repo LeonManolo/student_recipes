@@ -1,7 +1,8 @@
 package de.hsflensburg.recipe_backend.ingredients
 
+import de.hsflensburg.recipe_backend.ingredients.entity.Ingredient
 import org.springframework.stereotype.Service
-import java.util.*
+
 @Service
 class IngredientService(private val ingredientRepository: IngredientRepository) {
     fun createIngredient(ingredient: Ingredient){

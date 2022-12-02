@@ -1,7 +1,7 @@
 package de.hsflensburg.recipe_backend.authentication.entity
 
 
-import de.hsflensburg.recipe_backend.users.User
+import de.hsflensburg.recipe_backend.users.entity.User
 import java.time.Instant
 import javax.persistence.*
 
