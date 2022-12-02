@@ -62,4 +62,17 @@ class RecipeService(
     fun deleteRecipe(id: Long) {
         recipeRepository.deleteById(id)
     }
+
+
+    //ToDO alles
+    fun updateRecipe(id: Long, recipeDTO: CreateRecipeRequestDto){
+        val recipe = recipeRepository.findById(id).get()
+        recipe.apply {
+            title = recipeDTO.title
+            description = recipeDTO.description
+            servings =  recipeDTO.servings
+        }
+
+
+    }
 }

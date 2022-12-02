@@ -18,7 +18,10 @@ class RefreshToken(
     @Column(nullable = false)
     val expiryDate: Instant? = null,
 
+
+){
     @Id
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private val id: Long? = null,
-)
+    val id: Long? = null
+}

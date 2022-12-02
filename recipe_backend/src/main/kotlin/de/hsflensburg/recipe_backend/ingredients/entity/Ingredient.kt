@@ -11,38 +11,41 @@ import javax.persistence.*
 @Entity
 @Table(
     name = "ingredient",
-    uniqueConstraints = [UniqueConstraint(columnNames = ["title", "locale"])],
+    //uniqueConstraints = [UniqueConstraint(columnNames = ["title", "locale"])],
 )
 class Ingredient(
 
     @Column(name = "locale", nullable = false)
-    val locale: LanguageSelection,
+    var locale: LanguageSelection,
 
     @Column(name = "title", nullable = false)
-    val title: String,
+    var title: String,
 
     @Column(name = "calories", nullable = false)
-    val calories: Int,
+    var calories: Int,
+
+    @Column(name = "protein", nullable = false)
+    var protein: Int,
+
+    @Column(name = "carbs",nullable = false)
+    var carbohydrates: Int,
+
+    @Column(name = "fat", nullable = false)
+    var fat: Int,
+
+) {
 
     @Formula(value = "calories + protein")
     @JsonProperty(required = false)
-    val calculation: Int,
+    var calculation: Int = 0
 
-    @Column(name = "protein", nullable = false)
-    val protein: Int,
-
-    @Column(name = "carbs",nullable = false)
-    val carbohydrates: Int,
-
-    @Column(name = "fat", nullable = false)
-    val fat: Int,
-
+    //Todo gucken ob loeschbar ist
     @OneToMany(mappedBy = "ingredient", cascade = [CascadeType.ALL])
     @JsonIgnore
-    val ingredientInfos: MutableSet<IngredientInfo> = mutableSetOf(),
+    var ingredientInfos: MutableSet<IngredientInfo> = mutableSetOf()
 
-    //Optional am ende am besten
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long? = null,
-)
+    @Column(name = "id", nullable = false)
+    val id: Long? = null
+}

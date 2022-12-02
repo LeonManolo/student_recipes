@@ -2,19 +2,23 @@ package de.hsflensburg.recipe_backend.categories.entity
 
 import javax.persistence.*
 
+//Todo many to many mit recipe
 @Entity
 @Table(name = "category")
 class Category(
     @Column(name = "title", nullable = false)
-    val title: String,
+    var title: String,
 
     @Column(name = "description", nullable = true)
-    val description: String? = null,
+    var description: String? = null,
 
     @Column(name = "image_url", nullable = true)
-    val imageUrl: String? = null,
+    var imageUrl: String? = null,
 
+
+){
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long? = null,
-)
+    val id: Long? = null
+}

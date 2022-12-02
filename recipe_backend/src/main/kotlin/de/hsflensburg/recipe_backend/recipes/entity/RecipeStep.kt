@@ -5,33 +5,32 @@ import com.fasterxml.jackson.annotation.JsonManagedReference
 import de.hsflensburg.recipe_backend.ingredients.entity.IngredientInfo
 import javax.persistence.*
 
-//TODO: eventuell nummerien für die Schritte
 @Entity
 @Table(name = "recipe_step")
 class RecipeStep (
     @Column(name = "title", nullable = false)
-    val title: String,
+    var title: String,
 
     @Column(name = "description", nullable = false)
-    val description: String,
+    var description: String,
 
-    @Column(name = "step_number", nullable = true)
-    val stepNumber: Int,
+    @Column(name = "step_number", nullable = false)
+    var stepNumber: Int,
 
-    @OneToMany(mappedBy = "recipeStep", cascade = [CascadeType.ALL], orphanRemoval = true)
-    @JsonManagedReference
-    var ingredients: MutableSet<IngredientInfo> = mutableSetOf(),
-
-    @ManyToOne() // vlt hier cascade type all
+    @ManyToOne()
     @JoinColumn(name="recipe_id", nullable=false)
-    //@Column(name = "recipe_id", nullable = false)
     @JsonBackReference
-    val recipe: Recipe? = null,
+    var recipe: Recipe? = null,
 
     @Column(name = "image_url", nullable = true)
-    val imageUrl: String? = null,
+    var imageUrl: String? = null,
+
+) {
+    @OneToMany(mappedBy = "recipeStep", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JsonManagedReference
+    var ingredients: MutableSet<IngredientInfo> = mutableSetOf()
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long? = null
-)
+}

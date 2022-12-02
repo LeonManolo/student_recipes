@@ -11,22 +11,25 @@ import javax.persistence.*
 class IngredientInfo(
 
     @Column(name = "amount", nullable = false)
-    val amount: Double,
+    var amount: Double,
 
     @Column(name = "unit", nullable = false)
-    val unit: String,
+    var unit: String,
 
     @ManyToOne
     @JoinColumn(name = "recipe_step_id", nullable = false)
     @JsonBackReference
-    val recipeStep: RecipeStep? = null,
+    var recipeStep: RecipeStep? = null,
 
     @ManyToOne
     @JoinColumn(name="ingredient_id", nullable=false)
     @JsonManagedReference
-    val ingredient: Ingredient? = null,
+    var ingredient: Ingredient? = null,
 
+
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long? = null,
-)
+    @Column(name = "id", nullable = false)
+    val id: Long? = null
+}

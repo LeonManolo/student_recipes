@@ -12,46 +12,32 @@ import javax.persistence.*
 class User (
 
     @Column( name = "first_name", nullable = false)
-    val firstName: String,
+    var firstName: String,
 
     @Column(name = "last_name", nullable = false)
-    val lastName: String,
+    var lastName: String,
 
     @Column(name = "email", nullable = false, unique = true)
-    val email: String,
+    var email: String,
 
     @Column(name = "password", nullable = false)
     @JsonIgnore
-    val password: String,
-
-    @OneToMany(mappedBy = "author")
-    @JsonBackReference
-    val recipes: MutableSet<Recipe> = mutableSetOf(),
-
-    //---------- Optional am ende am besten ----------------
+    var password: String,
 
     @Column(name = "image" ,nullable = true)
-    val imageUrl: String? = null,
+    var imageUrl: String? = null,
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long? = null,
+){
+    @OneToMany(mappedBy = "author")
+    @JsonBackReference
+    val recipes: MutableSet<Recipe> = mutableSetOf()
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    val createdAt : Date? = null,
+    val createdAt : Date? = null
 
-
-
-    /*
-    @ManyToMany
-    @JoinTable(
-        name = "recipe_like",
-        joinColumns = [JoinColumn(name = "user_id")],
-        inverseJoinColumns = [JoinColumn(name = "recipe_id")]
-    )
-    @JsonIgnoreProperties("likes")
-    val likedRecipes : List<Recipe> = mutableListOf()
-    */
-
-)
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null
+}
