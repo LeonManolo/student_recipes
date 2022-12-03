@@ -1,7 +1,7 @@
 package de.hsflensburg.recipe_backend.authentication.entity
 
 
-import de.hsflensburg.recipe_backend.users.User
+import de.hsflensburg.recipe_backend.users.entity.User
 import java.time.Instant
 import javax.persistence.*
 
@@ -18,7 +18,10 @@ class RefreshToken(
     @Column(nullable = false)
     val expiryDate: Instant? = null,
 
+
+){
     @Id
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private val id: Long? = null,
-)
+    val id: Long? = null
+}

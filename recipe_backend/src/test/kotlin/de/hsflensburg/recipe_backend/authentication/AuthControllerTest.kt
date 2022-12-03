@@ -3,7 +3,7 @@ package de.hsflensburg.recipe_backend.authentication
 import com.fasterxml.jackson.databind.ObjectMapper
 import de.hsflensburg.recipe_backend.authentication.dto.LoginRequestDto
 import de.hsflensburg.recipe_backend.authentication.dto.RegisterRequestDto
-import de.hsflensburg.recipe_backend.users.User
+import de.hsflensburg.recipe_backend.users.entity.User
 import de.hsflensburg.recipe_backend.users.UserRepository
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase.RefreshMode

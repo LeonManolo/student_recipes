@@ -68,10 +68,11 @@ class WebSecurityConfig(
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
             .antMatchers("/api/auth/test/**").authenticated()
+            .antMatchers("/api/api/ingredients/**").permitAll()
             .antMatchers("/api/auth/**").permitAll()
 
             //.antMatchers("$h2ConsolePath/**").permitAll()
-            .anyRequest().authenticated()
+            .anyRequest().permitAll()
 
         // fix H2 database console: Refused to display ' in a frame because it set 'X-Frame-Options' to 'deny'
         http.headers().frameOptions().sameOrigin()
