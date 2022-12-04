@@ -13,7 +13,7 @@ const h1Styles: CSS.Properties = {
 
 export default function RecipeOverview({ children, ...props }: any) {
     return (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto shadow-xl">
             <table className="table table-zebra w-full">
                 <thead>
                     <tr>

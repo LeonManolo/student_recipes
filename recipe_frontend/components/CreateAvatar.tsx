@@ -2,14 +2,17 @@ import Image from 'next/image';
 import img from '../public/profile/profile-picture.png';
 export default function CreateAvatar({ children, ...props }: any) {
     return (
-        <div className="card card-side bg-base-100 shadow-xl p-10">
+        <div className="card card-side bg-custom-first shadow-xl p-10">
             <figure><div className="avatar">
                 <div className="p-4">
                     <div className="w-1/2 rounded">
-                        <Image className="rounded border-double border-8 border-violet-900" src={img} alt='profile-picture' width={300} height={300} />
+                        <Image className="rounded border-double border-8 border-custom-forth" src={img} alt='profile-picture' width={300} height={300} />
                     </div>
-                    <div className="p-2">
-                        <input type="file" className="file-input file-input-bordered file-input-primary w-full max-w-xs" />
+                    <div className="form-control max-w-xs w-3/4 pt-2">
+                        <input type="file" className="file-input file-input-bordered max-w-xs" />
+                        <label className="label">
+                            <span className="label-text-alt">Neues Bild hochladen</span>
+                        </label>
                     </div>
                 </div>
             </div></figure>
