@@ -34,6 +34,10 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
+    // google cloud
+    implementation("com.google.cloud:google-cloud-storage:2.15.1")
+    //implementation("org.springframework.cloud:spring-cloud-gcp-starter-storage")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.21")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     runtimeOnly("org.postgresql:postgresql")

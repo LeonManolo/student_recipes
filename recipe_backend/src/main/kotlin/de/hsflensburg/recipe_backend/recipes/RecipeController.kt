@@ -24,6 +24,11 @@ class RecipeController(val recipeService: RecipeService) {
         return recipeService.getRecipes()
     }
 
+    @PatchMapping("/{id}")
+    fun updateRecipe(@PathVariable id:Long, @RequestBody @Valid recipe: CreateRecipeRequestDto) {
+        recipeService.updateRecipe(id, recipe)
+    }
+
     @DeleteMapping("/{id}")
     fun deleteRecipe(@PathVariable id: Long){
        recipeService.deleteRecipe(id)

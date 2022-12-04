@@ -3,6 +3,8 @@ package de.hsflensburg.recipe_backend.ingredients.entity
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeStep
+import org.hibernate.annotations.CreationTimestamp
+import java.util.*
 import javax.persistence.*
 
 
@@ -28,6 +30,11 @@ class IngredientInfo(
 
 
 ) {
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    val createdAt : Date? = null
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)

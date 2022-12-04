@@ -16,7 +16,7 @@ data class CreateRecipeRequestDto(
     @field:Min(1)
     val servings: Int,
 
-    val authorId: Long,
+    val authorId: Long, //TODO: rausnehmen sobald über authentication der author ermittelt werden kann
 
     @field:NotEmpty
     @field:Valid

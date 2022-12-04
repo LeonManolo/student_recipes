@@ -28,6 +28,7 @@ class RecipeStep (
 ) {
     @OneToMany(mappedBy = "recipeStep", cascade = [CascadeType.ALL], orphanRemoval = true)
     @JsonManagedReference
+    @OrderBy("created_at ASC")
     var ingredients: MutableSet<IngredientInfo> = mutableSetOf()
 
     @Id

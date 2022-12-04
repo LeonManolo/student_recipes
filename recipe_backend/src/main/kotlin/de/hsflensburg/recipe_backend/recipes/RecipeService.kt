@@ -16,8 +16,9 @@ class RecipeService(
     private val userRepository: UserRepository,
 ) {
 
+    //TODO: exception handling
     @Transactional
-    fun createRecipe(recipe: CreateRecipeRequestDto) {
+    fun createRecipe(recipe: CreateRecipeRequestDto): Recipe {
         val recipeToSave = Recipe(
             title = recipe.title,
             description = recipe.description,
@@ -47,7 +48,7 @@ class RecipeService(
             }.toMutableSet()
 
         }.toMutableSet()
-        recipeRepository.save(savedRecipe)
+        return recipeRepository.save(savedRecipe)
 
     }
 
@@ -65,14 +66,39 @@ class RecipeService(
 
 
     //ToDO alles
-    fun updateRecipe(id: Long, recipeDTO: CreateRecipeRequestDto){
-        val recipe = recipeRepository.findById(id).get()
-        recipe.apply {
-            title = recipeDTO.title
-            description = recipeDTO.description
-            servings =  recipeDTO.servings
-        }
+    @Transactional
+    fun updateRecipe(id: Long, recipeDTO: CreateRecipeRequestDto): Recipe {
+        val recipe = recipeRepository.findById(id).orElseThrow { Exception("Recipe not found") }
 
+        recipe.steps.clear()
+        recipe.steps = mutableSetOf()
+
+        recipeDTO.steps.mapIndexed { index, step ->
+            val recipeStep = RecipeStep(
+                stepNumber = index,
+                title = step.title,
+                description = step.description,
+                recipe = recipe,
+                imageUrl = step.imageUrl
+            )
+            recipeStep.ingredients = step.ingredients.map { ingredient ->
+                IngredientInfo(
+                    recipeStep = recipeStep,
+                    amount = ingredient.amount,
+                    unit = ingredient.unit,
+                    ingredient = ingredientRepository.findById(ingredient.ingredientId).get()
+                )
+            }.toMutableSet()
+            recipe.steps.add(recipeStep)
+        }.toMutableSet()
+
+        recipe.title = recipeDTO.title
+        recipe.description = recipeDTO.description
+        recipe.servings = recipeDTO.servings
+        recipe.author = userRepository.findById(recipeDTO.authorId).get()
+
+        val result = recipeRepository.save(recipe)
+        return result
 
     }
 }

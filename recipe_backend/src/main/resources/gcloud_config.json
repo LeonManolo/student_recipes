@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hausarbeit-student-recipes",
+  "private_key_id": "ac357c70d7449a6dc65e29a5a5abdcbc4dc73213",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC1z1a4FCQio1kU\nI3jJM0jdKQgtpeUQDT8GCnNOTiqJJALQO7uDWZNvMyYvb3RL7j44cVWREh6bvwW+\nmLICNbsxPxILzVypmOoEU5Y1Ho3V7CZDI3KoCfo7YKdSrlEND/qQWFs/nP5ufI76\nV0OD2Mr9Bpx71VOXe3TEPdVmOysjit/edQ8f65NLIpopLrEFoKq+CZklHYJlAWhN\nkk4Jw4AS6sAWMrpOE2LQxb6lH4v/wBzBN1wMqLpD8oksu4HjYtrzbxGzpdz5y0u0\nMaMnghAETJOuMS3Lwfx6l1aPjQ4H7IIHEmZfh2rDv5WFD73TGZn2wvlV0nUrR13O\nk5hVFqHBAgMBAAECggEAA7Ks69+VAJNb+3nhOg5t+/marfsC1rm+P2w0/jG+0b1G\nxV+Bp+FJi2h57VsR/X1iDJnZiLLapoZTIpZOgJcBMLY8srrBmL2AfQgKNRhjACfm\ne1UcPui9CzojDR54jZB2ozr42ClkT3D/I35k5CijsFPTGP20zo73SAqN7Z9keDuR\nHWVZlVzvnLMIUAXnDLwcOLtBDbqJPdWMU9OWsAu3BXfYq6Au2lrehMygFZfvFel6\nLnNj9tLnA6jS11YQUQug8p3ti2caCZ+aMXKtZaCB+QpY95sJPSlT/BS2yDwxVhXZ\n/+NCWidhxZtI/PMC+xWfq67JQsPFNKhd+farPFc/ZQKBgQDYYlVhltqVu5G0oTc7\n8HOVUeTQZB4qG8xyJValae4ZLbtserBtfz5qhLFp87gvsIEe4hhyPImJR9mJv22a\nPpArZHab+Ikt+wWc4iGrd3jl0jGXkzCkSNRWmGcfy1D3wMtOhDbcOfQ8z/xYsx/V\nGBYu+Ln6Kc63d+yBkoKXh7ZB0wKBgQDXGI25sIdL/IaGEpV/twq3KEJmnuRFlhEE\nfSJm0nT7HwRH/nEdpyGfDvsAudmw1xujC/M9HuMchQ8bb29jTUJ1g0eNezpdz8oi\nnah7whtLUJRbj/VtoGUS42YDf97VgReVHyKNI+XGP5xUZZ9DKqtQn3W074N1aInK\nT4gI3cy9mwKBgEIUlZp95TcA1xhge2u0nLenEMeLK6MUZjUdrf5KAUpzKt+QAD0Q\nNNF2wG9o3IDD2ErEJU8Nqbrg1FA6w4/tNz3pKkereMkv9aDZdgrVK3iT3k05yAsD\nqsTfOe79ujZPDEdoHRDYKfxAUAIOgdQjzPJ/Rtxc1CI3X2Sah4MbEM+9AoGAMgdA\n936KiW7rrwVlhjYBpQYVI58zQsgbnyqntLiggsP9D+2rS5VS6ZbnZIzViB8QC4U9\nButHMZv1HpF1m+gdXA2zt8GAms84mYKH7HkCNitAxmceU2gp+hGv6YJ1Rr1mycVb\nGO7Pg6PJ7YtRVqL3A6KDExlePxGYcti6sC0+cJ8CgYEAgAAvrLFF1xVWBozP3Cv7\nfwjE1axwo2RBtN2HtaxHY5iabIP2j3HMonbq2BY2DpXyccIyfXCtxu+959L8CIg/\nhWNfIxkiRyk1QTkuZ6JiUb+fNs1Kw9reFN/agmq8NE86/KmO2iVVmQ3bXESg0LDI\npa+5L7f7UnJyoSE5Uhh6Fzc=\n-----END PRIVATE KEY-----\n",
+  "client_email": "studentrecipe-storage-admin@hausarbeit-student-recipes.iam.gserviceaccount.com",
+  "client_id": "113351360927628316298",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/studentrecipe-storage-admin%40hausarbeit-student-recipes.iam.gserviceaccount.com"
+}

@@ -15,6 +15,7 @@ import javax.persistence.*
 )
 class Ingredient(
 
+    //TODO: nicht veränderbar machen (generell bei jeder Tabelle mit locale)
     @Column(name = "locale", nullable = false)
     var locale: LanguageSelection,
 
@@ -25,7 +26,7 @@ class Ingredient(
     var calories: Int,
 
     @Column(name = "protein", nullable = false)
-    var protein: Int,
+    var protein: Int, // TODO: vielleicht in double umwandeln
 
     @Column(name = "carbs",nullable = false)
     var carbohydrates: Int,
