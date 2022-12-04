@@ -3,6 +3,7 @@ package de.hsflensburg.recipe_backend.categories
 import de.hsflensburg.recipe_backend.categories.entity.Category
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.annotation.PostConstruct
 import javax.validation.Valid
 
 @RestController
@@ -29,5 +30,12 @@ class CategoryController(
     @PatchMapping("/{id}")
     fun updateCategory(@PathVariable id: Long) {
         // TODO
+    }
+
+
+    @PostConstruct
+    private fun init() {
+        val category = Category("Vegan","Vegane Rezepte")
+        categoryRepository.save(category)
     }
 }

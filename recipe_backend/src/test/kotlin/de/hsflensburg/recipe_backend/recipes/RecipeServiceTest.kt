@@ -30,7 +30,6 @@ internal interface IngredientInfoRepository : JpaRepository<IngredientInfo, Long
 
 @SpringBootTest
 @AutoConfigureEmbeddedDatabase(refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
-@Transactional
 internal class RecipeServiceTest @Autowired constructor(
     private val recipeService: RecipeService,
     private val recipeRepository: RecipeRepository,
@@ -75,7 +74,7 @@ internal class RecipeServiceTest @Autowired constructor(
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
-                        IngredientInfoDto(ingredientPasta.id!!, 50.0, "g"), // 50.0 * noch nicht beachtet!!!
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
                     )
                 ),
                 RecipeStepDto(
@@ -85,10 +84,11 @@ internal class RecipeServiceTest @Autowired constructor(
                 )
             )
         )
-        val result = recipeService.createRecipe(recipeDto)
+        val id = recipeService.createRecipe(recipeDto).id!!
+        val result = recipeRepository.findById(id).get()
         println(result.totalCalories)
-        println((ingredientPasta.calories + ingredientTomato.calories))
-        //assertTrue(result.totalCalories == ingredientPasta.calories + ingredientTomato.calories)
+        val totalCalories = (recipeDto.steps[0].ingredients[0].amount / 100 * ingredientPasta.calories) + (recipeDto.steps[1].ingredients[0].amount / 100 * ingredientTomato.calories)
+        assertEquals(totalCalories, result.totalCalories)
     }
 
     @Test
@@ -184,7 +184,8 @@ internal class RecipeServiceTest @Autowired constructor(
 
         //TODO: reihenfolge inconstent
         //TODO: aktuelles datum abspeichern und schauen ob es einträge vor diesem datum gibt
-        val updatedResult = recipeService.updateRecipe(result.id!!, updatedRecipeDto)
+        val id = recipeService.updateRecipe(result.id!!, updatedRecipeDto).id!!
+        val updatedResult = recipeRepository.findById(id).get()
         assertTrue(updatedResult.title == "title2")
         assertTrue(updatedResult.description == "description2")
         assertTrue(updatedResult.steps.size == 3)

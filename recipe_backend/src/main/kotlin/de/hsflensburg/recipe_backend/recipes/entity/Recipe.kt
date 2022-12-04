@@ -27,13 +27,13 @@ class Recipe(
     var author: User,
 
 ) {
-    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
-    @OrderBy("step_number DESC")
+    @OrderBy("step_number ASC") // aufsteigend nach step_number sortieren
     var steps: MutableSet<RecipeStep> = mutableSetOf()
 
-    //@Formula(value = "(SELECT SUM(r.calories) FROM recipe_step r WHERE r.recipe_id = id)")
-    var totalCalories: Int = 0
+    @Formula(value = "(SELECT SUM(ingredient_info.amount / 100 * ingredient.calories) FROM recipe INNER JOIN recipe_step ON recipe.id = recipe_step.recipe_id INNER JOIN ingredient_info ON recipe_step.id = ingredient_info.recipe_step_id INNER JOIN ingredient ON ingredient_info.ingredient_id = ingredient.id WHERE recipe.id = id)")
+    val totalCalories: Double = 0.0
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

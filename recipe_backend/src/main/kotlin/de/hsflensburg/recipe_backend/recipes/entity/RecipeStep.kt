@@ -17,7 +17,7 @@ class RecipeStep (
     @Column(name = "step_number", nullable = false)
     var stepNumber: Int,
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name="recipe_id", nullable=false)
     @JsonBackReference
     var recipe: Recipe? = null,
@@ -26,9 +26,9 @@ class RecipeStep (
     var imageUrl: String? = null,
 
 ) {
-    @OneToMany(mappedBy = "recipeStep", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "recipeStep", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
-    @OrderBy("created_at ASC")
+    @OrderBy("created_at")
     var ingredients: MutableSet<IngredientInfo> = mutableSetOf()
 
     @Id

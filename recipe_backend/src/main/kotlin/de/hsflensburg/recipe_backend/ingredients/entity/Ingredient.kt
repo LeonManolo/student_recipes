@@ -16,7 +16,7 @@ import javax.persistence.*
 class Ingredient(
 
     //TODO: nicht veränderbar machen (generell bei jeder Tabelle mit locale)
-    @Column(name = "locale", nullable = false)
+    @Column(name = "locale", nullable = false, updatable = false)
     var locale: LanguageSelection,
 
     @Column(name = "title", nullable = false)
@@ -35,10 +35,6 @@ class Ingredient(
     var fat: Int,
 
 ) {
-
-    @Formula(value = "calories + protein")
-    @JsonProperty(required = false)
-    var calculation: Int = 0
 
     //Todo gucken ob loeschbar ist
     @OneToMany(mappedBy = "ingredient", cascade = [CascadeType.ALL])

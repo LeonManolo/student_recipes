@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional // muss rein damit @Formula funktioniert
 class RecipeService(
     private val recipeRepository: RecipeRepository,
     private val ingredientRepository: IngredientRepository,
@@ -17,7 +18,6 @@ class RecipeService(
 ) {
 
     //TODO: exception handling
-    @Transactional
     fun createRecipe(recipe: CreateRecipeRequestDto): Recipe {
         val recipeToSave = Recipe(
             title = recipe.title,
@@ -47,7 +47,7 @@ class RecipeService(
                 )
             }.toMutableSet()
 
-        }.toMutableSet()
+        }
         return recipeRepository.save(savedRecipe)
 
     }
@@ -66,12 +66,11 @@ class RecipeService(
 
 
     //ToDO alles
-    @Transactional
+
     fun updateRecipe(id: Long, recipeDTO: CreateRecipeRequestDto): Recipe {
         val recipe = recipeRepository.findById(id).orElseThrow { Exception("Recipe not found") }
 
         recipe.steps.clear()
-        recipe.steps = mutableSetOf()
 
         recipeDTO.steps.mapIndexed { index, step ->
             val recipeStep = RecipeStep(
@@ -90,7 +89,7 @@ class RecipeService(
                 )
             }.toMutableSet()
             recipe.steps.add(recipeStep)
-        }.toMutableSet()
+        }
 
         recipe.title = recipeDTO.title
         recipe.description = recipeDTO.description

@@ -23,7 +23,7 @@ class IngredientInfo(
     @JsonBackReference
     var recipeStep: RecipeStep? = null,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="ingredient_id", nullable=false)
     @JsonManagedReference
     var ingredient: Ingredient? = null,
