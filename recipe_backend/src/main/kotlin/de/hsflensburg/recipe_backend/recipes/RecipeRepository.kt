@@ -6,4 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface RecipeRepository: JpaRepository<Recipe, Long> {
     fun findByTotalCaloriesGreaterThanEqual(totalCalories: Double): Iterable<Recipe>
 
+
+    fun findByRecipeLikes_User_Id(id: Long): List<Recipe>
+
+
+
 }

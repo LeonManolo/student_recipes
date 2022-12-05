@@ -1,8 +1,8 @@
 package de.hsflensburg.recipe_backend.recipes.entity
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import com.fasterxml.jackson.annotation.JsonProperty
 import de.hsflensburg.recipe_backend.users.entity.User
+import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Formula
 import java.util.*
@@ -43,5 +43,18 @@ class Recipe(
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     val id: Long? = null
+
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var recipeLikes: MutableSet<RecipeLikes> = mutableSetOf()
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as Recipe
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
 }
 

@@ -6,6 +6,8 @@ import de.hsflensburg.recipe_backend.ingredients.entity.IngredientInfo
 import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
 import de.hsflensburg.recipe_backend.recipes.dto.IngredientInfoDto
 import de.hsflensburg.recipe_backend.recipes.dto.RecipeStepDto
+import de.hsflensburg.recipe_backend.recipes.entity.Recipe
+import de.hsflensburg.recipe_backend.recipes.entity.RecipeLikes
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeStep
 import de.hsflensburg.recipe_backend.shared.LanguageSelection
 import de.hsflensburg.recipe_backend.shared.isValid
@@ -37,6 +39,7 @@ internal class RecipeServiceTest @Autowired constructor(
     private val ingredientRepository: IngredientRepository,
     private val recipeStepRepository: RecipeStepRepository,
     private val ingredientInfoRepository: IngredientInfoRepository,
+    private val likesRepository: RecipeLikesRepository,
 ) {
     private lateinit var author: User
     private lateinit var ingredientPasta: Ingredient
@@ -61,6 +64,219 @@ internal class RecipeServiceTest @Autowired constructor(
         ingredientCheese = ingredientRepository.save(
             Ingredient(LanguageSelection.English, "Cheese", 22, 6, 36, 33)
         )
+    }
+
+    @Test
+    fun likeRecipe(){
+       val author2 = userRepository.save(
+            User("test", "test", "aaaaa@b.de", "password")
+        )
+
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            author.id!!,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val id = recipeService.createRecipe(recipeDto).id!!
+
+        val recipeDto2 = CreateRecipeRequestDto(
+            "title2",
+            "description",
+            2,
+            author.id!!,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val id2 = recipeService.createRecipe(recipeDto2).id!!
+
+        val recipeDto3 = CreateRecipeRequestDto(
+            "title3",
+            "description",
+            2,
+            author.id!!,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val id3 = recipeService.createRecipe(recipeDto3).id!!
+
+        recipeService.likeRecipe(author.id!!,id)
+        recipeService.likeRecipe(author.id!!, id3)
+
+        recipeService.likeRecipe(author2.id!!,id2)
+
+
+        var likedRecipe = likesRepository.findByUser_Id(author.id!!)
+        assertEquals(likedRecipe.size,2)
+
+        var likedRecipes2 = likesRepository.findByUser_Id(author2.id!!)
+        assertEquals(likedRecipes2.size,1)
+
+    }
+
+    @Test
+    @Transactional
+    fun unlike(){
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            author.id!!,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val id = recipeService.createRecipe(recipeDto).id!!
+
+        val recipeDto2 = CreateRecipeRequestDto(
+            "title2",
+            "description",
+            2,
+            author.id!!,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val id2 = recipeService.createRecipe(recipeDto2).id!!
+
+        recipeService.likeRecipe(author.id!!,id)
+        recipeService.likeRecipe(author.id!!,id2)
+
+        assertEquals(likesRepository.findAll().size,2)
+
+        likesRepository.deleteByUser_IdAndRecipe_Id(author.id!!,id)
+
+        val remaining = likesRepository.findAll()
+        assertEquals(remaining.size,1)
+        assertEquals(remaining[0].recipe?.id,id2)
+    }
+
+    @Test
+    @Transactional
+    fun `cascade should have an influence on saving likes`(){
+
+        val recipeDto = CreateRecipeRequestDto(
+                "title",
+        "description",
+        2,
+        author.id!!,
+        listOf(
+            RecipeStepDto(
+                "Pasta", "cook pasta", listOf(
+                    IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                )
+            ),
+            RecipeStepDto(
+                "Tomato", "cut tomato", listOf(
+                    IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                )
+            )
+        )
+        )
+
+        val recipe = recipeService.createRecipe(recipeDto)
+
+        // saven wird nicht gebraucht wenn es eine Transactional ist. adden zum set reicht aus
+        recipe.recipeLikes.add(RecipeLikes(author,recipe))
+        // falls keine Transaction dann muss save aufgerufen werden.
+        //recipeRepository.save(recipe)
+
+        assertEquals(likesRepository.findAll().size,1)
+    }
+
+
+    @Test
+    fun `delete Recipe deletes everything connected`(){
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            author.id!!,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe = recipeService.createRecipe(recipeDto)
+
+        recipeService.likeRecipe(author.id!!,recipe.id!!)
+
+        assertEquals(recipeRepository.findAll().size,1)
+        assertEquals(recipeStepRepository.findAll().size,2)
+        assertEquals(ingredientInfoRepository.findAll().size,2)
+        assertEquals(likesRepository.findAll().size,1)
+
+        recipeService.deleteRecipe(recipe.id!!)
+
+        assertEquals(recipeRepository.findAll().size,0)
+        assertEquals(recipeStepRepository.findAll().size,0)
+        assertEquals(ingredientInfoRepository.findAll().size,0)
+        assertEquals(likesRepository.findAll().size,0)
+
     }
 
     @Test

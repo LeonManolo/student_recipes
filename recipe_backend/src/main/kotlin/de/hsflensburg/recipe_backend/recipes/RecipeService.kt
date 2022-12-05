@@ -4,6 +4,7 @@ import de.hsflensburg.recipe_backend.ingredients.IngredientRepository
 import de.hsflensburg.recipe_backend.ingredients.entity.IngredientInfo
 import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
+import de.hsflensburg.recipe_backend.recipes.entity.RecipeLikes
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeStep
 import de.hsflensburg.recipe_backend.users.UserRepository
 import org.springframework.stereotype.Service
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional // muss rein damit @Formula funktioniert
 class RecipeService(
+    private val recipeLikesRepository: RecipeLikesRepository,
     private val recipeRepository: RecipeRepository,
     private val ingredientRepository: IngredientRepository,
     private val userRepository: UserRepository,
@@ -62,6 +64,18 @@ class RecipeService(
 
     fun deleteRecipe(id: Long) {
         recipeRepository.deleteById(id)
+    }
+
+    fun likeRecipe(userId: Long, recipeId: Long){
+        recipeLikesRepository.save(RecipeLikes(userRepository.findById(userId).get(),recipeRepository.findById(recipeId).get()))
+    }
+
+    fun getLikedRecipesForUser(userId: Long): List<Recipe> {
+        return recipeRepository.findByRecipeLikes_User_Id(userId)
+    }
+
+    fun unlikeRecipe(userId: Long, recipeId: Long): Long {
+        return recipeLikesRepository.deleteByUser_IdAndRecipe_Id(userId,recipeId)
     }
 
 
