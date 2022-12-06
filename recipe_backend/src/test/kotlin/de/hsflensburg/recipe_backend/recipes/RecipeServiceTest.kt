@@ -1,13 +1,14 @@
 package de.hsflensburg.recipe_backend.recipes
 
+import de.hsflensburg.recipe_backend.associations.FavoriteRepository
+import de.hsflensburg.recipe_backend.associations.RatingRepository
 import de.hsflensburg.recipe_backend.ingredients.IngredientRepository
 import de.hsflensburg.recipe_backend.ingredients.entity.Ingredient
 import de.hsflensburg.recipe_backend.ingredients.entity.IngredientInfo
 import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
 import de.hsflensburg.recipe_backend.recipes.dto.IngredientInfoDto
 import de.hsflensburg.recipe_backend.recipes.dto.RecipeStepDto
-import de.hsflensburg.recipe_backend.recipes.entity.Recipe
-import de.hsflensburg.recipe_backend.recipes.entity.RecipeLikes
+import de.hsflensburg.recipe_backend.associations.entity.Favorite
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeStep
 import de.hsflensburg.recipe_backend.shared.LanguageSelection
 import de.hsflensburg.recipe_backend.shared.isValid
@@ -15,7 +16,6 @@ import de.hsflensburg.recipe_backend.users.UserRepository
 import de.hsflensburg.recipe_backend.users.entity.User
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -39,7 +39,8 @@ internal class RecipeServiceTest @Autowired constructor(
     private val ingredientRepository: IngredientRepository,
     private val recipeStepRepository: RecipeStepRepository,
     private val ingredientInfoRepository: IngredientInfoRepository,
-    private val likesRepository: RecipeLikesRepository,
+    private val favoriteRepository: FavoriteRepository,
+    private val ratingRepository: RatingRepository,
 ) {
     private lateinit var author: User
     private lateinit var ingredientPasta: Ingredient
@@ -64,6 +65,102 @@ internal class RecipeServiceTest @Autowired constructor(
         ingredientCheese = ingredientRepository.save(
             Ingredient(LanguageSelection.English, "Cheese", 22, 6, 36, 33)
         )
+    }
+
+    @Test
+    fun `should delete user and his recipes`(){
+        assertEquals(userRepository.findAll().size,1)
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            author.id!!,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe = recipeService.createRecipe(recipeDto)
+
+        assertEquals(recipeRepository.findAll().size,1)
+        assertEquals(recipeStepRepository.findAll().size,2)
+        assertEquals(ingredientInfoRepository.findAll().size,2)
+
+        userRepository.deleteById(author.id!!)
+
+        assertEquals(recipeRepository.findAll().size,0)
+        assertEquals(userRepository.findAll().size,0)
+        assertEquals(recipeStepRepository.findAll().size,0)
+        assertEquals(ingredientInfoRepository.findAll().size,0)
+
+    }
+
+    @Test
+    fun `should create Rating for Recipe`(){
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            author.id!!,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe = recipeService.createRecipe(recipeDto)
+
+        assertEquals(ratingRepository.findAll().size,0)
+        recipeService.rateRecipe(5,author.id!!, recipe.id!!)
+        assertEquals(ratingRepository.findAll().size,1)
+    }
+
+    @Test
+    fun `should delete Rating`(){
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            author.id!!,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe = recipeService.createRecipe(recipeDto)
+
+        assertEquals(ratingRepository.findAll().size,0)
+        recipeService.rateRecipe(5,author.id!!, recipe.id!!)
+        assertEquals(ratingRepository.findAll().size,1)
+
+        recipeService.deleteRating(author.id!!,recipe.id!!)
+        assertEquals(ratingRepository.findAll().size,0)
     }
 
     @Test
@@ -135,22 +232,22 @@ internal class RecipeServiceTest @Autowired constructor(
 
         val id3 = recipeService.createRecipe(recipeDto3).id!!
 
-        recipeService.likeRecipe(author.id!!,id)
-        recipeService.likeRecipe(author.id!!, id3)
+        recipeService.favoriteRecipe(author.id!!,id)
+        recipeService.favoriteRecipe(author.id!!, id3)
 
-        recipeService.likeRecipe(author2.id!!,id2)
+        recipeService.favoriteRecipe(author2.id!!,id2)
 
 
-        var likedRecipe = likesRepository.findByUser_Id(author.id!!)
+        var likedRecipe = favoriteRepository.findByUser_Id(author.id!!)
         assertEquals(likedRecipe.size,2)
 
-        var likedRecipes2 = likesRepository.findByUser_Id(author2.id!!)
+        var likedRecipes2 = favoriteRepository.findByUser_Id(author2.id!!)
         assertEquals(likedRecipes2.size,1)
 
     }
 
     @Test
-    @Transactional
+    //@Transactional
     fun unlike(){
         val recipeDto = CreateRecipeRequestDto(
             "title",
@@ -171,7 +268,8 @@ internal class RecipeServiceTest @Autowired constructor(
             )
         )
 
-        val id = recipeService.createRecipe(recipeDto).id!!
+        val recipe = recipeService.createRecipe(recipeDto)
+        val id = recipe.id!!
 
         val recipeDto2 = CreateRecipeRequestDto(
             "title2",
@@ -194,14 +292,17 @@ internal class RecipeServiceTest @Autowired constructor(
 
         val id2 = recipeService.createRecipe(recipeDto2).id!!
 
-        recipeService.likeRecipe(author.id!!,id)
-        recipeService.likeRecipe(author.id!!,id2)
+        recipeService.favoriteRecipe(author.id!!,id)
+        recipeService.favoriteRecipe(author.id!!,id2)
 
-        assertEquals(likesRepository.findAll().size,2)
+        assertEquals(favoriteRepository.findAll().size,2)
 
-        likesRepository.deleteByUser_IdAndRecipe_Id(author.id!!,id)
+        // benoetigt vielleicht hierduch transaction
+        //favoriteRepository.deleteByUser_IdAndRecipe_Id(author.id!!,id)
+        //favoriteRepository.deleteByUserAndRecipe(author,recipe)
+        recipeService.unfavoriteRecipe(author.id!!,id)
 
-        val remaining = likesRepository.findAll()
+        val remaining = favoriteRepository.findAll()
         assertEquals(remaining.size,1)
         assertEquals(remaining[0].recipe?.id,id2)
     }
@@ -232,11 +333,11 @@ internal class RecipeServiceTest @Autowired constructor(
         val recipe = recipeService.createRecipe(recipeDto)
 
         // saven wird nicht gebraucht wenn es eine Transactional ist. adden zum set reicht aus
-        recipe.recipeLikes.add(RecipeLikes(author,recipe))
+        recipe.favoritedBy.add(Favorite(author,recipe))
         // falls keine Transaction dann muss save aufgerufen werden.
         //recipeRepository.save(recipe)
 
-        assertEquals(likesRepository.findAll().size,1)
+        assertEquals(favoriteRepository.findAll().size,1)
     }
 
 
@@ -263,19 +364,19 @@ internal class RecipeServiceTest @Autowired constructor(
 
         val recipe = recipeService.createRecipe(recipeDto)
 
-        recipeService.likeRecipe(author.id!!,recipe.id!!)
+        recipeService.favoriteRecipe(author.id!!,recipe.id!!)
 
         assertEquals(recipeRepository.findAll().size,1)
         assertEquals(recipeStepRepository.findAll().size,2)
         assertEquals(ingredientInfoRepository.findAll().size,2)
-        assertEquals(likesRepository.findAll().size,1)
+        assertEquals(favoriteRepository.findAll().size,1)
 
         recipeService.deleteRecipe(recipe.id!!)
 
         assertEquals(recipeRepository.findAll().size,0)
         assertEquals(recipeStepRepository.findAll().size,0)
         assertEquals(ingredientInfoRepository.findAll().size,0)
-        assertEquals(likesRepository.findAll().size,0)
+        assertEquals(favoriteRepository.findAll().size,0)
 
     }
 

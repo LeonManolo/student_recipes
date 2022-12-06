@@ -1,22 +1,28 @@
 package de.hsflensburg.recipe_backend.recipes
 
+import de.hsflensburg.recipe_backend.associations.FavoriteRepository
+import de.hsflensburg.recipe_backend.associations.RatingRepository
 import de.hsflensburg.recipe_backend.ingredients.IngredientRepository
 import de.hsflensburg.recipe_backend.ingredients.entity.IngredientInfo
 import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
-import de.hsflensburg.recipe_backend.recipes.entity.RecipeLikes
+import de.hsflensburg.recipe_backend.associations.entity.Favorite
+import de.hsflensburg.recipe_backend.associations.entity.Rating
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeStep
 import de.hsflensburg.recipe_backend.users.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import javax.validation.Valid
+import javax.validation.constraints.Size
 
 @Service
 @Transactional // muss rein damit @Formula funktioniert
 class RecipeService(
-    private val recipeLikesRepository: RecipeLikesRepository,
+    private val favoriteRepository: FavoriteRepository,
     private val recipeRepository: RecipeRepository,
     private val ingredientRepository: IngredientRepository,
     private val userRepository: UserRepository,
+    private val ratingRepository: RatingRepository,
 ) {
 
     //TODO: exception handling
@@ -66,17 +72,28 @@ class RecipeService(
         recipeRepository.deleteById(id)
     }
 
-    fun likeRecipe(userId: Long, recipeId: Long){
-        recipeLikesRepository.save(RecipeLikes(userRepository.findById(userId).get(),recipeRepository.findById(recipeId).get()))
+    fun favoriteRecipe(userId: Long, recipeId: Long){
+        favoriteRepository.save(Favorite(userRepository.findById(userId).get(),recipeRepository.findById(recipeId).get()))
     }
 
-    fun getLikedRecipesForUser(userId: Long): List<Recipe> {
-        return recipeRepository.findByRecipeLikes_User_Id(userId)
+    fun getFavoritesForUser(userId: Long): List<Recipe> {
+        return recipeRepository.findByFavoritedBy_User_Id(userId)
     }
 
-    fun unlikeRecipe(userId: Long, recipeId: Long): Long {
-        return recipeLikesRepository.deleteByUser_IdAndRecipe_Id(userId,recipeId)
+    fun unfavoriteRecipe(userId: Long, recipeId: Long): Long {
+        return  favoriteRepository.deleteByUserAndRecipe(userRepository.findById(userId).get(),recipeRepository.findById(recipeId).get())
+        //return favoriteRepository.deleteByUser_IdAndRecipe_Id(userId,recipeId)
     }
+
+    //Todo  limit value input to 1 - 5
+    fun rateRecipe(value: Int, userId: Long,recipeId: Long){
+        ratingRepository.save(Rating(value,userRepository.findById(userId).get(),recipeRepository.findById(recipeId).get()))
+    }
+
+    fun deleteRating(userId: Long, recipeId: Long):Long{
+        return ratingRepository.deleteByUserAndRecipe(userRepository.findById(userId).get(),recipeRepository.findById(recipeId).get())
+    }
+
 
 
     //ToDO alles

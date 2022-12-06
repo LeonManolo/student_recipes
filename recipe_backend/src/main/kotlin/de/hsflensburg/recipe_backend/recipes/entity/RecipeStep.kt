@@ -26,7 +26,7 @@ class RecipeStep (
     var imageUrl: String? = null,
 
 ) {
-    @OneToMany(mappedBy = "recipeStep", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "recipeStep", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JsonManagedReference
     @OrderBy("created_at")
     var ingredients: MutableSet<IngredientInfo> = mutableSetOf()

@@ -1,7 +1,5 @@
-package de.hsflensburg.recipe_backend.recipes.entity
+package de.hsflensburg.recipe_backend.associations.entity
 
-import com.fasterxml.jackson.annotation.JsonBackReference
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import de.hsflensburg.recipe_backend.users.entity.User
 import org.hibernate.annotations.CreationTimestamp
@@ -9,9 +7,10 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name = "recipe_likes",
-    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "recipe_id"])],)
-class RecipeLikes (
+@Table(name = "favorite",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "recipe_id"])]
+)
+class Favorite (
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)

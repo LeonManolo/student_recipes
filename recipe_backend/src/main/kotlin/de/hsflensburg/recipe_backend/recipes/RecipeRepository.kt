@@ -7,8 +7,6 @@ interface RecipeRepository: JpaRepository<Recipe, Long> {
     fun findByTotalCaloriesGreaterThanEqual(totalCalories: Double): Iterable<Recipe>
 
 
-    fun findByRecipeLikes_User_Id(id: Long): List<Recipe>
-
-
+    fun findByFavoritedBy_User_Id(id: Long): List<Recipe>
 
 }

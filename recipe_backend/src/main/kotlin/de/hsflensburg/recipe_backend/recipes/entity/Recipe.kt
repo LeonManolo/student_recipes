@@ -1,6 +1,8 @@
 package de.hsflensburg.recipe_backend.recipes.entity
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import de.hsflensburg.recipe_backend.associations.entity.Favorite
+import de.hsflensburg.recipe_backend.associations.entity.Rating
 import de.hsflensburg.recipe_backend.users.entity.User
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
@@ -27,6 +29,7 @@ class Recipe(
     var author: User,
 
 ) {
+    //Orhanremoval ist noetig fuer update
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
     @OrderBy("step_number ASC") // aufsteigend nach step_number sortieren
@@ -44,8 +47,11 @@ class Recipe(
     @Column(name = "id")
     val id: Long? = null
 
-    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var recipeLikes: MutableSet<RecipeLikes> = mutableSetOf()
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
+    var favoritedBy: MutableSet<Favorite> = mutableSetOf()
+
+    @OneToMany(mappedBy = "recipe",cascade = [CascadeType.ALL])
+    var ratingsOfRecipe: MutableSet<Rating> = mutableSetOf()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

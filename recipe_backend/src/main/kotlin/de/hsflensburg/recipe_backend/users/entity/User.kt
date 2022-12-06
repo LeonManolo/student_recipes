@@ -3,7 +3,8 @@ package de.hsflensburg.recipe_backend.users.entity
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import de.hsflensburg.recipe_backend.recipes.entity.RecipeLikes
+import de.hsflensburg.recipe_backend.associations.entity.Rating
+import de.hsflensburg.recipe_backend.associations.entity.Favorite
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import org.hibernate.annotations.CreationTimestamp
 import java.util.Date
@@ -30,7 +31,7 @@ class User (
     var imageUrl: String? = null,
 
 ){
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", orphanRemoval = true)
     @JsonBackReference
     val recipes: MutableSet<Recipe> = mutableSetOf()
 
@@ -43,7 +44,10 @@ class User (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
     @JsonManagedReference
-    var likedRecipes: MutableSet<RecipeLikes> = mutableSetOf()
+    var favoriteRecipes: MutableSet<Favorite> = mutableSetOf()
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+    var ratingsCreatedByUser: MutableSet<Rating> = mutableSetOf()
 }
