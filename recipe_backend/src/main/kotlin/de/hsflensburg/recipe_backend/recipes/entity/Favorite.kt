@@ -1,4 +1,4 @@
-package de.hsflensburg.recipe_backend.associations.entity
+package de.hsflensburg.recipe_backend.recipes.entity
 
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import de.hsflensburg.recipe_backend.users.entity.User

@@ -1,6 +1,6 @@
-package de.hsflensburg.recipe_backend.associations;
+package de.hsflensburg.recipe_backend.recipes.repository;
 
-import de.hsflensburg.recipe_backend.associations.entity.Favorite
+import de.hsflensburg.recipe_backend.recipes.entity.Favorite
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import de.hsflensburg.recipe_backend.users.entity.User
 import org.springframework.data.jpa.repository.JpaRepository

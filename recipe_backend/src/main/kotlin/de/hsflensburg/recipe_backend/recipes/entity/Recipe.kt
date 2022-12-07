@@ -1,8 +1,7 @@
 package de.hsflensburg.recipe_backend.recipes.entity
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import de.hsflensburg.recipe_backend.associations.entity.Favorite
-import de.hsflensburg.recipe_backend.associations.entity.Rating
+import de.hsflensburg.recipe_backend.recipes.constants.RecipeConstants
 import de.hsflensburg.recipe_backend.users.entity.User
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
@@ -28,15 +27,18 @@ class Recipe(
     @JsonManagedReference
     var author: User,
 
-) {
+    ) {
     //Orhanremoval ist noetig fuer update
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
     @OrderBy("step_number ASC") // aufsteigend nach step_number sortieren
     var steps: MutableSet<RecipeStep> = mutableSetOf()
 
-    @Formula(value = "(SELECT SUM(ingredient_info.amount / 100 * ingredient.calories) FROM recipe INNER JOIN recipe_step ON recipe.id = recipe_step.recipe_id INNER JOIN ingredient_info ON recipe_step.id = ingredient_info.recipe_step_id INNER JOIN ingredient ON ingredient_info.ingredient_id = ingredient.id WHERE recipe.id = id)")
+    @Formula(RecipeConstants.CALORIES_FORMULA)
     val totalCalories: Double = 0.0
+
+    @Column(name ="like_count")
+    var likeCount: Int = 0
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

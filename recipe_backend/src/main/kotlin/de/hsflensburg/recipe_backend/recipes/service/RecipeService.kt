@@ -1,19 +1,19 @@
-package de.hsflensburg.recipe_backend.recipes
+package de.hsflensburg.recipe_backend.recipes.service
 
-import de.hsflensburg.recipe_backend.associations.FavoriteRepository
-import de.hsflensburg.recipe_backend.associations.RatingRepository
+import de.hsflensburg.recipe_backend.recipes.repository.FavoriteRepository
+import de.hsflensburg.recipe_backend.recipes.repository.RatingRepository
 import de.hsflensburg.recipe_backend.ingredients.IngredientRepository
 import de.hsflensburg.recipe_backend.ingredients.entity.IngredientInfo
 import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
-import de.hsflensburg.recipe_backend.associations.entity.Favorite
-import de.hsflensburg.recipe_backend.associations.entity.Rating
+import de.hsflensburg.recipe_backend.recipes.entity.Rating
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeStep
+import de.hsflensburg.recipe_backend.recipes.repository.RecipeRepository
 import de.hsflensburg.recipe_backend.users.UserRepository
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import javax.validation.Valid
-import javax.validation.constraints.Size
+import org.springframework.web.server.ResponseStatusException
 
 @Service
 @Transactional // muss rein damit @Formula funktioniert
@@ -27,15 +27,18 @@ class RecipeService(
 
     //TODO: exception handling
     fun createRecipe(recipe: CreateRecipeRequestDto): Recipe {
+        val user = userRepository.findById(recipe.authorId).orElseThrow {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${recipe.authorId} not found")
+        }
+
         val recipeToSave = Recipe(
             title = recipe.title,
             description = recipe.description,
             servings = recipe.servings,
-            author = userRepository.findById(recipe.authorId).get(),
+            author = user,
         )
         val savedRecipe = recipeRepository.save(recipeToSave)
-        println(recipeToSave.id)
-        println(savedRecipe.id)
+
         recipe.steps.mapIndexed { index, step ->
             val recipeStep = RecipeStep( // wieso kriegt recipeStep die recipe_id automatisch?
                 stepNumber = index,
@@ -60,8 +63,10 @@ class RecipeService(
 
     }
 
-    fun getRecipe(id: Long): Recipe? {
-        return recipeRepository.findById(id).orElse(null)
+    fun getRecipe(id: Long): Recipe {
+        return recipeRepository.findById(id).orElseThrow {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with id $id not found")
+        }
     }
 
     fun getRecipes(): List<Recipe> {
@@ -72,34 +77,12 @@ class RecipeService(
         recipeRepository.deleteById(id)
     }
 
-    fun favoriteRecipe(userId: Long, recipeId: Long){
-        favoriteRepository.save(Favorite(userRepository.findById(userId).get(),recipeRepository.findById(recipeId).get()))
-    }
-
-    fun getFavoritesForUser(userId: Long): List<Recipe> {
+    fun getFavoriteRecipesForUser(userId: Long): List<Recipe> {
         return recipeRepository.findByFavoritedBy_User_Id(userId)
     }
 
-    fun unfavoriteRecipe(userId: Long, recipeId: Long): Long {
-        return  favoriteRepository.deleteByUserAndRecipe(userRepository.findById(userId).get(),recipeRepository.findById(recipeId).get())
-        //return favoriteRepository.deleteByUser_IdAndRecipe_Id(userId,recipeId)
-    }
-
-    //Todo  limit value input to 1 - 5
-    fun rateRecipe(value: Int, userId: Long,recipeId: Long){
-        ratingRepository.save(Rating(value,userRepository.findById(userId).get(),recipeRepository.findById(recipeId).get()))
-    }
-
-    fun deleteRating(userId: Long, recipeId: Long):Long{
-        return ratingRepository.deleteByUserAndRecipe(userRepository.findById(userId).get(),recipeRepository.findById(recipeId).get())
-    }
-
-
-
-    //ToDO alles
-
     fun updateRecipe(id: Long, recipeDTO: CreateRecipeRequestDto): Recipe {
-        val recipe = recipeRepository.findById(id).orElseThrow { Exception("Recipe not found") }
+        val recipe = getRecipe(id)
 
         recipe.steps.clear()
 
@@ -127,8 +110,6 @@ class RecipeService(
         recipe.servings = recipeDTO.servings
         recipe.author = userRepository.findById(recipeDTO.authorId).get()
 
-        val result = recipeRepository.save(recipe)
-        return result
-
+        return recipeRepository.save(recipe)
     }
 }

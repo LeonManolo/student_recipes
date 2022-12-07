@@ -1,4 +1,4 @@
-package de.hsflensburg.recipe_backend.recipes
+package de.hsflensburg.recipe_backend.recipes.repository
 
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import org.springframework.data.jpa.repository.JpaRepository

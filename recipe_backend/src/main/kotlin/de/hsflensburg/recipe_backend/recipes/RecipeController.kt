@@ -2,13 +2,20 @@ package de.hsflensburg.recipe_backend.recipes
 
 import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
+import de.hsflensburg.recipe_backend.recipes.service.FavoriteService
+import de.hsflensburg.recipe_backend.recipes.service.RatingService
+import de.hsflensburg.recipe_backend.recipes.service.RecipeService
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/recipes")
-class RecipeController(val recipeService: RecipeService) {
+class RecipeController(
+    private val recipeService: RecipeService,
+    private val favoriteService: FavoriteService,
+    private val ratingService: RatingService,
+    ) {
     @PostMapping
     fun createRecipe(@RequestBody @Valid recipe: CreateRecipeRequestDto) {
         recipeService.createRecipe(recipe)
@@ -32,5 +39,11 @@ class RecipeController(val recipeService: RecipeService) {
     @DeleteMapping("/{id}")
     fun deleteRecipe(@PathVariable id: Long){
        recipeService.deleteRecipe(id)
+    }
+
+    @PostMapping("favorites/{recipeId}")
+    fun addFavorite(@PathVariable recipeId: Long) {
+        val userId = 1L
+        favoriteService.favoriteRecipe(userId, recipeId)
     }
 }
