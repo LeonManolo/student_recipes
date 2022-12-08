@@ -1,5 +1,11 @@
 import img from '../public/food/pizza3.png'
 import Image from 'next/image';
+import { FiClock } from "react-icons/fi";
+import { FiThumbsUp } from "react-icons/fi";
+import { HiFire } from "react-icons/hi";
+
+
+
 /* import CSS from 'csstype';
 
 const h1Styles: CSS.Properties = {
@@ -15,21 +21,28 @@ const h1Styles: CSS.Properties = {
 
 export default function RecipeOverview({ children, ...props }: any) {
     return (
-        <div className="card shadow-xl bg-custom-first">
+        <div className="card card-compact w-96 shadow-xl bg-base-100">
+            <Image className='rounded-t-xl' src={img} alt="recipe" width={500} height={500} />
             <div className="card-body">
-                <Image className='rounded-2xl' src={img} alt="recipe" width={300} height={300} />
-                <h1 className="card-title">Pizza </h1>
-                <h2>einfach lecker</h2>
-                <div className="rating gap-1">
-                    <input type="radio" name="rating-3" className="mask mask-heart bg-red-400" />
-                    <input type="radio" name="rating-3" className="mask mask-heart bg-orange-400" />
-                    <input type="radio" name="rating-3" className="mask mask-heart bg-yellow-400" />
-                    <input type="radio" name="rating-3" className="mask mask-heart bg-lime-400" />
-                    <input type="radio" name="rating-3" className="mask mask-heart bg-green-400" />
+                <div className='flex flex-col'>
+                    <h1 className="card-title text-3xl">Pizza mit Gemüse</h1>
+                    <div className="rating gap-1 my-4">
+                        <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                        <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                        <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                        <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                        <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                    </div>
                 </div>
-                <p>Preis</p>
-                <p>Zubereitungsdauer</p>
-                <p>Schwierigkeit</p>
+                <h3 className='text-slate-500'>einfach lecker</h3>
+                <div className='flex flex-row'>
+                    <HiFire size="20" className='mr-1'></HiFire>
+                    <p>Kalorien</p>
+                    <FiClock size="20" className='mr-1'></FiClock>
+                    <p>Zubereitungsdauer</p>
+                    <FiThumbsUp size="20" className='mr-1'></FiThumbsUp>
+                    <p>Gefällt mir</p>
+                </div>
             </div>
         </div>
     )

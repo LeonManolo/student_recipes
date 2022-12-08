@@ -1,22 +1,63 @@
 import RecipeOverview from '../../../components/RecipeOverview';
 import RecipeTable from '../../../components/RecipeTable';
+import Image from 'next/image';
+import img from '../../../public/food/pizza3.png'
+import { FiClock } from "react-icons/fi";
+import { FiThumbsUp } from "react-icons/fi";
+import { HiFire } from "react-icons/hi";
 export default async function RecipeDetail() {
   return (
-    <div className='flex justify-center mt-16'>
-      <div className='card shadow-xl w-3/4'>
-        <div className='card-body flex-row justify-center'>
-          <div> <RecipeOverview></RecipeOverview></div>
-          <div className="rating rating-lg">
-            <input type="radio" name="rating-1" className="mask mask-star bg-yellow-400" />
+    <div className='flex justify-center '>
+      <div className='card shadow-xl w-full'>
+        <div className='card-body'>
+          <div className='flex justify-center mt-16'>
+            <h1 className='text-3xl '>Pizza mit Gemüse</h1>
           </div>
-          <div className='px-24 py-2'><RecipeTable></RecipeTable></div>
-          <div className='w-1/3 h-1/3'>
-            <div className="card shadow-xl">
-              <div className="card-body bg-custom-third rounded-2xl">
-                <h2 className="card-title">Zubereitung</h2>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
+          <div className='flex flex-col justify-center mt-16'>
+            <div className='flex justify-center'>
+              <div>
+                <Image className='rounded-xl' src={img} alt="recipe" width={750} height={750} />
+                <div className='flex flex-row ml-16 mt-4'>
+                  <HiFire size="20" className='mr-1'></HiFire>
+                  <p>Kalorien</p>
+                  <FiClock size="20" className='mr-1'></FiClock>
+                  <p>Zubereitungsdauer</p>
+                  <FiThumbsUp size="20" className='mr-1'></FiThumbsUp>
+                  <p>Gefällt mir</p>
+                </div>
+                <div className='flex flex-row'>
+                  <div className="rating gap-1 m-4">
+                    <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                    <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                    <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                    <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                    <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                  </div>
+                  <h2 className='flex my-2'>Bewerten</h2>
+                  <div className='flex flex-row ml-8'>
+                    <div className="rating rating-lg m-2">
+                      <input type="radio" name="rating-1" className="mask mask-star bg-yellow-400" />
+                    </div>
+                    <h2 className='flex my-2'>Als Favorit hinzufügen</h2>
+                  </div>
+                </div>
+
+              </div>
+              <div className='mx-12 py-2'><RecipeTable></RecipeTable></div>
+            </div>
+            <div className='flex justify-center'>
+              <div className='w-1/2 h-1/3'>
+                <div className="card shadow-xl">
+                  <div className="card-body rounded-2xl">
+                    <h2 className="card-title">Zubereitung</h2>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi aliquet eleifend massa pellentesque vehicula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Etiam lectus lectus, auctor at facilisis ut, porttitor et felis. Curabitur elementum dictum sapien vel iaculis. Nullam a metus rhoncus augue commodo fermentum sit amet sit amet lorem. Donec semper neque vel ultrices placerat. Quisque at massa ac libero efficitur euismod suscipit quis felis. Curabitur pharetra eros a nisi finibus rhoncus. Maecenas augue odio, scelerisque sit amet eleifend at, malesuada non tellus. Praesent id est at justo sagittis ornare. Ut elementum posuere felis, vel finibus arcu dignissim sed. Pellentesque pulvinar sed ligula sit amet rhoncus. Suspendisse vitae lacus porttitor, finibus neque ac, eleifend sapien. Donec fringilla auctor sapien in congue.
+
+                      Nullam gravida turpis egestas sollicitudin commodo. Praesent et purus diam. Integer eget viverra augue. Aliquam erat volutpat. Vivamus ut ultrices ipsum, in iaculis nibh. Vivamus mattis porttitor magna, non porta velit semper bibendum. Proin eget arcu quis nisl luctus venenatis eget ut leo.
+
+                      Vivamus tempor maximus efficitur. Mauris volutpat volutpat mauris, et tristique nunc volutpat quis. Praesent nunc nulla, dignissim ut accumsan et, dictum nec ipsum. Sed gravida in urna id laoreet. Vivamus quis enim ut nunc condimentum bibendum. Praesent magna sapien, blandit nec vulputate a, dignissim vitae dolor. Sed vehicula sem at lacus vestibulum, ut convallis erat luctus. Mauris nec leo libero.</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -9,12 +9,17 @@ export default async function Recipes({ params }: any) {
   const id = params.id;
   return (
     <div >
-      <Tab />
-      <div className='flex p-4'><DropDown /></div>
-      <div>
-        <div className='flex flex-row flex-wrap justify-center'>
+      <div className='flex flex-row'>
+        <div className='card shadow-xlw-1/5 h-1/3 bg-base-100 ml-4 mt-10'>
+          <div className='card-body'>
+            <h2 className='text-xl'>Rezepte filtern</h2>
+            <div className='flex'><Tab /></div>
+            <div className='flex pt-4'><DropDown /></div>
+          </div>
+        </div>
+        <div className='flex flex-row-reverse flex-wrap w-3/4'>
           {recipes.map((element, index) => (
-            <div key={index} className='flex w-1/5 p-4 items-center justify-center'>
+            <div key={index} className='flex p-4'>
               <Link href="recipes/{id}" ><RecipeOverview /> </Link>
             </div>
           ))}
