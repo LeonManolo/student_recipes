@@ -1,5 +1,6 @@
 package de.hsflensburg.recipe_backend.categories.entity
 
+import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import javax.persistence.*
 
 //Todo many to many mit recipe
@@ -17,6 +18,10 @@ class Category(
 
 
 ){
+
+    @OneToMany(mappedBy = "category", cascade = [CascadeType.ALL])
+    var recipes: MutableSet<CategoryRecipe> = mutableSetOf()
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)

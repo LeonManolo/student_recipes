@@ -1,6 +1,7 @@
 package de.hsflensburg.recipe_backend.recipes.entity
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import de.hsflensburg.recipe_backend.categories.entity.CategoryRecipe
 import de.hsflensburg.recipe_backend.recipes.constants.RecipeConstants
 import de.hsflensburg.recipe_backend.users.entity.User
 import org.hibernate.Hibernate
@@ -54,6 +55,9 @@ class Recipe(
 
     @OneToMany(mappedBy = "recipe",cascade = [CascadeType.ALL])
     var ratingsOfRecipe: MutableSet<Rating> = mutableSetOf()
+
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
+    var categories: MutableSet<CategoryRecipe> = mutableSetOf()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
