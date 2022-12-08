@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import de.hsflensburg.recipe_backend.shared.LanguageSelection
 import org.hibernate.annotations.Formula
 import org.hibernate.annotations.Type
+import org.springframework.transaction.annotation.Transactional
 import javax.persistence.*
 
 @Entity
@@ -35,6 +36,14 @@ class Ingredient(
     var fat: Int,
 
 ) {
+
+    @PrePersist
+    @PreUpdate
+    @PreRemove
+    @Transactional
+    fun updateTotalCalories() {
+        ingredientInfos.forEach { it.updateTotalCalories() }
+    }
 
     //Todo gucken ob loeschbar ist
     @OneToMany(mappedBy = "ingredient", cascade = [CascadeType.ALL])

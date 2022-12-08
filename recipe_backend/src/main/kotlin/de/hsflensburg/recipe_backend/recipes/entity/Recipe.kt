@@ -7,6 +7,7 @@ import de.hsflensburg.recipe_backend.users.entity.User
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Formula
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import javax.persistence.*
 
@@ -35,8 +36,8 @@ class Recipe(
     @OrderBy("step_number ASC") // aufsteigend nach step_number sortieren
     var steps: MutableSet<RecipeStep> = mutableSetOf()
 
-    @Formula(RecipeConstants.CALORIES_FORMULA)
-    val totalCalories: Double = 0.0
+    //@Formula(RecipeConstants.CALORIES_FORMULA)
+    var totalCalories: Double = 0.0
 
     @Column(name ="like_count")
     var likeCount: Int = 0
@@ -58,6 +59,20 @@ class Recipe(
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
     var categories: MutableSet<CategoryRecipe> = mutableSetOf()
+
+    @PrePersist
+    @PreUpdate
+    @Transactional
+    fun updateTotalCalories() {
+        //TODO: noch bei ingredient table anpassen
+        var totalCalories = 0.0
+        for (step in steps) {
+            for (ingredientInfo in step.ingredients) {
+                totalCalories += ingredientInfo.amount / 100 * ingredientInfo.ingredient!!.calories
+            }
+        }
+        this.totalCalories = totalCalories
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

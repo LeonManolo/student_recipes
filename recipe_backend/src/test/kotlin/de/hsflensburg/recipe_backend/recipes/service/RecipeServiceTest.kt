@@ -162,6 +162,15 @@ internal class RecipeServiceTest @Autowired constructor(
         val totalCalories =
             (recipeDto.steps[0].ingredients[0].amount / 100 * ingredientPasta.calories) + (recipeDto.steps[1].ingredients[0].amount / 100 * ingredientTomato.calories)
         assertEquals(totalCalories, result.totalCalories)
+
+        val ingredient = ingredientRepository.findById(ingredientPasta.id!!)
+        ingredient.get().calories = 500;
+        ingredientRepository.save(ingredient.get())
+
+        val totalCalories2 = recipeRepository.findById(result.id!!).get().totalCalories
+        val totalCalories2expected =
+            (recipeDto.steps[0].ingredients[0].amount / 100 * 500) + (recipeDto.steps[1].ingredients[0].amount / 100 * ingredientTomato.calories)
+        assertEquals(totalCalories2expected, totalCalories2)
     }
 
     @Test

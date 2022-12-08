@@ -26,6 +26,15 @@ class RecipeStep (
     var imageUrl: String? = null,
 
 ) {
+
+    @PrePersist
+    @PreUpdate
+    @PreRemove
+    fun updateTotalCalories() {
+        // Rufen Sie die updateTotalCalories()-Methode des zugehörigen Rezepts auf, um die Gesamtkalorien zu aktualisieren
+        recipe!!.updateTotalCalories()
+    }
+
     @OneToMany(mappedBy = "recipeStep", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JsonManagedReference
     @OrderBy("created_at")

@@ -110,6 +110,6 @@ class RecipeService(
         recipe.servings = recipeDTO.servings
         recipe.author = userRepository.findById(recipeDTO.authorId).get()
 
-        return recipeRepository.save(recipe)
+        return recipe
     }
 }

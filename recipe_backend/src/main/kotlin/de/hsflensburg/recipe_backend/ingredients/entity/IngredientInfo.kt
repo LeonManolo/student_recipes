@@ -30,6 +30,13 @@ class IngredientInfo(
 
 
 ) {
+    @PrePersist
+    @PreUpdate
+    @PreRemove
+    fun updateTotalCalories() {
+        // Rufen Sie die updateTotalCalories()-Methode des zugehörigen Rezepts auf, um die Gesamtkalorien zu aktualisieren
+        recipeStep!!.recipe!!.updateTotalCalories()
+    }
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
