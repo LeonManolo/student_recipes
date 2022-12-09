@@ -11,10 +11,10 @@ jobs:
   backend:
     runs-on: ubuntu-latest
     steps:
+      - name: Set working directory
+        working-directory: recipe_backend
       - name: Setup Actions
         uses: actions/checkout@v3
-      - name: Moving directory
-        run: mv -f recipe_backend/* recipe_backend/. gradlew .
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
@@ -25,9 +25,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: cd recipe_backend && ./gradlew build
-      - name: Move app.jar to current directory
-        run: mv recipe_backend/build/libs/app.jar .
+        run: ./gradlew build
       - name: Verify checksum of app.jar
         run: sha256sum app.jar
          
