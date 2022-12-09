@@ -11,9 +11,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body id="__next">
         <nav>
-          <div className="navbar bg-base-100">
+          <div className="navbar bg-base-100 text-base-100">
             <div className="navbar-start">
-              <div className="dropdown">
+              {/*               <div className="dropdown">
                 <label tabIndex={0} className="btn btn-ghost lg:hidden">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -55,14 +55,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <a>Item 3</a>
                   </li>
                 </ul>
-              </div>
-              <Link href="/" className="btn btn-ghost normal-case text-xl">
+              </div> */}
+              <Link href="/" className="btn btn-ghost normal-case text-xl bg-custom-first hover:bg-custom-second">
                 StudentenKueche
               </Link>
             </div>
             <div className="navbar-center hidden lg:flex">
-              <ul className="menu menu-horizontal p-0">
-                <li>
+              <ul className="menu menu-horizontal p-0 bg-custom-first rounded-xl">
+                {/*                 <li>
                   <a>Item 1</a>
                 </li>
                 <li tabIndex={0}>
@@ -86,14 +86,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                       <a>Submenu 2</a>
                     </li>
                   </ul>
+                </li> */}
+                <li className="">
+                  <Link href="/recipes">Rezepte</Link>
                 </li>
                 <li>
-                  <Link href="/recipes">Recipes</Link>
+                  <Link href="/my-recipes">Meine Rezepte</Link>
                 </li>
+                <li>
+                  <Link href="/new-recipe">Neues Rezept</Link>
+                </li>
+                <li>
+                  <Link href="/favorites">Favoriten</Link>
+                </li>
+
               </ul>
             </div>
-            <div className="navbar-end">
-              <Link href="/recipes/123">Rezept mit id 123</Link>
+            <div className="navbar-end pr-4 ">
+              <Link className="bg-custom-first" href="/profile">Profil</Link>
+              {/*               <Link href="/recipes/123">Rezept mit id 123</Link> */}
             </div>
           </div>
         </nav>

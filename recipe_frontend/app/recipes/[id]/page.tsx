@@ -7,46 +7,46 @@ import { FiThumbsUp } from "react-icons/fi";
 import { HiFire } from "react-icons/hi";
 export default async function RecipeDetail() {
   return (
-    <div className='flex justify-center '>
-      <div className='card shadow-xl w-full'>
-        <div className='card-body'>
-          <div className='flex justify-center mt-16'>
-            <h1 className='text-3xl '>Pizza mit Gemüse</h1>
+    <div className='card shadow-xl h-full w-full'>
+      <div className='card-body'>
+        <div className='flex flex-col ml-8'>
+          <div className='flex mt-8 my-2'>
+            <h1 className='text-3xl font-bold'>Pizza mit Gemüse</h1>
           </div>
-          <div className='flex flex-col justify-center mt-16'>
-            <div className='flex justify-center'>
-              <div>
-                <Image className='rounded-xl' src={img} alt="recipe" width={750} height={750} />
-                <div className='flex flex-row ml-16 mt-4'>
+          <div className='flex '>
+            <div className='flex flex-col'>
+              <Image className='rounded-xl' src={img} alt="recipe" width={500} height={500} />
+              <div className='flex justify-center'>
+                <div className='flex flex-row mt-4'>
                   <HiFire size="20" className='mr-1'></HiFire>
                   <p>Kalorien</p>
-                  <FiClock size="20" className='mr-1'></FiClock>
+                  <FiClock size="20" className='ml-4 mr-1'></FiClock>
                   <p>Zubereitungsdauer</p>
-                  <FiThumbsUp size="20" className='mr-1'></FiThumbsUp>
+                  <FiThumbsUp size="20" className='ml-4 mr-1'></FiThumbsUp>
                   <p>Gefällt mir</p>
                 </div>
-                <div className='flex flex-row'>
-                  <div className="rating gap-1 m-4">
-                    <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
-                    <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
-                    <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
-                    <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
-                    <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
-                  </div>
-                  <h2 className='flex my-2'>Bewerten</h2>
-                  <div className='flex flex-row ml-8'>
-                    <div className="rating rating-lg m-2">
-                      <input type="radio" name="rating-1" className="mask mask-star bg-yellow-400" />
-                    </div>
-                    <h2 className='flex my-2'>Als Favorit hinzufügen</h2>
-                  </div>
-                </div>
-
               </div>
-              <div className='mx-12 py-2'><RecipeTable></RecipeTable></div>
+            </div>
+            <div>
+              <div className='flex flex-row'>
+                <div className="rating rating-lg m-2">
+                  <input type="radio" name="rating-1" className="mask mask-star bg-yellow-400" />
+                </div>
+{/*                 <h2 className='flex my-2'>Favorit</h2> */}
+              </div>
+              <div className='flex flex-col'>
+                <div className="rating gap-1 m-4">
+                  <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                  <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                  <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                  <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                  <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
+                </div>
+{/*                 <h2 className='flex my-2'>Bewerten</h2> */}
+              </div>
             </div>
             <div className='flex justify-center'>
-              <div className='w-1/2 h-1/3'>
+              <div className='w-full h-1/3 mx-32'>
                 <div className="card shadow-xl">
                   <div className="card-body rounded-2xl">
                     <h2 className="card-title">Zubereitung</h2>

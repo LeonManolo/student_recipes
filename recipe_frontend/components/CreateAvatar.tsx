@@ -1,19 +1,24 @@
 import Image from 'next/image';
 import img from '../public/profile/profile-picture.png';
+import { HiStar } from "react-icons/hi";
 export default function CreateAvatar({ children, ...props }: any) {
     return (
-        <div className="card card-side bg-custom-first shadow-xl p-10">
+        <div className="card card-side shadow-xl p-10">
             <figure><div className="avatar">
                 <div className="p-4">
                     <div className="w-1/2 rounded">
-                        <Image className="rounded border-double border-8 border-custom-forth" src={img} alt='profile-picture' width={300} height={300} />
+                        <Image className="rounded border-double border-8" src={img} alt='profile-picture' width={300} height={300} />
                     </div>
                     <div className="form-control max-w-xs w-3/4 pt-2">
-                        <input type="file" className="file-input file-input-bordered max-w-xs" />
+                        <input type="file" className="file-input file-input-bordered max-w-xs " />
                         <label className="label">
                             <span className="label-text-alt">Neues Bild hochladen</span>
                         </label>
                     </div>
+                    <button className="btn gap-2 bg-custom-first mt-8 hover:bg-custom-second">
+                        Favoriten
+                        <HiStar size={24}></HiStar>
+                    </button>
                 </div>
             </div></figure>
             <div className="card-body">

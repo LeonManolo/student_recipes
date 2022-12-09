@@ -1,4 +1,4 @@
-import DropDown from '../../components/DropDown';
+import Filter from '../../components/Filter';
 import RecipeOverview from '../../components/RecipeOverview';
 import Tab from '../../components/Tab';
 import Link from "next/link";
@@ -10,14 +10,15 @@ export default async function Recipes({ params }: any) {
   return (
     <div >
       <div className='flex flex-row'>
-        <div className='card shadow-xlw-1/5 h-1/3 bg-base-100 ml-4 mt-10'>
+        <div className='card shadow-xl h-1/3 bg-base-100 ml-8'>
           <div className='card-body'>
-            <h2 className='text-xl'>Rezepte filtern</h2>
+            <h2>Filter</h2>
             <div className='flex'><Tab /></div>
-            <div className='flex pt-4'><DropDown /></div>
+            <h2>Kategorie</h2>
+            <div className='flex'><Filter /></div>
           </div>
         </div>
-        <div className='flex flex-row-reverse flex-wrap w-3/4'>
+        <div className='flex flex-row-reverse flex-wrap w-full'>
           {recipes.map((element, index) => (
             <div key={index} className='flex p-4'>
               <Link href="recipes/{id}" ><RecipeOverview /> </Link>

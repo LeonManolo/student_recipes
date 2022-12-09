@@ -5,7 +5,6 @@ import { FiThumbsUp } from "react-icons/fi";
 import { HiFire } from "react-icons/hi";
 
 
-
 /* import CSS from 'csstype';
 
 const h1Styles: CSS.Properties = {
@@ -21,8 +20,8 @@ const h1Styles: CSS.Properties = {
 
 export default function RecipeOverview({ children, ...props }: any) {
     return (
-        <div className="card card-compact w-96 shadow-xl bg-base-100">
-            <Image className='rounded-t-xl' src={img} alt="recipe" width={500} height={500} />
+        <div className="card card-compact w-96 shadow-xl bg-base-100 hover:scale-105 transition-all duration-500 cursor-pointer">
+            <Image className='rounded-t-xl ' src={img} alt="recipe" width={500} height={500} />
             <div className="card-body">
                 <div className='flex flex-col'>
                     <h1 className="card-title text-3xl">Pizza mit Gemüse</h1>
