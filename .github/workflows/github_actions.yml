@@ -11,8 +11,6 @@ jobs:
   backend:
     runs-on: ubuntu-latest
     steps:
-      - name: Set working directory
-        working-directory: recipe_backend
       - name: Setup Actions
         uses: actions/checkout@v3
       - name: Setup Java
@@ -22,7 +20,8 @@ jobs:
           distribution: temurin
           cache: gradle
         
-      - name: Grant execute permission for gradlew
+      - name: Grant execute permission for gradlew and set working directory
+        working-directory: recipe_backend
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
