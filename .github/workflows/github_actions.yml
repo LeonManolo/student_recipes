@@ -14,7 +14,7 @@ jobs:
       - name: Setup Actions
         uses: actions/checkout@v3
       - name: Moving directory
-        run: mv -f recipe_backend/* recipe_backend/gradlew .
+        run: mv -f recipe_backend/* recipe_backend/. gradlew .
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
