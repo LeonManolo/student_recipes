@@ -94,12 +94,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <Link href="/my-recipes">Meine Rezepte</Link>
                 </li>
                 <li>
-                  <Link href="/new-recipe">Neues Rezept</Link>
+                  <Link href="/recipes/create-recipe">Neues Rezept</Link>
                 </li>
                 <li>
                   <Link href="/favorites">Favoriten</Link>
                 </li>
-
               </ul>
             </div>
             <div className="navbar-end pr-4 ">
