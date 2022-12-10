@@ -28,7 +28,7 @@ class RecipeController(
     }
 
     @GetMapping
-    fun getRecipes(@Valid @RequestParam sortBy: RecipeFilter) : List<Recipe> {
+    fun getRecipes(@Valid @RequestParam("sort_by") sortBy: RecipeFilter? = null) : List<Recipe> {
         return recipeService.getRecipes(sortBy)
     }
 

@@ -1,10 +1,18 @@
 package de.hsflensburg.recipe_backend.recipes.entity
 
-enum class RecipeFilter(s: String) {
-    NEWEST("newest"),
-    MOST_VIEWED("most_viewed"),
-    BEST_RATED("best_rated"),
-    MOST_FAVORITES("most_favorites"),
-    FAST_TO_COOK("fast_to_cook"),
-    CHEAP("cheap"),
+import com.fasterxml.jackson.annotation.JsonProperty
+
+enum class RecipeFilter {
+    @field:JsonProperty("newest")
+    NEWEST,
+    @field:JsonProperty("most_viewed")
+    MOST_VIEWED,
+    @field:JsonProperty("best_rated")
+    BEST_RATED,
+    @field:JsonProperty("most_favorites")
+    MOST_FAVORITES,
+    @field:JsonProperty("fast_to_cook")
+    FAST_TO_COOK,
+    @field:JsonProperty("cheap")
+    CHEAP,
 }
