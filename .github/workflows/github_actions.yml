@@ -33,6 +33,9 @@ jobs:
       - name: Execute Gradle build
         run: ./gradlew build --scan
         
+      - name: Check contents of build/libs directory
+        run: ls build/libs
+        
       - name: Build container image
       #         run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
 
