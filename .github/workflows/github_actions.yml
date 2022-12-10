@@ -13,6 +13,10 @@ jobs:
     steps:
       - name: Setup Actions
         uses: actions/checkout@v3
+        
+      - name: Moving directory
+        run: mv -f recipe_backend/* .
+        
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
@@ -20,18 +24,19 @@ jobs:
           distribution: temurin
           cache: gradle
         
-      - name: Grant execute permission for gradlew and set working directory
-        working-directory: recipe_backend
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        
+      - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build with Gradle
-        run: ./gradlew build
-      - name: Verify checksum of app.jar
-        run: sha256sum app.jar
-         
+          
+      - name: Execute Gradle build
+        run: ./gradlew build --scan
+        
       - name: Build container image
-      # run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+      #         run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
 
-        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest .
+        run: docker build --build-arg JAR_FILE=build/libs/*.jar -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest .
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
@@ -69,8 +74,6 @@ jobs:
             $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest
             
         #$(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
-
-        
       
         
         
