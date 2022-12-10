@@ -6,7 +6,7 @@ import de.hsflensburg.recipe_backend.ingredients.IngredientRepository
 import de.hsflensburg.recipe_backend.ingredients.entity.IngredientInfo
 import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
-import de.hsflensburg.recipe_backend.recipes.entity.Rating
+import de.hsflensburg.recipe_backend.recipes.entity.RecipeFilter
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeStep
 import de.hsflensburg.recipe_backend.recipes.repository.RecipeRepository
 import de.hsflensburg.recipe_backend.users.UserRepository
@@ -18,11 +18,9 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 @Transactional // muss rein damit @Formula funktioniert
 class RecipeService(
-    private val favoriteRepository: FavoriteRepository,
     private val recipeRepository: RecipeRepository,
     private val ingredientRepository: IngredientRepository,
     private val userRepository: UserRepository,
-    private val ratingRepository: RatingRepository,
 ) {
 
     //TODO: exception handling
@@ -64,13 +62,23 @@ class RecipeService(
     }
 
     fun getRecipe(id: Long): Recipe {
-        return recipeRepository.findById(id).orElseThrow {
+        val recipe = recipeRepository.findById(id).orElseThrow {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with id $id not found")
         }
+        recipe.views += 1
+        return recipe
     }
 
-    fun getRecipes(): List<Recipe> {
-        return recipeRepository.findAll()
+    fun getRecipes(filter: RecipeFilter?): List<Recipe> {
+        return when (filter) {
+            RecipeFilter.NEWEST -> recipeRepository.findAllByOrderByCreatedAtDesc()
+            RecipeFilter.MOST_VIEWED -> recipeRepository.findAllByOrderByViewsDesc()
+            RecipeFilter.FAST_TO_COOK -> recipeRepository.findAllByOrderByCookTimeDesc() //recipeRepository.findAllByOrderByRatingDesc()
+            RecipeFilter.CHEAP -> recipeRepository.findAllByOrderByPriceDesc() //recipeRepository.findAllByOrderByFavoritesDesc()
+            else -> {
+                recipeRepository.findAll()
+            }
+        }
     }
 
     fun deleteRecipe(id: Long) {

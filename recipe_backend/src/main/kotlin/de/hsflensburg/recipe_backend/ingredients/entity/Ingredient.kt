@@ -24,16 +24,16 @@ class Ingredient(
     var title: String,
 
     @Column(name = "calories", nullable = false)
-    var calories: Int,
+    var calories: Double,
 
     @Column(name = "protein", nullable = false)
-    var protein: Int, // TODO: vielleicht in double umwandeln
+    var protein: Double, // TODO: vielleicht in double umwandeln
 
     @Column(name = "carbs",nullable = false)
-    var carbohydrates: Int,
+    var carbohydrates: Double,
 
     @Column(name = "fat", nullable = false)
-    var fat: Int,
+    var fat: Double,
 
 ) {
 

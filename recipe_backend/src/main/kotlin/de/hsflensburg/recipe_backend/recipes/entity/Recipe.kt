@@ -2,11 +2,12 @@ package de.hsflensburg.recipe_backend.recipes.entity
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import de.hsflensburg.recipe_backend.categories.entity.CategoryRecipe
-import de.hsflensburg.recipe_backend.recipes.constants.RecipeConstants
+import de.hsflensburg.recipe_backend.ingredients.dto.IngredientResponseDto
+import de.hsflensburg.recipe_backend.recipes.extension.sumIngredients
+import de.hsflensburg.recipe_backend.recipes.extension.updateNutritionalData
 import de.hsflensburg.recipe_backend.users.entity.User
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.Formula
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import javax.persistence.*
@@ -29,50 +30,54 @@ class Recipe(
     @JsonManagedReference
     var author: User,
 
+    @Column(name = "price", nullable = false)
+    var price: Double = 0.0,
+
+    @Column(name = "cooking_time", nullable = false)
+    var cookTime : Int = 0,
     ) {
-    //Orhanremoval ist noetig fuer update
-    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
-    @JsonManagedReference
-    @OrderBy("step_number ASC") // aufsteigend nach step_number sortieren
-    var steps: MutableSet<RecipeStep> = mutableSetOf()
-
-    //@Formula(RecipeConstants.CALORIES_FORMULA)
-    var totalCalories: Double = 0.0
-
-    @Column(name ="like_count")
-    var likeCount: Int = 0
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    val createdAt : Date? = null
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     val id: Long? = null
 
+    //Orhanremoval ist noetig fuer update
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @OrderBy("step_number ASC") // aufsteigend nach step_number sortieren
+    var steps: MutableSet<RecipeStep> = mutableSetOf()
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    val createdAt: Date? = null
+
+    @Column(name = "views", nullable = false)
+    var views: Int = 0
+
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
     var favoritedBy: MutableSet<Favorite> = mutableSetOf()
 
-    @OneToMany(mappedBy = "recipe",cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
     var ratingsOfRecipe: MutableSet<Rating> = mutableSetOf()
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
     var categories: MutableSet<CategoryRecipe> = mutableSetOf()
 
+    //@Formula(RecipeConstants.CALORIES_FORMULA)
+    var totalCalories: Double = 0.0
+    var totalProtein: Double = 0.0
+    var totalCarbohydrates: Double = 0.0
+    var totalFat: Double = 0.0
+
+    //@Transient
+    val ingredients: MutableList<IngredientResponseDto>
+        get() = sumIngredients()
+
     @PrePersist
     @PreUpdate
     @Transactional
-    fun updateTotalCalories() {
-        //TODO: noch bei ingredient table anpassen
-        var totalCalories = 0.0
-        for (step in steps) {
-            for (ingredientInfo in step.ingredients) {
-                totalCalories += ingredientInfo.amount / 100 * ingredientInfo.ingredient!!.calories
-            }
-        }
-        this.totalCalories = totalCalories
-    }
+    fun updateNutritionalValues() = updateNutritionalData()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
