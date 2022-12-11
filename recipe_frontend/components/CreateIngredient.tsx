@@ -1,8 +1,12 @@
 "use client";
+
+import CreateIngredientRequestDto from "../utils/dto/CreateIngredientRequestDto";
+import StudentRecipesClient from "../utils/StudentRecipesClient";
+
 export default function CreateIngedrient() {
     return (
         <div className="justify-center">
-            <button onClick={() => createIngedrients()} className="btn btn-outline btn-accent">Button</button>
+            <button onClick={() => createIngredient()} className="btn btn-outline btn-accent">Button</button>
             {/* The button to open modal */}
             <a href="#my-modal-2" className="btn">open modal</a>
             <div className="modal" id="my-modal-2">
@@ -17,24 +21,19 @@ export default function CreateIngedrient() {
         </div >
     );
 
-    async function createIngedrients(): Promise<void> {
-        const json = JSON.stringify({
-            "locale": "de",
-            "title": "Gurke",
-            "calories": 135,
+    async function createIngredient(): Promise<void> {
+        console.log("pressed createIngredient")
+        const ingredient: CreateIngredientRequestDto = {
+            "title": "Kartoffel",
+            "calories": 12,
             "protein": 22,
             "carbohydrates": 12,
             "fat": 33
-        });
+        }
         try {
-            const result = await fetch("https://sea-turtle-app-hqisk.ondigitalocean.app/api/ingredients", {
-                method: "POST", body: json, mode: 'no-cors', headers: {
-                    'Content-Type': 'application/json'
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                },
-            }); // cache no store um bei jedem Seiten aufruf die Rezepte zu fetchen
-            console.log(result.status)
-            console.log("Moin")
+            const recipeClient = new StudentRecipesClient()
+            const success = await recipeClient.createIngredient(ingredient)
+            console.log(success)
         } catch (e: any) {
             console.log(e?.message)
         }
