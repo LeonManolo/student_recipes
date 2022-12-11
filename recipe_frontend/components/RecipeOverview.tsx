@@ -20,7 +20,7 @@ const h1Styles: CSS.Properties = {
 
 export default function RecipeOverview({ children, ...props }: any) {
     return (
-        <div className="card card-compact w-96 shadow-xl bg-base-100 hover:scale-105 transition-all duration-500 cursor-pointer">
+        <div className="card card-compact w-96 h-max shadow-xl bg-base-100 ">
             <Image className='rounded-t-xl ' src={img} alt="recipe" width={500} height={500} />
             <div className="card-body">
                 <div className='flex flex-col'>

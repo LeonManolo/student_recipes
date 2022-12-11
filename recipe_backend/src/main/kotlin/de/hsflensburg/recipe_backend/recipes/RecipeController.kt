@@ -2,6 +2,7 @@ package de.hsflensburg.recipe_backend.recipes
 
 import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
+import de.hsflensburg.recipe_backend.recipes.entity.RecipeFilter
 import de.hsflensburg.recipe_backend.recipes.service.FavoriteService
 import de.hsflensburg.recipe_backend.recipes.service.RatingService
 import de.hsflensburg.recipe_backend.recipes.service.RecipeService
@@ -27,8 +28,8 @@ class RecipeController(
     }
 
     @GetMapping
-    fun getRecipes() : List<Recipe> {
-        return recipeService.getRecipes()
+    fun getRecipes(@Valid @RequestParam("sort_by") sortBy: RecipeFilter? = null) : List<Recipe> {
+        return recipeService.getRecipes(sortBy)
     }
 
     @PatchMapping("/{id}")

@@ -20,7 +20,7 @@ export default async function Recipes({ params }: any) {
         </div>
         <div className='flex flex-row-reverse flex-wrap w-full'>
           {recipes.map((element, index) => (
-            <div key={index} className='flex p-4'>
+            <div key={index} className='flex p-4 hover:scale-105 transition-all duration-500 cursor-pointer'>
               <Link href="recipes/{id}" ><RecipeOverview /> </Link>
             </div>
           ))}

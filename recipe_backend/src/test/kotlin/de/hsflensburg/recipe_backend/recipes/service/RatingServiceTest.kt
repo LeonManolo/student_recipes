@@ -38,14 +38,14 @@ internal class RatingServiceTest @Autowired constructor(
         )
 
         ingredientPasta = ingredientRepository.save(
-            Ingredient(LanguageSelection.English, "Pasta", 122, 1, 3, 4)
+            Ingredient(LanguageSelection.English, "Pasta", 122.0, 1.0, 3.0, 4.0)
         )
         ingredientTomato = ingredientRepository.save(
-            Ingredient(LanguageSelection.English, "Tomato", 45, 3, 66, 12)
+            Ingredient(LanguageSelection.English, "Tomato", 45.0, 3.0, 66.0, 12.0)
         )
 
         ingredientCheese = ingredientRepository.save(
-            Ingredient(LanguageSelection.English, "Cheese", 22, 6, 36, 33)
+            Ingredient(LanguageSelection.English, "Cheese", 22.0, 6.0, 36.0, 33.0)
         )
     }
 

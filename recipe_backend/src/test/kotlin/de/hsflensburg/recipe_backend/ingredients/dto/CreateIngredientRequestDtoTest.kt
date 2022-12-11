@@ -12,10 +12,10 @@ internal class CreateIngredientRequestDtoTest {
         val createIngredientRequestDto = CreateIngredientRequestDto(
             locale = LanguageSelection.German,
             title = "Test",
-            calories = 0,
-            protein = 0,
-            carbohydrates = 0,
-            fat = 0,
+            calories = 0.0,
+            protein = .0,
+            carbohydrates = .0,
+            fat = .0,
         )
         assertTrue(createIngredientRequestDto.isValid())
     }
@@ -25,19 +25,19 @@ internal class CreateIngredientRequestDtoTest {
         val dto = CreateIngredientRequestDto(
             locale = LanguageSelection.German,
             title = "Test",
-            calories = -1,
-            protein = -1,
-            carbohydrates = -1,
-            fat = -1,
+            calories = -1.0,
+            protein = -1.0,
+            carbohydrates = -1.0,
+            fat = -1.0,
         )
         val de = LanguageSelection.German
         assertFalse(dto.isValid())
 
         val dtos = listOf(
-            CreateIngredientRequestDto(de, "Test", -1, 0, 0, 0),
-            CreateIngredientRequestDto(de, "Test", 0, -1, 0, 0),
-            CreateIngredientRequestDto(de, "Test", 0, 0, -1, 0),
-            CreateIngredientRequestDto(de, "Test", 0, 0, 0, -1),
+            CreateIngredientRequestDto(de, "Test", -1.0, 0.0, 0.0, 0.0),
+            CreateIngredientRequestDto(de, "Test", 0.0, -1.0, 0.0, 0.0),
+            CreateIngredientRequestDto(de, "Test", 0.0, 0.0, -1.0, 0.0),
+            CreateIngredientRequestDto(de, "Test", .0, .0, 0.0, -1.0),
         )
         dtos.forEach { assertFalse(it.isValid()) }
     }
@@ -48,17 +48,17 @@ internal class CreateIngredientRequestDtoTest {
         val dto = CreateIngredientRequestDto(
             locale = de,
             title = "Test",
-            calories = 22,
-            protein = 101,
-            carbohydrates = 101,
-            fat = 101,
+            calories = 22.0,
+            protein = 101.0,
+            carbohydrates = 101.0,
+            fat = 101.0,
         )
         assertFalse(dto.isValid())
 
         val dtos = listOf(
-            CreateIngredientRequestDto(de, "Test", 0, 101, 0, 0),
-            CreateIngredientRequestDto(de, "Test", 0, 0, 101, 0),
-            CreateIngredientRequestDto(de, "Test", 0, 0, 0, 101),
+            CreateIngredientRequestDto(de, "Test", 0.0, 101.0, .0, .0),
+            CreateIngredientRequestDto(de, "Test", .0, .0, 101.0, .0),
+            CreateIngredientRequestDto(de, "Test", .0, .0, .0, 101.0),
         )
         dtos.forEach { assertFalse(it.isValid()) }
     }
@@ -68,10 +68,10 @@ internal class CreateIngredientRequestDtoTest {
         val dto = CreateIngredientRequestDto(
             locale = LanguageSelection.German,
             title = "",
-            calories = 0,
-            protein = 0,
-            carbohydrates = 0,
-            fat = 0,
+            calories = 0.0,
+            protein = 0.0,
+            carbohydrates = 0.0,
+            fat = 0.0,
         )
         assertFalse(dto.isValid())
     }

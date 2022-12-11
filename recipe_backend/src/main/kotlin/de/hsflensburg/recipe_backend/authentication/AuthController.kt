@@ -41,13 +41,13 @@ class AuthController(
     @ResponseStatus(HttpStatus.CREATED)
     fun registerUser(@Valid @RequestBody registerDto: RegisterRequestDto) {
         if (userRepository.findByEmail(registerDto.email) != null) { // TODO: richtige existByEmail funktion aufrufen
-            //return ResponseEntity.badRequest().body<Any>("Error: Username is already taken!")
-            throw ResponseStatusException(HttpStatus.CONFLICT, "Email already exists!")        }
+            throw ResponseStatusException(HttpStatus.CONFLICT, "Email already exists!")
+        }
 
         // Create new user's account
         val user = User(
-            "Max",
-            "Mustermann",
+            registerDto.firstName,
+            registerDto.lastName,
             registerDto.email,
             encoder.encode(registerDto.password),
         )
@@ -78,9 +78,7 @@ class AuthController(
 
     @GetMapping("/test")
     fun test(): UserDetailsImpl {
-        //TODO: helper function um die ID des user zu bekommen schreiben
-        val user = SecurityContextHolder.getContext().authentication.principal as UserDetailsImpl
-        return user
+        return SecurityContextHolder.getContext().authentication.principal as UserDetailsImpl
     }
 
 

@@ -48,14 +48,14 @@ internal class RecipeServiceTest @Autowired constructor(
         )
 
         ingredientPasta = ingredientRepository.save(
-            Ingredient(LanguageSelection.English, "Pasta", 122, 1, 3, 4)
+            Ingredient(LanguageSelection.English, "Pasta", 122.0, 1.0, 3.0, 4.0)
         )
         ingredientTomato = ingredientRepository.save(
-            Ingredient(LanguageSelection.English, "Tomato", 45, 3, 66, 12)
+            Ingredient(LanguageSelection.English, "Tomato", 45.0, 3.0, 66.0, 12.0)
         )
 
         ingredientCheese = ingredientRepository.save(
-            Ingredient(LanguageSelection.English, "Cheese", 22, 6, 36, 33)
+            Ingredient(LanguageSelection.English, "Cheese", 22.0, 6.0, 36.0, 33.0)
         )
     }
 
@@ -164,7 +164,7 @@ internal class RecipeServiceTest @Autowired constructor(
         assertEquals(totalCalories, result.totalCalories)
 
         val ingredient = ingredientRepository.findById(ingredientPasta.id!!)
-        ingredient.get().calories = 500;
+        ingredient.get().calories = 500.0;
         ingredientRepository.save(ingredient.get())
 
         val totalCalories2 = recipeRepository.findById(result.id!!).get().totalCalories
@@ -220,6 +220,40 @@ internal class RecipeServiceTest @Autowired constructor(
         )
         assertEquals(recipeDto.steps[1].ingredients[0].amount, result.steps.toList()[1].ingredients.toList()[0].amount)
         assertEquals(recipeDto.steps[1].ingredients[0].unit, result.steps.toList()[1].ingredients.toList()[0].unit)
+    }
+
+    @Test
+    fun `should add up all ingredients as a list as a prop on the Recipe`(){
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            author.id!!,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 50.0, "g"),
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                        IngredientInfoDto(ingredientPasta.id!!, 100.0, "g"),
+
+                        )
+                )
+            )
+        )
+        val id = recipeService.createRecipe(recipeDto).id!!
+        val recipe = recipeService.getRecipe(id)
+        val ingredients = recipe.ingredients
+        println(ingredients)
+        assertEquals(ingredients.size, 2)
+        assertEquals(ingredients[0].id, ingredientPasta.id)
+        assertEquals(ingredients[0].calories,ingredientPasta.calories * 1.5)
+        assertEquals(ingredients[1].calories,ingredientTomato.calories * 0.5)
+
+
     }
 
     @Test

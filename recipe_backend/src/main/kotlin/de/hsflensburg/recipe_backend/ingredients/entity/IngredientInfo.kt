@@ -34,8 +34,7 @@ class IngredientInfo(
     @PreUpdate
     @PreRemove
     fun updateTotalCalories() {
-        // Rufen Sie die updateTotalCalories()-Methode des zugehörigen Rezepts auf, um die Gesamtkalorien zu aktualisieren
-        recipeStep!!.recipe!!.updateTotalCalories()
+        recipeStep!!.recipe!!.updateNutritionalValues()
     }
 
     @CreationTimestamp

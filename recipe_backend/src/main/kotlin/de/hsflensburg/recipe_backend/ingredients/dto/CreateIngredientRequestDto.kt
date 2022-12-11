@@ -15,16 +15,16 @@ data class CreateIngredientRequestDto (
     val title: String,
 
     @field:Range(min = 0)
-    val calories: Int = 0,
+    val calories: Double = .0,
 
     @field:Range(min = 0, max = 100)
-    val protein: Int,
+    val protein: Double = .0,
 
     @field:Range(min = 0, max = 100)
-    val carbohydrates: Int,
+    val carbohydrates: Double = .0,
 
     @field:Range(min = 0, max = 100)
-    val fat: Int,
+    val fat: Double = .0,
 )
 
 fun CreateIngredientRequestDto.toIngredient() = Ingredient(
