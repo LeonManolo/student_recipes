@@ -13,7 +13,6 @@ export default class StudentRecipesClient {
 
   async getIngredients(): Promise<IngredientDto[]> {
     const result = await fetch(`${this.BASE_URL}/api/ingredients`, {
-      method: "POST",
       headers: this.DEFAULT_HEADER,
     });
     const ingredients: IngredientDto[] = await result.json();
