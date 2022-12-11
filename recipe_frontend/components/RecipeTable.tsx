@@ -1,52 +1,26 @@
-/* import CSS from 'csstype';
-
-const h1Styles: CSS.Properties = {
-    backgroundColor: 'rgba(255, 0, 0, 0.85',
-    position: 'absolute',
-    right: 0,
-    bottom: '2rem',
-    padding: '0.5rem',
-    fontFamily: 'sans-serif',
-    fontSize: '1.5rem',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)'
-}; */
-
-export default function RecipeOverview({ children, ...props }: any) {
+export default function RecipeTable({ children, ...props }: any) {
     return (
-        <div className="overflow-x-auto shadow-xl">
-            <table className="table table-zebra w-full">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Zutaten</th>
-                        <th>Menge</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th>1</th>
-                        <td>Crème fraîche</td>
-                        <td>200 ml</td>
-                    </tr>
+        <div className="card w-full bg-base-100 shadow-xl">
+            <div className="card-body">
+                <h2 className="card-title">Step by Step Anleitung</h2>
+                <ol className="list-decimal">
+                    <li>Donec luctus placerat nunc, a venenatis ante molestie vitae. Vestibulum eget justo et elit eleifend scelerisque vel vel dui. Integer varius nulla ut molestie iaculis.</li>
+                    <li>Aliquam neque urna, accumsan ac congue vel, facilisis a massa. Integer ac blandit ex. Nulla massa orci, rhoncus eget porta et, pellentesque ut justo.</li>
+                    <li> Phasellus pharetra, metus sit amet varius aliquam, elit ipsum suscipit purus, vitae varius neque ex sit amet nulla. </li>
+                    <li>Vestibulum faucibus risus nec nibh facilisis, a mattis urna tincidunt. Fusce et aliquet tellus. Morbi tincidunt dui sed eros tempor, eget ullamcorper nibh consequat. Nunc at lobortis ipsum, eget eleifend lectus.</li>
+                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
+                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
+                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
+                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
+                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
+                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
+                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
+                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
+                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
+                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
 
-                    <tr>
-                        <th>2</th>
-                        <td>Eier</td>
-                        <td>2</td>
-                    </tr>
-
-                    <tr>
-                        <th>3</th>
-                        <td>Mehl</td>
-                        <td>350 g</td>
-                    </tr>
-                    <tr>
-                        <th>3</th>
-                        <td>Milch</td>
-                        <td>500 ml</td>
-                    </tr>
-                </tbody>
-            </table>
+                </ol>
+            </div>
         </div>
     )
 }

@@ -3,14 +3,10 @@ import RecipeOverview from '../../components/RecipeOverview';
 import UserInfo from '../../components/UserInfo';
 export default async function Profile() {
     return (
-        <div className='flex flex-row p-8 justify-center'>
-            <CreateAvatar />
+        <div>
+            <div className='flex flex-row justify-center'>
+                <CreateAvatar />
+            </div>
         </div>
     );
 }
-/* {
-    "firstName": "hans",
-    "lastName": "Mustermann",
-    "email": "hans@mustermann.de",
-    profile picture
-} */

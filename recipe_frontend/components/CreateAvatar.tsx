@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import img from '../public/profile/profile-picture.png';
 import { HiStar } from "react-icons/hi";
+import Link from 'next/link';
 export default function CreateAvatar({ children, ...props }: any) {
     return (
         <div className="card card-side shadow-xl p-10">
@@ -15,10 +16,12 @@ export default function CreateAvatar({ children, ...props }: any) {
                             <span className="label-text-alt">Neues Bild hochladen</span>
                         </label>
                     </div>
-                    <button className="btn gap-2 bg-custom-first mt-8 hover:bg-custom-second">
-                        Favoriten
-                        <HiStar size={24}></HiStar>
-                    </button>
+                    <Link href="/favorites">
+                        <button className="btn gap-2 bg-custom-first mt-8 hover:bg-custom-second">
+                            Favoriten
+                            <HiStar size={24}></HiStar>
+                        </button>
+                    </Link>
                 </div>
             </div></figure>
             <div className="card-body">
