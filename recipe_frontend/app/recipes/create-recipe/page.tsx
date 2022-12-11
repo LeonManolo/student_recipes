@@ -1,4 +1,4 @@
-import CreateIngedrient from "../../../components/CreateIngredient";
+import React from "react";
 
 export default async function CreateRecipe() {
   return (
@@ -41,12 +41,12 @@ export default async function CreateRecipe() {
               </thead>
               <tbody>
                 <tr className="hover">
-                  <td>1</td>
-                  <td>A</td>
+                  <td className="p-2" contentEditable="true">1</td>
+                  <td className="p-2" contentEditable="true">A</td>
                 </tr>
                 <tr className="hover">
-                  <td>2</td>
-                  <td>B</td>
+                  <td className="p-2" contentEditable="true">2</td>
+                  <td className="p-2" contentEditable="true">B</td>
                 </tr>
               </tbody>
             </table>
@@ -56,13 +56,10 @@ export default async function CreateRecipe() {
           Bilder <input type="file" className="file-input file-input-bordered w-full max-w-xs ml-10" />
         </li>
         <li className="ml-10 mt-10">
-          Zubereitung <textarea className="textarea textarea-bordered ml-10" placeholder="Hier schreiben" />
+          Zubereitung <textarea className="textarea textarea-bordered w-full max-w-xs ml-10" placeholder="Hier schreiben" />
         </li>
-        <li>
-          <table>
-            <tr><td><div contentEditable>I am editable</div></td><td><div contentEditable>I am also editable</div></td></tr>
-            <tr><td>I am not editable</td></tr>
-          </table>
+        <li className="ml-10 mt-10 mb-10">
+          <input type="submit" value="Speichern" className="btn" /> <button className="btn float-right mr-auto">Abbrechen</button>
         </li>
       </ul>
     </div>
