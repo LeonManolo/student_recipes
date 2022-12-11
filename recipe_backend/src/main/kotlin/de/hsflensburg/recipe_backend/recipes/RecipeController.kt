@@ -34,6 +34,7 @@ class RecipeController(
 
     @PatchMapping("/{id}")
     fun updateRecipe(@PathVariable id:Long, @RequestBody @Valid recipe: CreateRecipeRequestDto) {
+        //TODO: prüfen ob userId mit recipe.userId übereinstimmt
         recipeService.updateRecipe(id, recipe)
     }
 
