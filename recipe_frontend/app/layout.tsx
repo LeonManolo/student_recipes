@@ -91,13 +91,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <Link href="/recipes">Rezepte</Link>
                 </li>
                 <li>
+                  <Link href="/favorites">Favoriten</Link>
+                </li>
+                <li>
                   <Link href="/my-recipes">Meine Rezepte</Link>
                 </li>
                 <li>
                   <Link href="/recipes/create-recipe">Neues Rezept</Link>
-                </li>
-                <li>
-                  <Link href="/favorites">Favoriten</Link>
                 </li>
               </ul>
             </div>
