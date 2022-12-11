@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body id="__next">
-        <nav>
+        <nav className="border-solid border-2">
           <div className="navbar bg-base-100 text-base-100">
             <div className="navbar-start">
               {/*               <div className="dropdown">
@@ -101,8 +101,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </li>
               </ul>
             </div>
-            <div className="navbar-end pr-4 ">
-              <Link className="bg-custom-first" href="/profile">Profil</Link>
+            <div className="navbar-end pr-2 ">
+              <Link className="btn btn-ghost normal-case text-xl bg-custom-first hover:bg-custom-second" href="/profile">Profil</Link>
               {/*               <Link href="/recipes/123">Rezept mit id 123</Link> */}
             </div>
           </div>

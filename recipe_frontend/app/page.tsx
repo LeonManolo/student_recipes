@@ -4,19 +4,13 @@ import Register from "../components/Register";
 
 export default function HomePage() {
   return (
-    <div className="hero min-h-screen bg-red-500" style={{ backgroundImage: `url("/cooking.jpg")` }}>
-      <div className="hero-overlay bg-opacity-60 justify-center">
-        <div className="hero-content text-center text-neutral-content">
-          <div className="max-w-md">
-            <h1 className="mb-5 text-5xl font-bold">Studentenkueche</h1>
-            <p className="mb-5">
-              Leckere Rezepte für leckere Studenten
-            </p>
-          </div>
-          <div className="flex justify-end m-16 align-middle w-96">
-            <Login></Login>
-          </div>
-          {/*           <Register></Register> */}
+    <div className="hero min-h-screen bg-base-200" style={{ backgroundImage: `url("/cooking.jpg")` }}>
+      <div className="hero-overlay bg-opacity-60"></div>
+      <div className="hero-content flex-col lg:flex-row-reverse ">
+        <Login></Login>
+        <div className="text-center text-white">
+          <h1 className="text-5xl font-bold ">Studentenkueche</h1>
+          <p className="py-6">Leckere Rezepte für leckere Studenten</p>
         </div>
       </div>
     </div>
