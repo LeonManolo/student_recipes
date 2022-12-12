@@ -1,5 +1,6 @@
 package de.hsflensburg.recipe_backend.recipes.constants
 
+// unused
 class RecipeConstants {
     companion object {
         const val PROTEIN_COLUMN = "protein"

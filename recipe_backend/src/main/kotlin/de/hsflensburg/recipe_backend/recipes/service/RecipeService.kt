@@ -22,8 +22,6 @@ class RecipeService(
     private val ingredientRepository: IngredientRepository,
     private val userRepository: UserRepository,
 ) {
-
-    //TODO: exception handling
     fun createRecipe(recipe: CreateRecipeRequestDto): Recipe {
         val user = userRepository.findById(recipe.authorId).orElseThrow {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${recipe.authorId} not found")

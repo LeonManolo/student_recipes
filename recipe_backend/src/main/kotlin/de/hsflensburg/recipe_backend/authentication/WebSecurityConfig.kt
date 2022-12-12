@@ -27,17 +27,11 @@ class WebSecurityConfig(
     private val unauthorizedHandler: AuthEntryPointJwt
 
 ) {
-    //@Value("\${spring.h2.console.path}")
-    //private val h2ConsolePath: String? = null
-
-
-
 
     @Bean
     fun authenticationJwtTokenFilter(): AuthTokenFilter {
         return AuthTokenFilter(userDetailsServiceImpl, jwtUtils)
     }
-
 
     @Bean
     fun authenticationProvider(): DaoAuthenticationProvider? {

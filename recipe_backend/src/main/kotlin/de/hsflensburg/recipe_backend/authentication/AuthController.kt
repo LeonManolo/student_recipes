@@ -68,6 +68,7 @@ class AuthController(
             .collect(Collectors.toList())
         val refreshToken: RefreshToken = refreshTokenService.createRefreshToken(userDetails.getId())
         val jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.token!!)
+        // TODO: hier auf authorization header umstellen
         return ResponseEntity.ok()
             .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
             .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
