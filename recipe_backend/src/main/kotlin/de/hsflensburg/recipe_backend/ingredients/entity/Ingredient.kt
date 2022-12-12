@@ -9,6 +9,18 @@ import org.hibernate.annotations.Type
 import org.springframework.transaction.annotation.Transactional
 import javax.persistence.*
 
+/**
+ * Represents an ingredient that can be used in a recipe.
+ *
+ * @property locale The language in which the ingredient is defined.
+ * @property title The title of the ingredient.
+ * @property calories The number of calories per 100 grams/ml of the ingredient.
+ * @property protein The amount of protein per 100 grams/ml of the ingredient.
+ * @property carbohydrates The amount of carbohydrates per 100 grams of the ingredient.
+ * @property fat The amount of fat per 100 grams of the ingredient.
+ * @property ingredientInfos The [IngredientInfo] objects that reference this ingredient.
+ * @property id The unique ID of the ingredient.
+ */
 @Entity
 @Table(
     name = "ingredient",
@@ -27,7 +39,7 @@ class Ingredient(
     var calories: Double,
 
     @Column(name = "protein", nullable = false)
-    var protein: Double, // TODO: vielleicht in double umwandeln
+    var protein: Double,
 
     @Column(name = "carbs",nullable = false)
     var carbohydrates: Double,
@@ -37,6 +49,9 @@ class Ingredient(
 
 ) {
 
+    /**
+     * If a changes occurs in the ingredient, the ingredient infos have to be updated inside the Recipe entity.
+     */
     @PrePersist
     @PreUpdate
     @PreRemove

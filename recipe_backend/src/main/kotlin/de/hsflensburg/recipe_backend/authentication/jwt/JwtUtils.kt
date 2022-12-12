@@ -1,5 +1,6 @@
 package de.hsflensburg.recipe_backend.authentication.jwt
 
+import de.hsflensburg.recipe_backend.authentication.dto.JwtResponseDto
 import de.hsflensburg.recipe_backend.users.entity.User
 import de.hsflensburg.recipe_backend.authentication.entity.UserDetailsImpl
 import io.jsonwebtoken.ExpiredJwtException
@@ -19,7 +20,13 @@ import java.security.SignatureException
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
-
+/**
+ * This class is responsible for creating and validating JWTs.
+ * It is used by the [AuthTokenFilter] to validate
+ * incoming requests.
+ * It is also used by the [AuthService] to create
+ * JWTs for successful authentication.
+ */
 @Component
 class JwtUtils {
     @Value("\${recipe.app.jwtSecret}")
@@ -52,6 +59,15 @@ class JwtUtils {
 
     fun getJwtFromCookies(request: HttpServletRequest): String? {
         return getCookieValueByName(request, jwtCookie)
+    }
+
+    fun getJwtFromHeader(request: HttpServletRequest): String? {
+        return request.getHeader("Authorization")?.replace("Bearer ", "")
+    }
+
+    fun generateJwtTokenHeader(user: User): JwtResponseDto {
+        val jwt = generateTokenFromUsername(user.email)
+        return JwtResponseDto(jwt)
     }
 
     fun getJwtRefreshFromCookies(request: HttpServletRequest): String? {
@@ -109,6 +125,7 @@ class JwtUtils {
     }
 
     private fun getCookieValueByName(request: HttpServletRequest, name: String): String? {
+        //request.getHeader("")
         val cookie = WebUtils.getCookie(request, name)
         return cookie?.value
     }

@@ -1,3 +1,5 @@
 package de.hsflensburg.recipe_backend.authentication.dto
 
-data class JwtResponseDto()
+data class JwtResponseDto(
+    val token: String,
+)

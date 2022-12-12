@@ -11,11 +11,13 @@ export default async function MyRecipes({ params }: any) {
             <div className='flex flex-row'>
                 <div className='flex flex-row flex-wrap w-full'>
                     <h1 className='w-full mx-4'>Meine Rezepte</h1>
+                    {/*
                     {recipes.map((element, index) => (
                         <div key={index} className='flex p-4 hover:scale-105 transition-all duration-500 cursor-pointer'>
                             <Link href="recipes/{id}" ><RecipeOverview /> </Link>
                         </div>
                     ))}
+                    */}
                 </div>
             </div>
         </div>

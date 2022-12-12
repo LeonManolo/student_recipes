@@ -42,9 +42,13 @@ class IngredientService(private val ingredientRepository: IngredientRepository) 
      * The getAllIngredients() method retrieves all ingredients from the repository
      * and returns them as an Iterable.
      *
+     * @param keyword the keyword to search for
      * @return an Iterable of all ingredients in the repository
      */
-    fun getAllIngredients() : Iterable<Ingredient> {
+    fun getAllIngredients(keyword: String? = null): Iterable<Ingredient> {
+        if(keyword != null) {
+            return ingredientRepository.findAllByTitleContainingIgnoreCase(keyword)
+        }
         return ingredientRepository.findAll()
     }
 
