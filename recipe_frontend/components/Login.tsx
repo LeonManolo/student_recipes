@@ -21,7 +21,7 @@ export default function Login({ children, ...props }: any) {
                         </div>
                         <div className="w-full">
                             <label className="label">
-                                <a href="#" className="label-text-alt link link-hover">Account erstellen</a>
+                                <a href="#" onClick={() => props.onchangeRegister()} className="label-text-alt link link-hover">Account erstellen</a>
                             </label>
                         </div>
                     </div>
