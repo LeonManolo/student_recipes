@@ -1,29 +1,28 @@
 import RecipeResponseDto from "../utils/dto/RecipeResponseDto";
+import { HiChevronDoubleRight } from "react-icons/hi2";
 
-export default function RecipeTable({recipe }: {recipe: RecipeResponseDto}) {
+export default function RecipeTable({ recipe }: { recipe: RecipeResponseDto }) {
     const stepList = recipe.steps.map(step => {
-        return <li key={step.stepNumber}>{step.title} </li>;
-      });
-      
+        return step.ingredients.map(ingredientInfo => {
+            return <li key={step.stepNumber} className="mb-4">
+                <div>{step.title}</div>
+                <div className="flex flex-row">
+                    <HiChevronDoubleRight size={24} />
+                    <div className="mx-1">{ingredientInfo.ingredient.title}</div>
+                    <div className="mx-1">{ingredientInfo.amount}</div>
+                    <div className="mx-1">{ingredientInfo.unit}</div>
+                </div>
+                <div>{step.description}</div>
+            </li>
+        })
+    });
+
     return (
         <div className="card w-full bg-base-100 shadow-xl">
             <div className="card-body">
                 <h2 className="card-title">Step by Step Anleitung</h2>
                 <ol className="list-decimal">
-                    <li>Donec luctus placerat nunc, a venenatis ante molestie vitae. Vestibulum eget justo et elit eleifend scelerisque vel vel dui. Integer varius nulla ut molestie iaculis.</li>
-                    <li>Aliquam neque urna, accumsan ac congue vel, facilisis a massa. Integer ac blandit ex. Nulla massa orci, rhoncus eget porta et, pellentesque ut justo.</li>
-                    <li> Phasellus pharetra, metus sit amet varius aliquam, elit ipsum suscipit purus, vitae varius neque ex sit amet nulla. </li>
-                    <li>Vestibulum faucibus risus nec nibh facilisis, a mattis urna tincidunt. Fusce et aliquet tellus. Morbi tincidunt dui sed eros tempor, eget ullamcorper nibh consequat. Nunc at lobortis ipsum, eget eleifend lectus.</li>
-                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
-                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
-                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
-                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
-                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
-                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
-                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
-                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
-                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
-                    <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
+                    {stepList}
                 </ol>
             </div>
         </div>

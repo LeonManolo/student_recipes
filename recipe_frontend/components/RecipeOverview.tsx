@@ -1,11 +1,13 @@
 import img from '../public/food/pizza3.png'
 import Image from 'next/image';
 import { FiClock } from "react-icons/fi";
-import { FiThumbsUp } from "react-icons/fi";
+import { HiOutlineChartBar } from "react-icons/hi2";
 import { HiFire } from "react-icons/hi";
+import { HiOutlineFaceSmile } from "react-icons/hi2";
 import React from 'react';
 import RecipeResponseDto from '../utils/dto/RecipeResponseDto';
 import StudentRecipesClient from '../utils/StudentRecipesClient';
+
 
 
 /* import CSS from 'csstype';
@@ -42,8 +44,10 @@ export default function RecipeOverview({ recipe }: { recipe: RecipeResponseDto }
                     <p>{recipe.totalCalories}</p>
                     <FiClock size="20" className='mr-1'></FiClock>
                     <p>{recipe.cookTime}</p>
-                    <FiThumbsUp size="20" className='mr-1'></FiThumbsUp>
+                    <HiOutlineChartBar size="20" className='mr-1'></HiOutlineChartBar>
                     <p>{recipe.views}</p>
+                    <HiOutlineFaceSmile size="20" className='mr-1'></HiOutlineFaceSmile>
+                    <p>{recipe.author.firstName}</p>
                 </div>
             </div>
         </div>

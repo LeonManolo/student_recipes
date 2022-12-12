@@ -6,9 +6,8 @@ import StudentRecipesClient from '../../utils/StudentRecipesClient';
 import RecipeResponseDto from '../../utils/dto/RecipeResponseDto';
 
 // Mapped zu der Route "/recipes" ohne eine id also nicht "recipes/123"
-export default async function Recipes({ params }: any) {
+export default async function Recipes() {
   const recipes = await fetchRecipes();
-  const id = params.id;
   return (
     <div >
       <div className='flex flex-row'>
@@ -20,12 +19,10 @@ export default async function Recipes({ params }: any) {
             <div className='flex'><Filter /></div>
           </div>
         </div>
-        <div className='flex flex-row-reverse flex-wrap w-full'>
+        <div className='flex flex-row flex-wrap w-full'>
           {recipes.map((recipe, index) => (
             <div key={index} className='flex p-4 hover:scale-105 transition-all duration-500 cursor-pointer'>
-              {recipe.title}
-              {recipe.description}
-              <Link href="recipes/{id}" ><RecipeOverview recipe={recipe} /> </Link>
+              <Link href={`recipes/${recipe.id}`} ><RecipeOverview recipe={recipe} /> </Link>
             </div>
           ))}
         </div>
