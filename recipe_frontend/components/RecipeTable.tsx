@@ -1,4 +1,10 @@
-export default function RecipeTable({ children, ...props }: any) {
+import RecipeResponseDto from "../utils/dto/RecipeResponseDto";
+
+export default function RecipeTable({recipe }: {recipe: RecipeResponseDto}) {
+    const stepList = recipe.steps.map(step => {
+        return <li key={step.stepNumber}>{step.title} </li>;
+      });
+      
     return (
         <div className="card w-full bg-base-100 shadow-xl">
             <div className="card-body">
@@ -18,7 +24,6 @@ export default function RecipeTable({ children, ...props }: any) {
                     <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
                     <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
                     <li>Sed vel ipsum vitae nisi luctus consectetur. Nam at augue blandit, fermentum orci et, vulputate diam. Nam malesuada laoreet feugiat.</li>
-
                 </ol>
             </div>
         </div>

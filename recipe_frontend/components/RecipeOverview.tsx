@@ -5,6 +5,7 @@ import { FiThumbsUp } from "react-icons/fi";
 import { HiFire } from "react-icons/hi";
 import React from 'react';
 import RecipeResponseDto from '../utils/dto/RecipeResponseDto';
+import StudentRecipesClient from '../utils/StudentRecipesClient';
 
 
 /* import CSS from 'csstype';
@@ -20,7 +21,7 @@ const h1Styles: CSS.Properties = {
     boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)'
 }; */
 //{children: React.ReactNode, recipe: RecipeResponseDto}
-export default function RecipeOverview({ recipe }: {recipe: RecipeResponseDto}) {
+export default function RecipeOverview({ recipe }: { recipe: RecipeResponseDto }) {
     return (
         <div className="card card-compact w-96 h-max shadow-xl bg-base-100 ">
             <Image className='rounded-t-xl ' src={img} alt="recipe" width={500} height={500} />
@@ -38,11 +39,11 @@ export default function RecipeOverview({ recipe }: {recipe: RecipeResponseDto}) 
                 <h3 className='text-slate-500'>{recipe.description}</h3>
                 <div className='flex flex-row'>
                     <HiFire size="20" className='mr-1'></HiFire>
-                    <p>Kalorien</p>
+                    <p>{recipe.totalCalories}</p>
                     <FiClock size="20" className='mr-1'></FiClock>
-                    <p>Zubereitungsdauer</p>
+                    <p>{recipe.cookTime}</p>
                     <FiThumbsUp size="20" className='mr-1'></FiThumbsUp>
-                    <p>Gefällt mir</p>
+                    <p>{recipe.views}</p>
                 </div>
             </div>
         </div>
