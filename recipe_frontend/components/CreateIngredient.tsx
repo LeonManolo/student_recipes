@@ -3,10 +3,12 @@
 import { useState } from "react";
 import CreateIngredientRequestDto from "../utils/dto/CreateIngredientRequestDto";
 import IngredientDto from "../utils/dto/IngredientDto";
+import UserDto from "../utils/dto/UserDto";
 import StudentRecipesClient from "../utils/StudentRecipesClient";
 
 export default function AddIngredientModal() {
   const [tab, setTab] = useState(0);
+  const [user, setUser] = useState<UserDto>()
 
   return (
     <div className="justify-center">
@@ -89,7 +91,7 @@ function SearchIngredient() {
     console.log(searchText);
     const fetchedIngredients = await recipeClient.getIngredients(); //TODO: filter hinzufügen
     setLoading(false);
-    setIngredients(fetchedIngredients ?? []);
+    setIngredients(fetchedIngredients);
   }
 }
 

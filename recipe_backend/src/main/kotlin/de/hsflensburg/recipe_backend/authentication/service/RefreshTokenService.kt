@@ -11,7 +11,11 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.util.*
 
-
+/**
+ * This class is responsible for creating and validating refresh tokens.
+ * It is used by the [AuthController] to create
+ * refresh tokens for successful authentication.
+ */
 @Service
 class RefreshTokenService {
     @Value("\${recipe.app.jwtRefreshExpirationMs}")

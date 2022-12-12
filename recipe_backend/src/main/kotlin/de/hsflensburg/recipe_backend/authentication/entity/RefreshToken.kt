@@ -3,6 +3,7 @@ package de.hsflensburg.recipe_backend.authentication.entity
 
 import de.hsflensburg.recipe_backend.users.entity.User
 import java.time.Instant
+import java.util.*
 import javax.persistence.*
 
 
@@ -15,9 +16,10 @@ class RefreshToken(
     @Column(nullable = false, unique = true)
     val token: String? = null,
 
+    Optional<Instant> expiryDate = Optional.empty()
+
     @Column(nullable = false)
     val expiryDate: Instant? = null,
-
 
     ){
     @Id

@@ -6,7 +6,16 @@ import org.hibernate.validator.constraints.Range
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 
-//TODO: implementieren
+/**
+ * Data class representing a request to create a new ingredient.
+ *
+ * @param locale The locale for the ingredient.
+ * @param title The title of the ingredient.
+ * @param calories The number of calories in the ingredient.
+ * @param protein The amount of protein in the ingredient, per 100g or 100ml.
+ * @param carbohydrates The amount of carbohydrates in the ingredient, per 100g or 100ml.
+ * @param fat The amount of fat in the ingredient, per 100g or 100ml.
+ */
 data class CreateIngredientRequestDto (
     @Valid
     val locale: LanguageSelection = LanguageSelection.German, //TODO: LanguageSelection
@@ -27,6 +36,12 @@ data class CreateIngredientRequestDto (
     val fat: Double = .0,
 )
 
+
+/**
+ * Converts this [CreateIngredientRequestDto] object to an [Ingredient] entity/object.
+ *
+ * @return The [Ingredient] entity/object.
+ */
 fun CreateIngredientRequestDto.toIngredient() = Ingredient(
     locale = locale,
     title = title,

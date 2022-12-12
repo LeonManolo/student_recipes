@@ -35,13 +35,14 @@ export default async function Recipes({ params }: any) {
 }
 
 async function fetchRecipes(): Promise<RecipeResponseDto[]> {
-  /*
-  const result = await fetch("https://dummyjson.com/products", { cache: "no-store" }); // cache no store um bei jedem Seiten aufruf die Rezepte zu fetchen
-  const recipes = await result?.json();
-  return recipes.products; // für die dummmy api musste ich products aufrufen
-  */
-
   const recipeClient = new StudentRecipesClient()
   const recipes = recipeClient.getRecipes()
   return recipes;
 }
+
+/* async function fetchRecipes(): Promise<any[]> {
+    const result = await fetch("https://dummyjson.com/products", { cache: "no-store" }); // cache no store um bei jedem Seiten aufruf die Rezepte zu fetchen
+    const recipes = await result?.json();
+    return recipes.products; // für die dummmy api musste ich products aufrufen
+}
+ */

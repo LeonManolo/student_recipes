@@ -16,7 +16,7 @@ export default class StudentRecipesClient {
       headers: this.DEFAULT_HEADER,
     });
     const ingredients: IngredientDto[] = await result.json();
-    return ingredients;
+    return await this.returnIfSuccessElseError(result, ingredients);
   }
 
   async getIngredient(id: number): Promise<IngredientDto> {
@@ -24,17 +24,17 @@ export default class StudentRecipesClient {
       headers: this.DEFAULT_HEADER,
     });
     const ingredient: IngredientDto = await result.json();
-    return ingredient;
+    return await this.returnIfSuccessElseError(result, ingredient);
   }
 
-  async createIngredient(ingredient: CreateIngredientRequestDto): Promise<boolean> {
+  async createIngredient(ingredient: CreateIngredientRequestDto): Promise<void> {
     const json = JSON.stringify(ingredient);
     const result = await fetch(`${this.BASE_URL}/api/ingredients`, {
       method: "POST",
       headers: this.DEFAULT_HEADER,
       body: json,
     });
-    return result.ok;
+    await this.returnIfSuccessElseError(result, true);
   }
 
   async updateIngredient(ingredient: CreateIngredientRequestDto, ingredientId: number): Promise<boolean> {
@@ -44,7 +44,7 @@ export default class StudentRecipesClient {
       headers: this.DEFAULT_HEADER,
       body: json,
     });
-    return result.ok;
+    return await this.returnIfSuccessElseError(result, true);
   }
 
   async getRecipes(): Promise<RecipeResponseDto[]> {
@@ -52,7 +52,7 @@ export default class StudentRecipesClient {
       headers: this.DEFAULT_HEADER,
     });
     const recipes: RecipeResponseDto[] = await result.json();
-    return recipes;
+    return await this.returnIfSuccessElseError(result, recipes);
   }
 
   async getRecipe(id: number): Promise<RecipeResponseDto> {
@@ -60,35 +60,35 @@ export default class StudentRecipesClient {
       headers: this.DEFAULT_HEADER,
     });
     const recipe: RecipeResponseDto = await result.json();
-    return recipe;
+    return await this.returnIfSuccessElseError(result, recipe);
   }
 
-  async createRecipe(recipe: CreateRecipeRequestDto): Promise<boolean> {
+  async createRecipe(recipe: CreateRecipeRequestDto): Promise<void> {
     const json = JSON.stringify(recipe);
     const result = await fetch(`${this.BASE_URL}/api/recipes`, {
       method: "POST",
       headers: this.DEFAULT_HEADER,
       body: json,
     });
-    return result.ok;
+    await this.returnIfSuccessElseError(result, true);
   }
 
-  async updateRecipe(recipe: CreateRecipeRequestDto, recipeId: number): Promise<boolean> {
+  async updateRecipe(recipe: CreateRecipeRequestDto, recipeId: number): Promise<void> {
     const json = JSON.stringify(recipe);
     const result = await fetch(`${this.BASE_URL}/api/recipes${recipeId}`, {
       method: "PATCH",
       headers: this.DEFAULT_HEADER,
       body: json,
     });
-    return result.ok;
+    await this.returnIfSuccessElseError(result, true);
   }
 
-  async deleteRecipe(recipeId: number): Promise<boolean> {
+  async deleteRecipe(recipeId: number): Promise<void> {
     const result = await fetch(`${this.BASE_URL}/api/recipes/${recipeId}`, {
       method: "DELETE",
       headers: this.DEFAULT_HEADER,
     });
-    return result.ok;
+    await this.returnIfSuccessElseError(result, true);
   }
 
   async register(registerDto: RegisterRequestDto): Promise<boolean> {
@@ -98,7 +98,7 @@ export default class StudentRecipesClient {
       headers: this.DEFAULT_HEADER,
       body: json,
     });
-    return result.ok;
+    return this.returnIfSuccessElseError(result, true);
   }
 
   async login(loginDto: LoginRequestDto): Promise<boolean> {
@@ -108,7 +108,7 @@ export default class StudentRecipesClient {
       headers: this.DEFAULT_HEADER,
       body: json,
     });
-    return result.ok;
+    return this.returnIfSuccessElseError(result, true);
   }
 
   async logout(): Promise<boolean> {
@@ -116,6 +116,20 @@ export default class StudentRecipesClient {
       method: "POST",
       headers: this.DEFAULT_HEADER,
     });
-    return result.ok;
+    return this.returnIfSuccessElseError(result, true);
+  }
+
+  private async returnIfSuccessElseError<T>(response: Response, success: T): Promise<T> {
+    if (response.ok) {
+      return success;
+    }
+    const error = await response.text();
+    throw new StudentRecipesClientError(error);
+  }
+}
+
+class StudentRecipesClientError extends Error {
+  constructor(readonly message: string) {
+    super();
   }
 }
