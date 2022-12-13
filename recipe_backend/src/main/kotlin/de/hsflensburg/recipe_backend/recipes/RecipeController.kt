@@ -62,4 +62,9 @@ class RecipeController(
         return favoriteService.getFavoriteRecipes(userIdTemp)
     }
 
+    @GetMapping("/rating/{userId}/{recipeId}")
+    fun getRating(@PathVariable userId: Long,@PathVariable recipeId: Long): Int {
+        return ratingService.getRating(userId,recipeId)
+    }
+
 }
