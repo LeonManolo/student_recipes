@@ -16,7 +16,6 @@ import React, { useState } from 'react';
 
 export default function Profile() {
     const [file, setFile] = useState<File>();
-    const [imageUrl, setImageUrl] = useState('');
     const [filebase64, setFileBase64] = useState<string>("")
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
