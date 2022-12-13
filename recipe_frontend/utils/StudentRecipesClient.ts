@@ -51,6 +51,22 @@ export default class StudentRecipesClient {
     return await this.returnIfSuccessElseError(result, true);
   }
 
+  async getRating(userId: number, recipeId: number): Promise<number> {
+    const result = await fetch(`${this.BASE_URL}/api/recipes/rating/${userId}/${recipeId}`, {
+      headers: this.DEFAULT_HEADER,
+    });
+    const text = await result.text()
+    return await this.returnIfSuccessElseError(result, parseInt(text));
+  }
+
+  async getFavorites(userId: number): Promise<RecipeResponseDto[]> {
+    const result = await fetch(`${this.BASE_URL}/api/recipes/favorites/ofUser/${userId}`, {
+      headers: this.DEFAULT_HEADER,
+    });
+    const recipes: RecipeResponseDto[] = await result.json();
+    return await this.returnIfSuccessElseError(result, recipes);
+  }
+
   async getRecipes(): Promise<RecipeResponseDto[]> {
     const result = await fetch(`${this.BASE_URL}/api/recipes`, {
       headers: this.DEFAULT_HEADER,

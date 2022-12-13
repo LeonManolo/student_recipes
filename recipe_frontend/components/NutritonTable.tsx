@@ -22,35 +22,30 @@ export default function NutritionTable({ recipe }: { recipe: RecipeResponseDto }
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Nährstoffe<IoNutritionSharp /></th>
+                                <th className='flex flex-row'> Nährstoffe</th>
                                 <th>Menge</th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <th>1</th>
+                                <td><HiFire size={20} /></td>
                                 <td>Kalorien</td>
                                 <td>{recipe.totalCalories}</td>
-                                <td><HiFire /></td>
                             </tr>
                             <tr>
-                                <th>2</th>
+                                <td><GiMuscleUp size={20} /></td>
                                 <td>Proteine</td>
                                 <td>{recipe.totalProtein}</td>
-                                <td><GiMuscleUp /></td>
                             </tr>
                             <tr>
-                                <th>3</th>
+                                <td><GiSlicedBread size={20} /></td>
                                 <td>Kohlenhydrate</td>
                                 <td>{recipe.totalCarbohydrates}</td>
-                                <td><GiSlicedBread /></td>
                             </tr>
                             <tr>
-                                <th>4</th>
+                                <td><GiDroplets size={20} /></td>
                                 <td>Fette</td>
                                 <td>{recipe.totalFat}</td>
-                                <td><GiDroplets /></td>
                             </tr>
                         </tbody>
                     </table>
