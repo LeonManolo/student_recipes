@@ -3,6 +3,7 @@ import Tab from '../../components/Tab';
 import Link from "next/link";
 import StudentRecipesClient from '../../utils/StudentRecipesClient';
 import RecipeResponseDto from '../../utils/dto/RecipeResponseDto';
+import EditRecipeOverview from '../../components/EditRecipeOverview';
 
 // Mapped zu der Route "/recipes" ohne eine id also nicht "recipes/123"
 export default async function MyRecipes({ params }: any) {
@@ -16,9 +17,7 @@ export default async function MyRecipes({ params }: any) {
                     <div className='flex flex-row-reverse flex-wrap w-full'>
                         {recipes.map((recipe, index) => (
                             <div key={index} className='flex p-4 hover:scale-105 transition-all duration-500 cursor-pointer'>
-                                {recipe.title}
-                                {recipe.description}
-                                <Link href="recipes/{id}" ><RecipeOverview recipe={recipe} /> </Link>
+                                <Link href={`recipes/${recipe.id}`} ><EditRecipeOverview recipe={recipe} /> </Link>
                             </div>
                         ))}
                     </div>

@@ -1,5 +1,6 @@
 import RecipeResponseDto from "../utils/dto/RecipeResponseDto";
 import { HiChevronDoubleRight } from "react-icons/hi2";
+import { HiOutlineStar } from "react-icons/hi";
 
 export default function RecipeTable({ recipe }: { recipe: RecipeResponseDto }) {
     const stepList = recipe.steps.map(step => {
@@ -20,7 +21,10 @@ export default function RecipeTable({ recipe }: { recipe: RecipeResponseDto }) {
     return (
         <div className="card w-full bg-base-100 shadow-xl">
             <div className="card-body">
-                <h2 className="card-title">Step by Step Anleitung</h2>
+                <div className="flex flex-row">
+                    <HiOutlineStar size={30} className="m-2 hover:scale-125 transition-all duration-500 cursor-pointer" />
+                    <h2 className="card-title">Step by Step Anleitung für {recipe.servings} Portionen </h2>
+                </div>
                 <ol className="list-decimal">
                     {stepList}
                 </ol>

@@ -7,8 +7,7 @@ import RecipeResponseDto from '../../utils/dto/RecipeResponseDto';
 
 // Mapped zu der Route "/recipes" ohne eine id also nicht "recipes/123"
 export default async function Favorites({ params }: any) {
-    const recipes = await fetchRecipes();
-    const id = params.id;
+    const recipes = await fetchRecipes(params.id);
     return (
         <div >
             <div className='flex flex-row'>
@@ -17,9 +16,7 @@ export default async function Favorites({ params }: any) {
                     <div className='flex flex-row-reverse flex-wrap w-full'>
                         {recipes.map((recipe, index) => (
                             <div key={index} className='flex p-4 hover:scale-105 transition-all duration-500 cursor-pointer'>
-                                {recipe.title}
-                                {recipe.description}
-                                <Link href="recipes/{id}" ><RecipeOverview recipe={recipe} /> </Link>
+                                <Link href={`recipes/${recipe.id}`} ><RecipeOverview recipe={recipe} /> </Link>
                             </div>
                         ))}
                     </div>
@@ -29,15 +26,8 @@ export default async function Favorites({ params }: any) {
     );
 }
 
-async function fetchRecipes(): Promise<RecipeResponseDto[]> {
+async function fetchRecipes(userId: number): Promise<RecipeResponseDto[]> {
     const recipeClient = new StudentRecipesClient()
-    const recipes = recipeClient.getRecipes()
+    const recipes = recipeClient.getFavorites(userId)
     return recipes;
-  }
-  
-  /* async function fetchRecipes(): Promise<any[]> {
-      const result = await fetch("https://dummyjson.com/products", { cache: "no-store" }); // cache no store um bei jedem Seiten aufruf die Rezepte zu fetchen
-      const recipes = await result?.json();
-      return recipes.products; // für die dummmy api musste ich products aufrufen
-  }
-   */
+}
