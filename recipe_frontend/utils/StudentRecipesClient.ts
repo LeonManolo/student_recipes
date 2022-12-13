@@ -55,7 +55,7 @@ export default class StudentRecipesClient {
     return await this.returnIfSuccessElseError(result, recipes);
   }
 
-  async getRecipe(id: number): Promise<RecipeResponseDto> {
+  async getRecipe(id: String): Promise<RecipeResponseDto> {
     const result = await fetch(`${this.BASE_URL}/api/recipes/${id}`, {
       headers: this.DEFAULT_HEADER,
     });
@@ -123,7 +123,7 @@ export default class StudentRecipesClient {
     if (response.ok) {
       return success;
     }
-    const error = await response.text();
+    const error = "Error"
     throw new StudentRecipesClientError(error);
   }
 }
