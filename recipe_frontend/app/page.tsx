@@ -1,5 +1,5 @@
 import Image from "next/image";
-import AddIngredientModal from "../components/CreateIngredient";
+import AddIngredientModal from "../components/AddIngredientModal";
 import Login from "../components/Login";
 import Login_Register from "../components/Login_Register";
 import Register from "../components/Register";

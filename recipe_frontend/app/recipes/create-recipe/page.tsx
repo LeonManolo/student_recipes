@@ -1,116 +1,179 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import AddIngredientModal from "../../../components/AddIngredientModal";
+import { IngredientInfoDto, RecipeStepDto } from "../../../utils/dto/CreateRecipeRequestDto";
+import IngredientDto from "../../../utils/dto/IngredientDto";
 import StudentRecipesClient from "../../../utils/StudentRecipesClient";
 
 export default function CreateRecipePage() {
+  let recipeSteps: RecipeStepDto[] = [];
+
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="grid place-content-center ...">
-        <h1 className="ml-10 mt-10">Neues Rezept</h1>
-        <div>
-          <ul>
-            <li className="ml-10 mt-10">
-              Name des Rezepts{" "}
-              <input
-                name="title"
-                type="text"
-                placeholder="Hier schreiben"
-                className="input input-bordered w-full max-w-xs ml-10"
-              />
-            </li>
-            <li className="ml-10 mt-10">
-              Kurzbeschreibung{" "}
-              <input
-                name="title"
-                type="text"
-                placeholder="Hier schreiben"
-                className="input input-bordered w-full max-w-xs ml-10"
-              />
-            </li>
-            <li className="ml-10 mt-10">
-              Preis (€){" "}
-              <input type="text" placeholder="Hier schreiben" className="input input-bordered w-full max-w-xs ml-10" />
-            </li>
-            <li className="ml-10 mt-10">
-              Dauer (min){" "}
-              <input type="text" placeholder="Hier schreiben" className="input input-bordered w-full max-w-xs ml-10" />
-            </li>
-            <li className="ml-10 mt-10">
-              Schwierigkeit{" "}
-              <select className="select select-bordered w-full max-w-xs ml-10">
-                <option>Einfach</option>
-                <option>Mittel</option>
-                <option>Schwer</option>
-              </select>
-            </li>
-            <li className="ml-10 mt-10">
-              Kategorie <input type="checkbox" className="checkbox ml-10" /> Kuchen{" "}
-              <input type="checkbox" className="checkbox ml-10" /> Nudeln{" "}
-              <input type="checkbox" className="checkbox ml-10" /> Reis{" "}
-              <input type="checkbox" className="checkbox ml-10" /> Fleisch{" "}
-              <input type="checkbox" className="checkbox ml-10" /> Vegetarisch
-            </li>
-            <li className="ml-10 mt-10">
-              <div className="overflow-x-auto">
-                Zutaten
-                <table className="table border-solid border-2 border-black w-full max-w-xs ml-40">
-                  <thead>
-                    <tr>
-                      <th>Menge</th>
-                      <th>Zutat</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="hover">
-                      <td className="p-2" contentEditable="true"></td>
-                      <td className="p-2" contentEditable="true"></td>
-                    </tr>
-                    <tr className="hover">
-                      <td className="p-2" contentEditable="true"></td>
-                      <td className="p-2" contentEditable="true"></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </li>
-            <li className="ml-10 mt-10">
-              Bilder <input type="file" className="file-input file-input-bordered w-full max-w-xs ml-10" />
-            </li>
-            <li className="ml-10 mt-10">
-              Zubereitung{" "}
-              <textarea className="textarea textarea-bordered w-full max-w-xs ml-10" placeholder="Hier schreiben" />
-            </li>
-            <li className="ml-10 mt-10 mb-10">
-              <input type="submit" value="Speichern" className="btn" />{" "}
-              <button className="btn float-right mr-auto">Abbrechen</button>
-            </li>
-          </ul>
+    <div className="flex flex-row justify-center w-full p-4">
+      <form onSubmit={handleSubmit} className="w-2/3 p-4 border border-base-content rounded-lg">
+        <h1 className="mb-8">Rezept erstellen</h1>
+
+        <div className="flex flex-row w-full space-x-4">
+          <div className="flex items-center w-full aspect-square rounded-lg text-center justify-center bg-base-200">
+            Kein Bild ausgewählt
+          </div>
+          <div className="flex justify-center form-control w-full">
+            <label className="label">
+              <span className="label-text">Bild auswählen</span>
+            </label>
+            <input type="file" className="file-input file-input-bordered w-full" />
+          </div>
         </div>
-      </div>
-    </form>
+
+        <div className="flex flex-row space-x-4">
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Titel des Rezeptes</span>
+            </label>
+            <input type="text" placeholder="Nudeln mit Pesto..." className="input input-bordered w-full" />
+          </div>
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Anzahl an Portionen</span>
+            </label>
+            <input type="text" placeholder="3..." className="input input-bordered w-full" />
+          </div>
+        </div>
+
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text">Beschreibung</span>
+          </label>
+          <input type="text" placeholder="Beschreibung..." className="input input-bordered w-full" />
+        </div>
+
+        <div className="flex flex-row space-x-4">
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Kochzeit in Minuten</span>
+            </label>
+            <input type="text" placeholder="5..." className="input input-bordered w-full" />
+          </div>
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Preis in Euro</span>
+            </label>
+            <input type="text" placeholder="2..." className="input input-bordered w-full" />
+          </div>
+        </div>
+
+        <div className="divider" />
+        <RecipeStepsComponent
+          onRecipeStepChange={(steps) => {
+            recipeSteps = { ...steps };
+            console.log("STEP ADDED!");
+          }}
+        />
+      </form>
+    </div>
   );
 
-  async function handleSubmit(event: any) {
-    event.preventDefault();
-    const target = event.currentTarget;
-    //for simple html input values
-    //const formInput = (e.target as HTMLFormElement).files[0];
+  function handleSubmit() {}
+}
 
-    console.log(target.title.value);
+function RecipeStepsComponent({ onRecipeStepChange }: { onRecipeStepChange: (steps: RecipeStepDto[]) => void }) {
+  const [steps, setSteps] = useState<RecipeStepDto[]>([]);
 
-    const recipeClient = new StudentRecipesClient();
-      const result = await recipeClient
-      .createRecipe(
-        {
-          title: "Burger",
-          description: "Tolles Burger rezept für burgerliebhaber",
-          servings: 2,
-          authorId: 1,
-          steps: []
-        }
-      ).catch(e => {
-        console.log("DER ERROR: " + e)
-      })
-    }
+  return (
+    <div>
+      <h2 className="mb-4">Schritte</h2>
+      {steps.map((recipeStep, index) => (
+        <div key={`recipe_step_${index}`} className="p-4 mb-4 border rounded-lg">
+          <h3>Schritt {index + 1}</h3>
+          <div className="flex flex-row space-x-4">
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Titel des Schrittes</span>
+              </label>
+              <input type="text" placeholder="Reis waschen..." className="input input-bordered w-full" />
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Beschreibung</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Reis sorgfältig für etwa 2 Minuten waschen..."
+                className="input input-bordered w-full"
+              />
+            </div>
+          </div>
 
+          <div>
+            <div className="flex flex-col w-full border-opacity-50">
+              <div className="divider">Zutaten</div>
+            </div>
+            {recipeStep.ingredients.map((ingredient, i) => (
+              <IngredientInfoComponent key={`step_${index}_ingr_${i}`} ingredient={ingredient} />
+            ))}
+          </div>
+
+          <AddIngredientModal
+            modalId={`recipe_step_modal${index}`}
+            onAddIngredientClick={(ingredient) => onAddIngredientClick(ingredient, index)}
+          />
+        </div>
+      ))}
+      <div className="flex justify-center my-4">
+        <button onClick={onAddStepClick} className="btn">
+          Schritt hinzufügen +
+        </button>
+      </div>
+    </div>
+  );
+
+  function onAddIngredientClick(ingredientDto: IngredientDto, stepIndex: number) {
+    console.log("on ingredient click");
+    const ingredient: IngredientInfoDto = {
+      ingredientId: ingredientDto.id,
+      amount: 0,
+      unit: "g",
+      title: ingredientDto.title,
+    };
+    const ingredients = [...steps[stepIndex].ingredients];
+    ingredients.push(ingredient);
+    steps[stepIndex].ingredients = [...ingredients];
+    setSteps([...steps]);
+    onRecipeStepChange(steps);
+    console.log(steps);
+  }
+
+  function onAddStepClick() {
+    event?.preventDefault(); //wichtig!
+
+    const step: RecipeStepDto = {
+      title: "",
+      description: "",
+      ingredients: [],
+    };
+    setSteps(steps.concat([step]));
+    onRecipeStepChange(steps); // Hier vielleicht fehler
+  }
+}
+
+function IngredientInfoComponent({ ingredient }: { ingredient: IngredientInfoDto }) {
+  return (
+    <div className="border rounded-lg p-4 mb-4">
+      <h3 className="font-bold text-secondary">{ingredient.title}</h3>
+      <div className="flex flex-row  space-x-4">
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text">Anzahl in Gram oder Milliliter</span>
+          </label>
+          <input type="text" placeholder="150" className="input input-bordered w-full" />
+        </div>
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text">Einheit (ml / g)</span>
+          </label>
+          <input type="text" defaultValue="g" placeholder="g" className="input input-bordered w-full" />
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -6,14 +6,15 @@ export default interface CreateRecipeRequestDto {
   steps: RecipeStepDto[];
 }
 
-interface RecipeStepDto {
+export interface RecipeStepDto {
   title: string;
   description: string;
   ingredients: IngredientInfoDto[];
 }
 
-interface IngredientInfoDto {
+export interface IngredientInfoDto {
   ingredientId: number;
+  title: string; // Nur für state im Backend nicht benutzt
   amount: number;
   unit: string; // einheit e.g. "g" oder "ml"
 }

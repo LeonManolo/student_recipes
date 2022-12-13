@@ -6,20 +6,22 @@ import IngredientDto from "../utils/dto/IngredientDto";
 import UserDto from "../utils/dto/UserDto";
 import StudentRecipesClient from "../utils/StudentRecipesClient";
 
-export default function AddIngredientModal() {
+export default function AddIngredientModal({
+  onAddIngredientClick,
+  modalId,
+}: {
+  onAddIngredientClick: (ingredient: IngredientDto) => void,
+  modalId: string,
+}) {
   const [tab, setTab] = useState(0);
-  const [user, setUser] = useState<UserDto>()
+  const [user, setUser] = useState<UserDto>();
 
   return (
     <div className="justify-center">
-      <button onClick={() => createIngredient()} className="btn btn-outline btn-accent">
-        Button
-      </button>
-      {/* The button to open modal */}
-      <a href="#my-modal-2" className="btn">
-        open modal
+      <a href={`#${modalId}`} className="btn">
+        Zutat hinzufügen +
       </a>
-      <div className="modal" id="my-modal-2">
+      <div className="modal" id={modalId}>
         <div className="modal-box">
           <div className="tabs w-full">
             <div className="w-full"></div>
@@ -31,7 +33,7 @@ export default function AddIngredientModal() {
             </a>
           </div>
 
-          {tab == 0 ? <SearchIngredient /> : <CreateIngredient />}
+          {tab == 0 ? <SearchIngredient onAddIngredientClick={onAddIngredientClick}/> : <CreateIngredient />}
           <div className="modal-action">
             <a href="#" className="btn">
               Abbrechen
@@ -61,7 +63,7 @@ export default function AddIngredientModal() {
   }
 }
 
-function SearchIngredient() {
+function SearchIngredient({onAddIngredientClick}: {onAddIngredientClick: (x: IngredientDto) => void}) {
   const [ingredients, setIngredients] = useState<IngredientDto[]>([]);
   const [isLoading, setLoading] = useState(false);
   let searchText = "";
@@ -79,7 +81,7 @@ function SearchIngredient() {
       />
       {isLoading ? "Loading..." : ""}
       {ingredients.map((e) => (
-        <div key={e.id}>{e.title}</div>
+        <a href="#" onClick={() => onAddIngredientClick(e)} key={e.id}>{e.title}</a>
       ))}
     </div>
   );
