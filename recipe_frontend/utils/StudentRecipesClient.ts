@@ -6,9 +6,8 @@ import RecipeResponseDto from "./dto/RecipeResponseDto";
 import RegisterRequestDto from "./dto/RegisterRequestDto";
 
 /*
-In dieser Klasse befinden sich alle Funktionen, die benötigt werden,
-um Anfragen an die API zu schicken. Die Funktionen greifen dazu auf
-die zugehörigen dto's zu.
+This class contains all functions that are necessary for all of the
+API requests. To do this, the functions use the associated dto's.
 */
 export default class StudentRecipesClient {
   private readonly BASE_URL = "https://sea-turtle-app-hqisk.ondigitalocean.app";
