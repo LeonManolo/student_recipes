@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
+/**
+ * A RestController that handles requests for the User resource
+ *
+ * @property userRepository The UserRepository instance used to handle User-related tasks.
+ */
 @RestController
 @RequestMapping("/api/users")
 class UserController(val userRepository: UserRepository) {

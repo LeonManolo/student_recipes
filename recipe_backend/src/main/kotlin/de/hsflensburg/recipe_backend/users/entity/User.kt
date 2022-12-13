@@ -9,7 +9,19 @@ import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import org.hibernate.annotations.CreationTimestamp
 import java.util.Date
 import javax.persistence.*
-
+/**
+ * User class representing a member of the application
+ * @property firstName The first name of the user
+ * @property lastName The last name of the user
+ * @property email The email address of the user
+ * @property password The password of the user
+ * @property imageUrl The URL of the user's profile image (optional)
+ * @property recipes A set of recipes created by the user
+ * @property createdAt The date the user account was created
+ * @property id The unique ID of the user
+ * @property favoriteRecipes A set of recipes marked as favorites by the user
+ * @property ratingsCreatedByUser A set of ratings created by the user
+ */
 @Entity
 @Table(name = "member")
 class User (

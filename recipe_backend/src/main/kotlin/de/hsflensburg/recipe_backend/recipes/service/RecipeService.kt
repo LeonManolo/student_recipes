@@ -15,6 +15,15 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 
+/**
+ * Service class for managing [Recipe] entities
+ * @property Service Marks this class as a Spring service bean.
+ * @property Transactional Specifies that methods in this class will be executed within a database transaction.
+ * @property RecipeRepository Repository for accessing and managing [Recipe] entities.
+ * @property IngredientRepository Repository for accessing and managing [Ingredient] entities.
+ * @property UserRepository Repository for accessing and managing [User] entities.
+ * @constructor Creates a new [RecipeService] instance with the specified repositories.
+ */
 @Service
 @Transactional // muss rein damit @Formula funktioniert
 class RecipeService(
@@ -22,6 +31,12 @@ class RecipeService(
     private val ingredientRepository: IngredientRepository,
     private val userRepository: UserRepository,
 ) {
+    /**
+     * Creates a new [Recipe] with the information provided in the [CreateRecipeRequestDto].
+     * @param recipe The recipe information to be used for creating the new recipe.
+     * @return The newly created [Recipe].
+     * @throws ResponseStatusException with a status of [HttpStatus.NOT_FOUND] if the user with the specified id in the [CreateRecipeRequestDto] does not exist.
+     */
     fun createRecipe(recipe: CreateRecipeRequestDto): Recipe {
         val user = userRepository.findById(recipe.authorId).orElseThrow {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${recipe.authorId} not found")
@@ -36,7 +51,7 @@ class RecipeService(
         val savedRecipe = recipeRepository.save(recipeToSave)
 
         recipe.steps.mapIndexed { index, step ->
-            val recipeStep = RecipeStep( // wieso kriegt recipeStep die recipe_id automatisch?
+            val recipeStep = RecipeStep(
                 stepNumber = index,
                 title = step.title,
                 description = step.description,

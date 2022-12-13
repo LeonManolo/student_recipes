@@ -37,4 +37,11 @@ class RatingService(
 
         return ratingRepository.deleteByUserAndRecipe(user, recipe)
     }
-}
+
+    fun getRating(userId: Long, recipeId: Long): Int {
+        val user = userService.getUser(userId)
+        val recipe = recipeService.getRecipe(recipeId)
+        val rating = ratingRepository.findByUserAndRecipe(user, recipe)
+        return rating.value
+        }
+    }

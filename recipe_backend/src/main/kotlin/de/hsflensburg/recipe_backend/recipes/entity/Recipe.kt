@@ -11,7 +11,27 @@ import org.hibernate.annotations.CreationTimestamp
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import javax.persistence.*
-
+/**
+ * Recipe Entity Class
+ * @property title the title of the recipe
+ * @property description the description of the recipe
+ * @property servings the number of servings of the recipe
+ * @property author the author of the recipe
+ * @property price the price of the recipe
+ * @property cookTime the cooking time of the recipe
+ * @property id the id of the recipe
+ * @property steps the steps of the recipe
+ * @property createdAt the creation date of the recipe
+ * @property views the number of views of the recipe
+ * @property favoritedBy the list of users who have favorited the recipe
+ * @property ratingsOfRecipe the list of ratings for the recipe
+ * @property categories the categories the recipe belongs to
+ * @property totalCalories the total calories of the recipe
+ * @property totalProtein the total protein of the recipe
+ * @property totalCarbohydrates the total carbohydrates of the recipe
+ * @property totalFat the total fat of the recipe
+ * @property ingredients the ingredients of the recipe
+ */
 @Entity
 @Table(name = "recipe")
 class Recipe(

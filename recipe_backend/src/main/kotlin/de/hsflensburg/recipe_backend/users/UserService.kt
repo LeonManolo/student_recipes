@@ -5,6 +5,10 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 
+/**
+ * The UserService class represents a spring service class that provides
+ * methods for retrieving Users from the UserRepository
+ */
 @Service
 class UserService(private val userRepository: UserRepository) {
 

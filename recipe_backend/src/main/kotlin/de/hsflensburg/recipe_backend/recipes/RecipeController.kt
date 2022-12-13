@@ -43,9 +43,18 @@ class RecipeController(
        recipeService.deleteRecipe(id)
     }
 
+    //Todo userID nicht hardcoden
     @PostMapping("favorites/{recipeId}")
     fun addFavorite(@PathVariable recipeId: Long) {
         val userId = 1L
         favoriteService.favoriteRecipe(userId, recipeId)
     }
+
+    //Todo userID nicht hardcoden
+    @GetMapping("favorites/ofUser/{userId}")
+    fun getFavoritesOfUser(@PathVariable userId: Long): List<Recipe>{
+        val userIdTemp = 1L
+        return favoriteService.getFavoriteRecipes(userIdTemp)
+    }
+
 }
