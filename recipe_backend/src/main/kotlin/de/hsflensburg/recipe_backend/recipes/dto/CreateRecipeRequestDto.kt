@@ -22,7 +22,7 @@ data class CreateRecipeRequestDto(
     @field:Valid
     val steps: List<RecipeStepDto>,
     //val tags: List<String> = emptyList(),
-    val image: String? = null
+    var image: String? = null
 )
 
 

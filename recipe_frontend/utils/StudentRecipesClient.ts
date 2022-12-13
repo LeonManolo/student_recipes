@@ -77,6 +77,23 @@ export default class StudentRecipesClient {
     await this.returnIfSuccessElseError(result, true);
   }
 
+  async createRecipeWithImage(recipe: CreateRecipeRequestDto, image: File): Promise<void> {
+    const json = JSON.stringify(recipe);
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append(
+      "recipe",
+      new Blob([json], {
+        type: "application/json",
+      })
+    );
+    const result = await fetch(`http://localhost:8080/api/recipes`, {
+      method: "POST",
+      body: formData,
+    });
+    await this.returnIfSuccessElseError(result, true);
+  }
+
   async updateRecipe(recipe: CreateRecipeRequestDto, recipeId: number): Promise<void> {
     const json = JSON.stringify(recipe);
     const result = await fetch(`${this.BASE_URL}/api/recipes${recipeId}`, {

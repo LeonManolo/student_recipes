@@ -13,6 +13,9 @@ export default function CreateRecipePage() {
   const [cookTime, setCookTime] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
 
+  const [file, setFile] = useState<File>();
+  const [filebase64, setFileBase64] = useState<string>("");
+
   return (
     <div className="flex flex-row justify-center w-full p-4">
       <form onSubmit={handleSubmit} className="w-2/3 p-4 border border-base-content rounded-lg">
@@ -20,13 +23,23 @@ export default function CreateRecipePage() {
 
         <div className="flex flex-row w-full space-x-4">
           <div className="flex items-center w-full aspect-square rounded-lg text-center justify-center bg-base-200">
-            Kein Bild ausgewählt
+            {filebase64 ? (
+              <img className="w-full aspect-square object-cover rounded-lg" alt="recipe image" src={filebase64} />
+            ) : (
+              "Kein Bild ausgewählt"
+            )}
           </div>
           <div className="flex justify-center form-control w-full">
             <label className="label">
               <span className="label-text">Bild auswählen</span>
             </label>
-            <input type="file" className="file-input file-input-bordered w-full" />
+            <input
+              type="file"
+              onChange={onFileChange}
+              accept="image/png, image/jpeg"
+              className="file-input file-input-bordered w-full"
+              required={true}
+            />
           </div>
         </div>
 
@@ -138,8 +151,9 @@ export default function CreateRecipePage() {
     console.log(recipe);
 
     try {
+      if (file === undefined) throw new StudentRecipesClientError("Image missing!");
       const client = new StudentRecipesClient();
-      await client.createRecipe(recipe);
+      await client.createRecipeWithImage(recipe, file);
     } catch (recipeError: any) {
       if (recipeError instanceof StudentRecipesClientError) {
         const err = recipeError as StudentRecipesClientError;
@@ -148,6 +162,27 @@ export default function CreateRecipePage() {
       } else {
         alert(recipeError);
       }
+    }
+  }
+
+  function onFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (event.target.files) {
+      convertFile(event.target.files);
+      setFile(event.target.files[0]);
+    }
+  }
+
+  function convertFile(files: FileList | null) {
+    if (files) {
+      const fileRef = files[0] || "";
+      const fileType: string = fileRef.type || "";
+      console.log("This file upload is of type:", fileType);
+      const reader = new FileReader();
+      reader.readAsBinaryString(fileRef);
+      reader.onload = (ev: any) => {
+        // convert it to base64
+        setFileBase64(`data:${fileType};base64,${btoa(ev.target.result)}`);
+      };
     }
   }
 }
