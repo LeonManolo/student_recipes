@@ -94,6 +94,20 @@ class RecipeService(
         }
     }
 
+    fun getRecipesForCategory(filter: RecipeFilter?, id: Long): List<Recipe> {
+        return when (filter){
+            RecipeFilter.NEWEST -> recipeRepository.findByCategories_IdOrderByCreatedAtDesc(id)
+            RecipeFilter.MOST_VIEWED -> recipeRepository.findByCategories_IdOrderByViewsDesc(id)
+            RecipeFilter.BEST_RATED -> TODO()
+            RecipeFilter.MOST_FAVORITES -> TODO()
+            RecipeFilter.FAST_TO_COOK -> recipeRepository.findByCategories_IdOrderByCookTimeDesc(id)
+            RecipeFilter.CHEAP -> recipeRepository.findByCategories_IdOrderByPriceDesc(id)
+            else -> {
+                recipeRepository.findByCategories_Id(id)
+            }
+        }
+    }
+
     fun deleteRecipe(id: Long) {
         recipeRepository.deleteById(id)
     }

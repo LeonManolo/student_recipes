@@ -62,6 +62,16 @@ class RecipeController(
         return recipeService.getRecipes(sortBy)
     }
 
+    @GetMapping("/category")
+    fun getRecipes(
+        @RequestParam("limit") limit: Int? = 100,
+        @RequestParam("category") category: Long,
+        @Valid @RequestParam("sort_by") sortBy: RecipeFilter? = null
+    ): List<Recipe> {
+        val recipes = recipeService.getRecipesForCategory(sortBy, category)
+        return recipes.subList(0, limit!!)
+    }
+
     @PatchMapping("/{id}")
     fun updateRecipe(@PathVariable id:Long, @RequestBody @Valid recipe: CreateRecipeRequestDto) {
         //TODO: prüfen ob userId mit recipe.userId übereinstimmt

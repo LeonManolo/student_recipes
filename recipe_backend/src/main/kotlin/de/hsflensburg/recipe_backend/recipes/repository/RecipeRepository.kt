@@ -19,4 +19,19 @@ interface RecipeRepository: JpaRepository<Recipe, Long> {
     //TODO: kann man renamen
     fun findByFavoritedBy_User_Id(id: Long): List<Recipe>
 
+
+    fun findByCategories_Id(id: Long): List<Recipe>
+
+
+    fun findByCategories_IdOrderByPriceDesc(id: Long): List<Recipe>
+
+
+    fun findByCategories_IdOrderByViewsDesc(id: Long): List<Recipe>
+
+
+    fun findByCategories_IdOrderByCookTimeDesc(id: Long): List<Recipe>
+
+
+    fun findByCategories_IdOrderByCreatedAtDesc(id: Long): List<Recipe>
+
 }
