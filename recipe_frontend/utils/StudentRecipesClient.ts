@@ -123,13 +123,13 @@ export default class StudentRecipesClient {
     if (response.ok) {
       return success;
     }
-    const error = "Error"
+    const error = await response.text();
     throw new StudentRecipesClientError(error);
   }
 }
 
-class StudentRecipesClientError extends Error {
+export class StudentRecipesClientError extends Error {
   constructor(readonly message: string) {
-    super();
+    super(message);
   }
 }
