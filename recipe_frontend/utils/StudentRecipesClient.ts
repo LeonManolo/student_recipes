@@ -5,10 +5,10 @@ import LoginRequestDto from "./dto/LoginRequestDto";
 import RecipeResponseDto from "./dto/RecipeResponseDto";
 import RegisterRequestDto from "./dto/RegisterRequestDto";
 
-/*
-This class contains all functions that are necessary for all of the
-API requests. To do this, the functions use the associated dto's.
-*/
+/**
+ * This class contains all functions that are necessary for all of the
+ * API requests. To do this, the functions use the associated dto's.
+ */
 export default class StudentRecipesClient {
   private readonly BASE_URL = "https://sea-turtle-app-hqisk.ondigitalocean.app";
   private readonly DEFAULT_HEADER = {
