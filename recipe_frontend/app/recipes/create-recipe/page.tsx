@@ -1,12 +1,17 @@
 "use client";
 import React, { useState } from "react";
 import AddIngredientModal from "../../../components/AddIngredientModal";
-import { IngredientInfoDto, RecipeStepDto } from "../../../utils/dto/CreateRecipeRequestDto";
+import CreateRecipeRequestDto, { IngredientInfoDto, RecipeStepDto } from "../../../utils/dto/CreateRecipeRequestDto";
 import IngredientDto from "../../../utils/dto/IngredientDto";
-import StudentRecipesClient from "../../../utils/StudentRecipesClient";
+import StudentRecipesClient, { StudentRecipesClientError } from "../../../utils/StudentRecipesClient";
 
 export default function CreateRecipePage() {
   let recipeSteps: RecipeStepDto[] = [];
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [servings, setServings] = useState<number>(0);
+  const [cookTime, setCookTime] = useState<number>(0);
+  const [price, setPrice] = useState<number>(0);
 
   return (
     <div className="flex flex-row justify-center w-full p-4">
@@ -30,13 +35,29 @@ export default function CreateRecipePage() {
             <label className="label">
               <span className="label-text">Titel des Rezeptes</span>
             </label>
-            <input type="text" placeholder="Nudeln mit Pesto..." className="input input-bordered w-full" />
+            <input
+              value={title}
+              minLength={2}
+              onChange={(v) => setTitle(v.target.value)}
+              type="text"
+              placeholder="Nudeln mit Pesto..."
+              className="input input-bordered w-full"
+              required={true}
+            />
           </div>
           <div className="form-control w-full">
             <label className="label">
               <span className="label-text">Anzahl an Portionen</span>
             </label>
-            <input type="text" placeholder="3..." className="input input-bordered w-full" />
+            <input
+              value={`${servings ?? 0}`}
+              min={1}
+              onChange={(v) => setServings(parseInt(v?.target?.value))}
+              type="number"
+              placeholder="3..."
+              className="input input-bordered w-full"
+              required={true}
+            />
           </div>
         </div>
 
@@ -44,7 +65,14 @@ export default function CreateRecipePage() {
           <label className="label">
             <span className="label-text">Beschreibung</span>
           </label>
-          <input type="text" placeholder="Beschreibung..." className="input input-bordered w-full" />
+          <input
+            value={description}
+            onChange={(v) => setDescription(v.target.value)}
+            type="text"
+            placeholder="Beschreibung..."
+            className="input input-bordered w-full"
+            required={true}
+          />
         </div>
 
         <div className="flex flex-row space-x-4">
@@ -52,28 +80,76 @@ export default function CreateRecipePage() {
             <label className="label">
               <span className="label-text">Kochzeit in Minuten</span>
             </label>
-            <input type="text" placeholder="5..." className="input input-bordered w-full" />
+            <input
+              value={`${cookTime}`}
+              min={1}
+              onChange={(v) => setCookTime(parseInt(v.target.value ?? 0))}
+              type="number"
+              placeholder="5..."
+              className="input input-bordered w-full"
+              required={true}
+            />
           </div>
           <div className="form-control w-full">
             <label className="label">
               <span className="label-text">Preis in Euro</span>
             </label>
-            <input type="text" placeholder="2..." className="input input-bordered w-full" />
+            <input
+              value={price}
+              onChange={(v) => setPrice(parseInt(v.target.value))}
+              type="number"
+              placeholder="2..."
+              className="input input-bordered w-full"
+              required={true}
+              min={0}
+            />
           </div>
         </div>
 
         <div className="divider" />
         <RecipeStepsComponent
           onRecipeStepChange={(steps) => {
-            recipeSteps = { ...steps };
+            recipeSteps = [...steps];
             console.log("STEP ADDED!");
+            console.log(steps);
           }}
         />
+        <div className="flex flex-col w-full border-opacity-50">
+          <div className="divider">Speichern</div>
+          <button type="submit" className="btn">
+            Rezept Speichern
+          </button>
+        </div>
       </form>
     </div>
   );
 
-  function handleSubmit() {}
+  async function handleSubmit() {
+    event?.preventDefault();
+    console.log("Submit clicked!");
+    const recipe: CreateRecipeRequestDto = {
+      title: title,
+      description: description,
+      cookTime: cookTime,
+      servings: servings,
+      authorId: 1,
+      steps: recipeSteps,
+    };
+    console.log(recipe);
+
+    try {
+      const client = new StudentRecipesClient();
+      await client.createRecipe(recipe);
+    } catch (recipeError: any) {
+      if (recipeError instanceof StudentRecipesClientError) {
+        const err = recipeError as StudentRecipesClientError;
+        alert(`Falsche eingabe: ${err.message}`);
+        console.log(err.message);
+      } else {
+        alert(recipeError);
+      }
+    }
+  }
 }
 
 function RecipeStepsComponent({ onRecipeStepChange }: { onRecipeStepChange: (steps: RecipeStepDto[]) => void }) {
@@ -90,16 +166,33 @@ function RecipeStepsComponent({ onRecipeStepChange }: { onRecipeStepChange: (ste
               <label className="label">
                 <span className="label-text">Titel des Schrittes</span>
               </label>
-              <input type="text" placeholder="Reis waschen..." className="input input-bordered w-full" />
+              <input
+                value={steps[index].title}
+                onChange={(v) => {
+                  const title = v.target.value;
+                  steps[index].title = title;
+                  updateSteps();
+                }}
+                type="text"
+                placeholder="Reis waschen..."
+                className="input input-bordered w-full"
+                required={true}
+              />
             </div>
             <div className="form-control w-full">
               <label className="label">
                 <span className="label-text">Beschreibung</span>
               </label>
               <input
+                value={steps[index].description}
+                onChange={(v) => {
+                  steps[index].description = v.target.value;
+                  updateSteps();
+                }}
                 type="text"
                 placeholder="Reis sorgfältig für etwa 2 Minuten waschen..."
                 className="input input-bordered w-full"
+                required={true}
               />
             </div>
           </div>
@@ -109,7 +202,16 @@ function RecipeStepsComponent({ onRecipeStepChange }: { onRecipeStepChange: (ste
               <div className="divider">Zutaten</div>
             </div>
             {recipeStep.ingredients.map((ingredient, i) => (
-              <IngredientInfoComponent key={`step_${index}_ingr_${i}`} ingredient={ingredient} />
+              <IngredientInfoComponent
+                key={`step_${index}_ingr_${i}`}
+                ingredient={ingredient}
+                onIngredientChange={(updatedIngredient) => {
+                  steps[i].ingredients[i] = updatedIngredient;
+                  const ingredients = [...steps[i].ingredients];
+                  steps[i].ingredients = [...ingredients];
+                  updateSteps();
+                }}
+              />
             ))}
           </div>
 
@@ -126,6 +228,11 @@ function RecipeStepsComponent({ onRecipeStepChange }: { onRecipeStepChange: (ste
       </div>
     </div>
   );
+
+  function updateSteps() {
+    setSteps([...steps]);
+    onRecipeStepChange(steps);
+  }
 
   function onAddIngredientClick(ingredientDto: IngredientDto, stepIndex: number) {
     console.log("on ingredient click");
@@ -156,7 +263,13 @@ function RecipeStepsComponent({ onRecipeStepChange }: { onRecipeStepChange: (ste
   }
 }
 
-function IngredientInfoComponent({ ingredient }: { ingredient: IngredientInfoDto }) {
+function IngredientInfoComponent({
+  ingredient,
+  onIngredientChange,
+}: {
+  ingredient: IngredientInfoDto;
+  onIngredientChange: (e: IngredientInfoDto) => void;
+}) {
   return (
     <div className="border rounded-lg p-4 mb-4">
       <h3 className="font-bold text-secondary">{ingredient.title}</h3>
@@ -165,15 +278,41 @@ function IngredientInfoComponent({ ingredient }: { ingredient: IngredientInfoDto
           <label className="label">
             <span className="label-text">Anzahl in Gram oder Milliliter</span>
           </label>
-          <input type="text" placeholder="150" className="input input-bordered w-full" />
+          <input
+            value={ingredient.amount}
+            min={1}
+            onChange={(v) => {
+              ingredient.amount = parseInt(v.target.value ?? 0);
+              onIngredientChange(ingredient);
+            }}
+            type="number"
+            placeholder="150"
+            className="input input-bordered w-full"
+            required={true}
+          />
         </div>
         <div className="form-control w-full">
           <label className="label">
             <span className="label-text">Einheit (ml / g)</span>
           </label>
-          <input type="text" defaultValue="g" placeholder="g" className="input input-bordered w-full" />
+          <input
+            value={ingredient.unit}
+            onChange={(v) => {
+              ingredient.unit = v.target.value;
+              onIngredientChange(ingredient);
+            }}
+            type="text"
+            placeholder="g"
+            className="input input-bordered w-full"
+            required={true}
+          />
         </div>
       </div>
     </div>
   );
+}
+
+function parseIntElseZero(value: any): number {
+  const value2 = Number(value?.target?.value ?? 0);
+  return isNaN(value2) || value2 === undefined || value?.target?.value === "" ? 0 : value;
 }

@@ -1,6 +1,7 @@
 export default interface CreateRecipeRequestDto {
   title: string;
   description: string;
+  cookTime: number;
   servings: number;
   authorId: number; //TODO: nur temporär
   steps: RecipeStepDto[];
