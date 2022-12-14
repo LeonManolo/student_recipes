@@ -11,7 +11,14 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
 import javax.validation.Valid
-
+/**
+ * A `RecipeController` handles HTTP requests related to recipes.
+ *
+ * @param recipeService the service object to interact with the `recipe` data store
+ * @param favoriteService the service object to interact with the `favorite` data store
+ * @param ratingService the service object to interact with the `rating` data store
+ * @param fileService the service object to interact with the file storage
+ */
 @RestController
 @RequestMapping("/api/recipes")
 class RecipeController(
@@ -20,6 +27,12 @@ class RecipeController(
     private val ratingService: RatingService,
     private val fileService: FileService,
     ) {
+    /**
+     * Creates a new Recipe.
+     *
+     * @param file the file to be uploaded
+     * @param recipe the Recipe object to be created
+     */
     @PostMapping(consumes = ["multipart/form-data"])
     fun createRecipe(@RequestPart("file") file: MultipartFile, @RequestPart("recipe") @Valid recipe: CreateRecipeRequestDto) {
         val image = fileService.uploadFile(file.bytes, file.originalFilename!!);
@@ -27,14 +40,36 @@ class RecipeController(
         recipeService.createRecipe(recipe)
     }
 
+    /**
+     * Retrieves a specific recipe by its id.
+     *
+     * @param id the id of the recipe to retrieve
+     * @return the recipe with the specified id, or null if no such recipe exists
+     */
     @GetMapping("/{id}")
     fun getRecipe(@PathVariable id:Long) : Recipe? {
         return recipeService.getRecipe(id)
     }
 
+    /**
+     * Retrieves a list of all recipes.
+     *
+     * @param sortBy optional sorting criteria for the recipes
+     * @return a list of all recipes, sorted according to the specified criteria
+     */
     @GetMapping
     fun getRecipes(@Valid @RequestParam("sort_by") sortBy: RecipeFilter? = null) : List<Recipe> {
         return recipeService.getRecipes(sortBy)
+    }
+
+    @GetMapping("/category")
+    fun getRecipes(
+        @RequestParam("limit") limit: Int? = 100,
+        @RequestParam("category") category: Long,
+        @Valid @RequestParam("sort_by") sortBy: RecipeFilter? = null
+    ): List<Recipe> {
+        val recipes = recipeService.getRecipesForCategory(sortBy, category)
+        return recipes.subList(0, limit!!)
     }
 
     @PatchMapping("/{id}")

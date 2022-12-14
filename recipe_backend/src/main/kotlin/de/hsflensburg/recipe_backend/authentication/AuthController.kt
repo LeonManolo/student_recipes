@@ -1,5 +1,6 @@
 package de.hsflensburg.recipe_backend.authentication
 
+import de.hsflensburg.recipe_backend.authentication.dto.JwtResponseDto
 import de.hsflensburg.recipe_backend.authentication.dto.LoginRequestDto
 import de.hsflensburg.recipe_backend.authentication.dto.RegisterRequestDto
 import de.hsflensburg.recipe_backend.authentication.entity.RefreshToken
@@ -62,18 +63,20 @@ class AuthController(
             .authenticate(UsernamePasswordAuthenticationToken(loginDto.email, loginDto.password))
         SecurityContextHolder.getContext().authentication = authentication
         val userDetails = authentication.principal as UserDetailsImpl
-        val jwtCookie = jwtUtils.generateJwtCookie(userDetails)
+        val jwt = jwtUtils.generateTokenFromUsername(userDetails.username)
+        /*
         val roles = userDetails.authorities.stream()
             .map { item: GrantedAuthority? -> item!!.authority }
             .collect(Collectors.toList())
+            */
         val refreshToken: RefreshToken = refreshTokenService.createRefreshToken(userDetails.getId())
-        val jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.token!!)
+        //val jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.token!!)
         // TODO: hier auf authorization header umstellen
         return ResponseEntity.ok()
-            .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-            .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
-            .body<Any>(
-                "Signed in successfully!"
+            //.header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+            //.header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
+            .body<JwtResponseDto>(
+                JwtResponseDto(jwt)
             )
     }
 
@@ -90,14 +93,17 @@ class AuthController(
             val userId = (principle as UserDetailsImpl).getId()
             refreshTokenService.deleteByUserId(userId)
         }
+
         val jwtCookie = jwtUtils.getCleanJwtCookie()
         val jwtRefreshCookie = jwtUtils.getCleanJwtRefreshCookie()
         return ResponseEntity.ok()
-            .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-            .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
+            //.header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+            //.header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
             .body<Any>("You've been signed out!")
     }
 
+
+    // wird nicht benutzt!
     @PostMapping("/refresh_token")
     fun refreshToken(request: HttpServletRequest): ResponseEntity<*>? {
         val refreshToken = jwtUtils.getJwtRefreshFromCookies(request)

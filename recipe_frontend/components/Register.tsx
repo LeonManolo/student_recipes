@@ -48,9 +48,9 @@ export default function Register({ children, ...props }: any) {
             </div>
         </div>
     )
-    function createAccount() {
+    async function createAccount() {
         const recipeClient = new StudentRecipesClient();
-        recipeClient.register({
+        await recipeClient.register({
             firstName: firstName,
             lastName: lastName,
             email: email,

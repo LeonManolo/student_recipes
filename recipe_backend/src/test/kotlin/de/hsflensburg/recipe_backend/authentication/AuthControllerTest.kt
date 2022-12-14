@@ -97,10 +97,16 @@ internal class AuthControllerTest @Autowired constructor(
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(loginDto)
         }.andExpect {
+            /*
             cookie {
                 exists(jwtCookie)
                 exists(jwtRefreshCookie)
             }
+            */
+
+                jsonPath("$.token") {
+                    exists()
+                }
             status { isOk() }
         }
     }

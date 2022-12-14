@@ -3,7 +3,15 @@ package de.hsflensburg.recipe_backend.categories.entity
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import javax.persistence.*
 
-//Todo many to many mit recipe
+/**
+ * Entity representing a category of items in the application
+ *
+ * @property title The title of the category
+ * @property description A description of the category
+ * @property imageUrl A URL to an image representing the category
+ * @property recipes A set of recipes that belong to the category
+ * @property id The ID of the category in the database
+ */
 @Entity
 @Table(name = "category")
 class Category(

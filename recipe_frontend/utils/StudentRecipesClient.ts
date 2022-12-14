@@ -135,6 +135,7 @@ export default class StudentRecipesClient {
       headers: this.DEFAULT_HEADER,
       body: json,
     });
+    console.log(result.headers.get("set-cookie"));
     return this.returnIfSuccessElseError(result, true);
   }
 
