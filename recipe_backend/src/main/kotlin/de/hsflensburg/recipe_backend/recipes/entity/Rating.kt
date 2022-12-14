@@ -35,5 +35,5 @@ class Rating (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    var id: Long? = null
+    val id: Long? = null
 }

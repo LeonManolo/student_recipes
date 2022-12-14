@@ -77,6 +77,63 @@ internal class RatingServiceTest @Autowired constructor(
     }
 
     @Test
+    fun `should get correct value for recipe`(){
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe = recipeService.createRecipe(recipeDto,1)
+
+        assertEquals(ratingRepository.findAll().size,0)
+        ratingService.rateRecipe(5,author.id!!, recipe.id!!)
+        assertEquals(ratingRepository.findAll().size,1)
+
+        val rating = ratingService.getRating(author.id!!,recipe.id!!)
+        assertEquals(5,rating)
+    }
+    @Test
+    fun `should get standard value for recipe`(){
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe = recipeService.createRecipe(recipeDto,1)
+
+        assertEquals(ratingRepository.findAll().size,0)
+
+        val ratingNotFound = ratingService.getRating(author.id!!,recipe.id!!)
+        assertEquals(3,ratingNotFound)
+    }
+
+    @Test
     fun `should delete Rating`(){
         val recipeDto = CreateRecipeRequestDto(
             "title",

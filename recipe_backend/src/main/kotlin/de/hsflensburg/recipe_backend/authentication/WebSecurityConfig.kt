@@ -5,6 +5,7 @@ import de.hsflensburg.recipe_backend.authentication.jwt.JwtUtils
 import de.hsflensburg.recipe_backend.authentication.service.UserDetailsServiceImpl
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
@@ -62,11 +63,13 @@ class WebSecurityConfig(
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
             //.antMatchers("/api/auth/test/**").authenticated()
-            .antMatchers("/api/api/ingredients/**").permitAll()
+            .antMatchers("/api/auth/register").permitAll()
+            .antMatchers("/api/auth/login").permitAll()
             .antMatchers("/api/auth/**").permitAll()
+            .antMatchers(HttpMethod.GET,"/api/recipes").permitAll()
 
             //.antMatchers("$h2ConsolePath/**").permitAll()
-            .anyRequest().permitAll()
+            .anyRequest().authenticated()
 
         // fix H2 database console: Refused to display ' in a frame because it set 'X-Frame-Options' to 'deny'
         http.headers().frameOptions().sameOrigin()

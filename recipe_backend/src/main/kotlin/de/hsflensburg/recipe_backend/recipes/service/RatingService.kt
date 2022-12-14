@@ -26,8 +26,8 @@ class RatingService(
         val recipe = recipeService.getRecipe(recipeId)
         val rating = ratingRepository.findByUserAndRecipe(user, recipe)
 
-        rating.value = value
-        ratingRepository.save(rating)
+        rating!!.value = value
+        ratingRepository.save(rating!!)
     }
 
     @Transactional
@@ -41,6 +41,6 @@ class RatingService(
     fun getRating(userId: Long, recipeId: Long): Int {
         val user = userService.getUser(userId)
         val recipe = recipeService.getRecipe(recipeId)
-        return ratingRepository.findByUserAndRecipe(user, recipe).value.or(3)
+        return ratingRepository.findByUserAndRecipe(user, recipe)?.value ?: 3
         }
     }

@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface RatingRepository : JpaRepository<Rating, Long> {
     fun deleteByUserAndRecipe(user: User, recipe: Recipe): Long
 
-    fun findByUserAndRecipe(user: User, recipe: Recipe): Rating
+    fun findByUserAndRecipe(user: User, recipe: Recipe): Rating?
 
 }

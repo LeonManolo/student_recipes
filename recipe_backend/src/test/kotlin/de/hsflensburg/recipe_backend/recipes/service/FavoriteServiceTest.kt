@@ -55,6 +55,44 @@ internal class FavoriteServiceTest @Autowired constructor(
 
 
     @Test
+    fun `getting favorites returns correct recipes`(){
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val id = recipeService.createRecipe(recipeDto,1).id!!
+
+        favoriteService.favoriteRecipe(1,id)
+
+        val favorites = favoriteService.getFavoriteRecipes(1)
+
+        assertEquals(1,favorites.size)
+        assertEquals("title",favorites[0].title)
+
+    }
+
+    @Test
+    fun `getting empty Favorites`(){
+        val favorites = favoriteService.getFavoriteRecipes(1)
+
+        assertEquals(0,favorites.size)
+    }
+
+    @Test
     fun likeRecipe(){
         val author2 = userRepository.save(
             User("test", "test", "aaaaa@b.de", "password")
