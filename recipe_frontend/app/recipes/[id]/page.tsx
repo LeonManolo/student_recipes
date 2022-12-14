@@ -10,6 +10,8 @@ import StudentRecipesClient from '../../../utils/StudentRecipesClient';
 import NutritionTable from '../../../components/NutritonTable';
 import { HiOutlineFaceSmile } from 'react-icons/hi2';
 import Rating from '../../../components/Rating';
+import { notFound } from "next/navigation"
+
 export default async function RecipeDetail({ params }: any) {
   const recipe = await fetchRecipe(params.id);
   const rating = await fetchRating(recipe.author.id, params.id);
@@ -53,6 +55,9 @@ export default async function RecipeDetail({ params }: any) {
   async function fetchRecipe(id: String): Promise<RecipeResponseDto> {
     const recipeClient = new StudentRecipesClient()
     const recipe = await recipeClient.getRecipe(id)
+    if (!recipe) {
+      notFound()
+    }
     return recipe;
   }
 
