@@ -49,7 +49,13 @@ class AuthTokenFilter(
     }
 
     private fun parseJwt(request: HttpServletRequest): String? {
-        return jwtUtils.getJwtFromCookies(request)
+        //return jwtUtils.getJwtFromCookies(request)
+        request.getHeader("Authorization")?.let { header ->
+            if (header.startsWith("Bearer ")) {
+                return header.substring(7)
+            }
+        }
+        return null
     }
 
     companion object {
