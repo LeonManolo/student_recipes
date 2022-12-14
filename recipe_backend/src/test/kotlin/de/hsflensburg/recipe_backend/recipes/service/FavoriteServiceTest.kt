@@ -64,7 +64,6 @@ internal class FavoriteServiceTest @Autowired constructor(
             "title",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -79,13 +78,12 @@ internal class FavoriteServiceTest @Autowired constructor(
             )
         )
 
-        val id = recipeService.createRecipe(recipeDto).id!!
+        val id = recipeService.createRecipe(recipeDto,1).id!!
 
         val recipeDto2 = CreateRecipeRequestDto(
             "title2",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -100,13 +98,12 @@ internal class FavoriteServiceTest @Autowired constructor(
             )
         )
 
-        val id2 = recipeService.createRecipe(recipeDto2).id!!
+        val id2 = recipeService.createRecipe(recipeDto2,1).id!!
 
         val recipeDto3 = CreateRecipeRequestDto(
             "title3",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -121,7 +118,7 @@ internal class FavoriteServiceTest @Autowired constructor(
             )
         )
 
-        val id3 = recipeService.createRecipe(recipeDto3).id!!
+        val id3 = recipeService.createRecipe(recipeDto3,1).id!!
 
         favoriteService.favoriteRecipe(author.id!!,id)
         favoriteService.favoriteRecipe(author.id!!, id3)
@@ -144,7 +141,6 @@ internal class FavoriteServiceTest @Autowired constructor(
             "title",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -159,14 +155,13 @@ internal class FavoriteServiceTest @Autowired constructor(
             )
         )
 
-        val recipe = recipeService.createRecipe(recipeDto)
+        val recipe = recipeService.createRecipe(recipeDto,1)
         val id = recipe.id!!
 
         val recipeDto2 = CreateRecipeRequestDto(
             "title2",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -181,7 +176,7 @@ internal class FavoriteServiceTest @Autowired constructor(
             )
         )
 
-        val id2 = recipeService.createRecipe(recipeDto2).id!!
+        val id2 = recipeService.createRecipe(recipeDto2,1).id!!
 
         favoriteService.favoriteRecipe(author.id!!,id)
         favoriteService.favoriteRecipe(author.id!!,id2)
@@ -206,7 +201,6 @@ internal class FavoriteServiceTest @Autowired constructor(
             "title",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -221,7 +215,7 @@ internal class FavoriteServiceTest @Autowired constructor(
             )
         )
 
-        val recipe = recipeService.createRecipe(recipeDto)
+        val recipe = recipeService.createRecipe(recipeDto,1)
 
         // saven wird nicht gebraucht wenn es eine Transactional ist. adden zum set reicht aus
         recipe.favoritedBy.add(Favorite(author,recipe))

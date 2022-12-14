@@ -7,6 +7,7 @@ import de.hsflensburg.recipe_backend.recipes.entity.RecipeFilter
 import de.hsflensburg.recipe_backend.recipes.service.FavoriteService
 import de.hsflensburg.recipe_backend.recipes.service.RatingService
 import de.hsflensburg.recipe_backend.recipes.service.RecipeService
+import de.hsflensburg.recipe_backend.shared.getIdOfAuthenticatedUser
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
@@ -37,7 +38,7 @@ class RecipeController(
     fun createRecipe(@RequestPart("file") file: MultipartFile, @RequestPart("recipe") @Valid recipe: CreateRecipeRequestDto) {
         val image = fileService.uploadFile(file.bytes, file.originalFilename!!);
         recipe.image = image.publicUrl
-        recipeService.createRecipe(recipe)
+        recipeService.createRecipe(recipe, getIdOfAuthenticatedUser())
     }
 
     /**
@@ -48,7 +49,7 @@ class RecipeController(
      */
     @GetMapping("/{id}")
     fun getRecipe(@PathVariable id:Long) : Recipe? {
-        return recipeService.getRecipe(id)
+        return recipeService.getRecipe(id,true)
     }
 
     /**
@@ -74,31 +75,32 @@ class RecipeController(
 
     @PatchMapping("/{id}")
     fun updateRecipe(@PathVariable id:Long, @RequestBody @Valid recipe: CreateRecipeRequestDto) {
-        //TODO: prüfen ob userId mit recipe.userId übereinstimmt
-        recipeService.updateRecipe(id, recipe)
+
+        recipeService.updateRecipe(id, recipe, getIdOfAuthenticatedUser())
     }
 
     @DeleteMapping("/{id}")
     fun deleteRecipe(@PathVariable id: Long){
-       recipeService.deleteRecipe(id)
+
+       recipeService.deleteRecipe(id, getIdOfAuthenticatedUser())
     }
 
-    //Todo userID nicht hardcoden
+
     @PostMapping("favorites/{recipeId}")
     fun addFavorite(@PathVariable recipeId: Long) {
-        val userId = 1L
+        val userId = getIdOfAuthenticatedUser()
         favoriteService.favoriteRecipe(userId, recipeId)
     }
 
-    //Todo userID nicht hardcoden
-    @GetMapping("favorites/ofUser/{userId}")
-    fun getFavoritesOfUser(@PathVariable userId: Long): List<Recipe>{
-        val userIdTemp = 1L
-        return favoriteService.getFavoriteRecipes(userIdTemp)
+
+    @GetMapping("favorites/ofUser")
+    fun getFavoritesOfUser(): List<Recipe>{
+        return favoriteService.getFavoriteRecipes(getIdOfAuthenticatedUser())
     }
 
-    @GetMapping("/rating/{userId}/{recipeId}")
-    fun getRating(@PathVariable userId: Long,@PathVariable recipeId: Long): Int {
+    @GetMapping("/rating/{recipeId}")
+    fun getRating(@PathVariable recipeId: Long): Int {
+        val userId = getIdOfAuthenticatedUser()
         return ratingService.getRating(userId,recipeId)
     }
 

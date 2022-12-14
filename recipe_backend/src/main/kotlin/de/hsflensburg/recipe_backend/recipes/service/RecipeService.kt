@@ -9,6 +9,7 @@ import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeFilter
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeStep
 import de.hsflensburg.recipe_backend.recipes.repository.RecipeRepository
+import de.hsflensburg.recipe_backend.shared.getIdOfAuthenticatedUser
 import de.hsflensburg.recipe_backend.users.UserRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -37,9 +38,9 @@ class RecipeService(
      * @return The newly created [Recipe].
      * @throws ResponseStatusException with a status of [HttpStatus.NOT_FOUND] if the user with the specified id in the [CreateRecipeRequestDto] does not exist.
      */
-    fun createRecipe(recipe: CreateRecipeRequestDto): Recipe {
-        val user = userRepository.findById(recipe.authorId).orElseThrow {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${recipe.authorId} not found")
+    fun createRecipe(recipe: CreateRecipeRequestDto, userId: Long): Recipe {
+        val user = userRepository.findById(userId).orElseThrow {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "User with id ${userId} not found")
         }
 
         val recipeToSave = Recipe(
@@ -74,11 +75,11 @@ class RecipeService(
 
     }
 
-    fun getRecipe(id: Long): Recipe {
+    fun getRecipe(id: Long, increment: Boolean = false): Recipe {
         val recipe = recipeRepository.findById(id).orElseThrow {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with id $id not found")
         }
-        recipe.views += 1
+        if (increment) recipe.views += 1
         return recipe
     }
 
@@ -108,43 +109,47 @@ class RecipeService(
         }
     }
 
-    fun deleteRecipe(id: Long) {
-        recipeRepository.deleteById(id)
+    fun deleteRecipe(id: Long, userId: Long) {
+        val recipe = getRecipe((id))
+        if (recipe.author.id == userId){
+            recipeRepository.deleteById(id)
+        } else throw ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author")
+
     }
 
     fun getFavoriteRecipesForUser(userId: Long): List<Recipe> {
         return recipeRepository.findByFavoritedBy_User_Id(userId)
     }
 
-    fun updateRecipe(id: Long, recipeDTO: CreateRecipeRequestDto): Recipe {
+    fun updateRecipe(id: Long, recipeDTO: CreateRecipeRequestDto, userId: Long): Recipe {
         val recipe = getRecipe(id)
+        if (recipe.author.id == userId) {
+            recipe.steps.clear()
 
-        recipe.steps.clear()
-
-        recipeDTO.steps.mapIndexed { index, step ->
-            val recipeStep = RecipeStep(
-                stepNumber = index,
-                title = step.title,
-                description = step.description,
-                recipe = recipe,
-                imageUrl = step.imageUrl
-            )
-            recipeStep.ingredients = step.ingredients.map { ingredient ->
-                IngredientInfo(
-                    recipeStep = recipeStep,
-                    amount = ingredient.amount,
-                    unit = ingredient.unit,
-                    ingredient = ingredientRepository.findById(ingredient.ingredientId).get()
+            recipeDTO.steps.mapIndexed { index, step ->
+                val recipeStep = RecipeStep(
+                    stepNumber = index,
+                    title = step.title,
+                    description = step.description,
+                    recipe = recipe,
+                    imageUrl = step.imageUrl
                 )
-            }.toMutableSet()
-            recipe.steps.add(recipeStep)
-        }
+                recipeStep.ingredients = step.ingredients.map { ingredient ->
+                    IngredientInfo(
+                        recipeStep = recipeStep,
+                        amount = ingredient.amount,
+                        unit = ingredient.unit,
+                        ingredient = ingredientRepository.findById(ingredient.ingredientId).get()
+                    )
+                }.toMutableSet()
+                recipe.steps.add(recipeStep)
+            }
 
-        recipe.title = recipeDTO.title
-        recipe.description = recipeDTO.description
-        recipe.servings = recipeDTO.servings
-        recipe.author = userRepository.findById(recipeDTO.authorId).get()
+            recipe.title = recipeDTO.title
+            recipe.description = recipeDTO.description
+            recipe.servings = recipeDTO.servings
 
-        return recipe
+            return recipe
+        }else throw ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author")
     }
 }

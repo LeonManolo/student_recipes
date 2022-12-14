@@ -66,7 +66,6 @@ internal class RecipeServiceTest @Autowired constructor(
             "title",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -81,7 +80,7 @@ internal class RecipeServiceTest @Autowired constructor(
             )
         )
 
-        val recipe = recipeService.createRecipe(recipeDto)
+        val recipe = recipeService.createRecipe(recipeDto,1)
 
         assertEquals(recipeRepository.findAll().size, 1)
         assertEquals(recipeStepRepository.findAll().size, 2)
@@ -102,7 +101,6 @@ internal class RecipeServiceTest @Autowired constructor(
             "title",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -117,7 +115,7 @@ internal class RecipeServiceTest @Autowired constructor(
             )
         )
 
-        val recipe = recipeService.createRecipe(recipeDto)
+        val recipe = recipeService.createRecipe(recipeDto,1)
 
         favoriteRepository.save(Favorite(author, recipe))
 
@@ -126,7 +124,7 @@ internal class RecipeServiceTest @Autowired constructor(
         assertEquals(ingredientInfoRepository.findAll().size, 2)
         assertEquals(favoriteRepository.findAll().size, 1)
 
-        recipeService.deleteRecipe(recipe.id!!)
+        recipeService.deleteRecipe(recipe.id!!,1)
 
         assertEquals(recipeRepository.findAll().size, 0)
         assertEquals(recipeStepRepository.findAll().size, 0)
@@ -142,7 +140,6 @@ internal class RecipeServiceTest @Autowired constructor(
             "title",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -156,7 +153,7 @@ internal class RecipeServiceTest @Autowired constructor(
                 )
             )
         )
-        val id = recipeService.createRecipe(recipeDto).id!!
+        val id = recipeService.createRecipe(recipeDto,1).id!!
         val result = recipeRepository.findById(id).get()
         println(result.totalCalories)
         val totalCalories =
@@ -179,7 +176,6 @@ internal class RecipeServiceTest @Autowired constructor(
             "title",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -194,13 +190,12 @@ internal class RecipeServiceTest @Autowired constructor(
             )
         )
         assertTrue(recipeDto.isValid())
-        val result1 = recipeService.createRecipe(recipeDto)
+        val result1 = recipeService.createRecipe(recipeDto,1)
         val result = recipeRepository.findById(result1.id!!).get()
 
         assertEquals(recipeDto.title, result.title)
         assertEquals(recipeDto.description, result.description)
         assertEquals(recipeDto.servings, result.servings)
-        assertEquals(recipeDto.authorId, result.author.id)
         assertEquals(recipeDto.steps.size, result.steps.size)
         assertEquals(recipeDto.steps[0].title, result.steps.toList()[0].title) // jetzt geht es?
         assertEquals(recipeDto.steps[0].description, result.steps.toList()[0].description)
@@ -228,7 +223,6 @@ internal class RecipeServiceTest @Autowired constructor(
             "title",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -244,7 +238,7 @@ internal class RecipeServiceTest @Autowired constructor(
                 )
             )
         )
-        val id = recipeService.createRecipe(recipeDto).id!!
+        val id = recipeService.createRecipe(recipeDto,1).id!!
         val recipe = recipeService.getRecipe(id)
         val ingredients = recipe.ingredients
         println(ingredients)
@@ -262,7 +256,6 @@ internal class RecipeServiceTest @Autowired constructor(
             "title",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -277,13 +270,12 @@ internal class RecipeServiceTest @Autowired constructor(
             )
         )
         assertTrue(recipeDto.isValid())
-        val result = recipeService.createRecipe(recipeDto)
+        val result = recipeService.createRecipe(recipeDto,1)
 
         val updatedRecipeDto = CreateRecipeRequestDto(
             "title2",
             "description2",
             3,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta2", "cook pasta 2", listOf(
@@ -306,7 +298,7 @@ internal class RecipeServiceTest @Autowired constructor(
 
         //TODO: reihenfolge inconstent
         //TODO: aktuelles datum abspeichern und schauen ob es einträge vor diesem datum gibt
-        val id = recipeService.updateRecipe(result.id!!, updatedRecipeDto).id!!
+        val id = recipeService.updateRecipe(result.id!!, updatedRecipeDto,1).id!!
         val updatedResult = recipeRepository.findById(id).get()
         assertTrue(updatedResult.title == "title2")
         assertTrue(updatedResult.description == "description2")

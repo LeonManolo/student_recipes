@@ -55,7 +55,6 @@ internal class RatingServiceTest @Autowired constructor(
             "title",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -70,7 +69,7 @@ internal class RatingServiceTest @Autowired constructor(
             )
         )
 
-        val recipe = recipeService.createRecipe(recipeDto)
+        val recipe = recipeService.createRecipe(recipeDto,1)
 
         assertEquals(ratingRepository.findAll().size,0)
         ratingService.rateRecipe(5,author.id!!, recipe.id!!)
@@ -83,7 +82,6 @@ internal class RatingServiceTest @Autowired constructor(
             "title",
             "description",
             2,
-            author.id!!,
             listOf(
                 RecipeStepDto(
                     "Pasta", "cook pasta", listOf(
@@ -98,7 +96,7 @@ internal class RatingServiceTest @Autowired constructor(
             )
         )
 
-        val recipe = recipeService.createRecipe(recipeDto)
+        val recipe = recipeService.createRecipe(recipeDto,1)
 
         assertEquals(ratingRepository.findAll().size,0)
         ratingService.rateRecipe(5,author.id!!, recipe.id!!)
