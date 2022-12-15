@@ -51,6 +51,8 @@ class RecipeService(
             description = recipe.description,
             servings = recipe.servings,
             author = user,
+            price = recipe.price,
+            cookTime = recipe.cookTime
         )
         val savedRecipe = recipeRepository.save(recipeToSave)
 
@@ -105,14 +107,13 @@ class RecipeService(
 
     fun getRecipesForCategory(filter: RecipeFilter?,categoryId: Long): List<Recipe> {
         return when (filter){
-            RecipeFilter.NEWEST -> recipeRepository.findByCategories_IdOrderByCreatedAtDesc(categoryId)
-            RecipeFilter.MOST_VIEWED -> recipeRepository.findByCategories_IdOrderByViewsDesc(categoryId)
-            RecipeFilter.BEST_RATED -> TODO()
-            RecipeFilter.MOST_FAVORITES -> TODO()
-            RecipeFilter.FAST_TO_COOK -> recipeRepository.findByCategories_IdOrderByCookTimeDesc(categoryId)
-            RecipeFilter.CHEAP -> recipeRepository.findByCategories_IdOrderByPriceDesc(categoryId)
+            RecipeFilter.NEWEST -> recipeRepository.findByCategories_Category_IdOrderByCreatedAtDesc(categoryId)
+            RecipeFilter.MOST_VIEWED -> recipeRepository.findByCategories_Category_IdOrderByViewsDesc(categoryId)
+            RecipeFilter.BEST_RATED -> recipeRepository.findByCategories_Category_IdOrderByAverageRatingDesc(categoryId)
+            RecipeFilter.FAST_TO_COOK -> recipeRepository.findByCategories_Category_IdOrderByCookTimeDesc(categoryId)
+            RecipeFilter.CHEAP -> recipeRepository.findByCategories_Category_IdOrderByPriceDesc(categoryId)
             else -> {
-                recipeRepository.findByCategories_Id(categoryId)
+                recipeRepository.findByCategories_Category_Id(categoryId)
             }
         }
     }
@@ -162,6 +163,8 @@ class RecipeService(
             recipe.title = recipeDTO.title
             recipe.description = recipeDTO.description
             recipe.servings = recipeDTO.servings
+            recipe.price = recipeDTO.price
+            recipe.cookTime = recipeDTO.cookTime
 
             return recipe
         }else throw ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author")

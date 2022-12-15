@@ -5,6 +5,7 @@ import de.hsflensburg.recipe_backend.ingredients.entity.Ingredient
 import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
 import de.hsflensburg.recipe_backend.recipes.dto.IngredientInfoDto
 import de.hsflensburg.recipe_backend.recipes.dto.RecipeStepDto
+import de.hsflensburg.recipe_backend.recipes.entity.RecipeFilter
 import de.hsflensburg.recipe_backend.recipes.repository.FavoriteRepository
 import de.hsflensburg.recipe_backend.recipes.service.FavoriteService
 import de.hsflensburg.recipe_backend.recipes.service.RecipeService
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
 @AutoConfigureEmbeddedDatabase(refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
@@ -85,6 +87,94 @@ internal class CategoryTest@Autowired constructor(
         assertEquals(1,shouldContain.size)
         val shouldEmpty = recipeService.getRecipesForCategory(null,4)
         assertEquals(0,shouldEmpty.size)
+    }
+
+    @Test
+    @Transactional
+    fun `should order by filter and get for category`(){
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            ), null,
+            emptyList(),
+            10.0,
+            5
+
+        )
+
+        val id = recipeService.createRecipe(recipeDto,author.id!!).id!!
+
+        val recipeDto2 = CreateRecipeRequestDto(
+            "title2",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            ),null,
+            listOf<Long>(1),
+            20.0,
+            1
+        )
+
+        val id2 = recipeService.createRecipe(recipeDto2,author.id!!).id!!
+
+        val recipeDto3 = CreateRecipeRequestDto(
+            "title3",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            ),null,
+            listOf<Long>(1),
+            3.0,
+            20
+        )
+
+        val id3 = recipeService.createRecipe(recipeDto3,author.id!!).id!!
+
+        val recipesOrderByPriceDec = recipeService.getRecipes(RecipeFilter.CHEAP)
+        assertEquals(3,recipesOrderByPriceDec.size)
+        assertTrue(recipesOrderByPriceDec[0].id == id2)
+        assertTrue(recipesOrderByPriceDec[1].id == id)
+        assertTrue(recipesOrderByPriceDec[2].id == id3)
+
+        val check = recipeService.getRecipesForCategory(null,1)
+        assertEquals(2,check.size)
+
+        val recipesPriceDescCat1 = recipeService.getRecipesForCategory(RecipeFilter.CHEAP,1)
+        assertEquals(2,recipesPriceDescCat1.size)
+        assertTrue(recipesPriceDescCat1[0].id == id2 )
+        assertTrue(recipesPriceDescCat1[1].id == id3 )
     }
 
 

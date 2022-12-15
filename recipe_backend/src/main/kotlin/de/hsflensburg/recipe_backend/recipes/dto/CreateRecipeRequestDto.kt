@@ -24,7 +24,10 @@ data class CreateRecipeRequestDto(
     //val tags: List<String> = emptyList(),
     var image: String? = null,
 
-    val categories: List<Long> = emptyList()
+    val categories: List<Long> = emptyList(),
+
+    val price: Double = 0.0,
+    val cookTime: Int = 0
 )
 
 

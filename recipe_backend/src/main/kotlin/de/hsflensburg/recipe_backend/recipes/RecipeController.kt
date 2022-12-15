@@ -58,24 +58,32 @@ class RecipeController(
      * @param sortBy optional sorting criteria for the recipes
      * @return a list of all recipes, sorted according to the specified criteria
      */
+
+    /*
     @GetMapping
     fun getRecipes(@Valid @RequestParam("sort_by") sortBy: RecipeFilter? = null) : List<Recipe> {
         return recipeService.getRecipes(sortBy)
     }
+     */
 
-    @GetMapping("/category")
+    @GetMapping
     fun getRecipes(
-        @RequestParam("limit") limit: Int? = 100,
-        @RequestParam("category") category: Long,
+        @RequestParam("limit") limit: Int = 100,
+        @RequestParam("category") category: Long? = null,
         @Valid @RequestParam("sort_by") sortBy: RecipeFilter? = null
     ): List<Recipe> {
-        val recipes = recipeService.getRecipesForCategory(sortBy, category)
-        return recipes.subList(0, limit!!)
+        val recipes: List<Recipe> = if (category == null){
+            recipeService.getRecipes(sortBy)
+        } else
+            recipeService.getRecipesForCategory(sortBy, category)
+
+        return recipes.subList(0, limit)
     }
 
-    @PatchMapping("/{id}")
-    fun updateRecipe(@PathVariable id:Long, @RequestBody @Valid recipe: CreateRecipeRequestDto) {
-
+    @PatchMapping("/{id}", consumes = ["multipart/form-data"])
+    fun updateRecipe(@PathVariable id:Long, @RequestPart("file") file: MultipartFile, @RequestPart("recipe") @Valid recipe: CreateRecipeRequestDto) {
+        val image = fileService.uploadFile(file.bytes, file.originalFilename!!);
+        recipe.image = image.publicUrl
         recipeService.updateRecipe(id, recipe, getIdOfAuthenticatedUser())
     }
 
