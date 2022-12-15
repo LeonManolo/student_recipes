@@ -262,4 +262,33 @@ internal class FavoriteServiceTest @Autowired constructor(
 
         assertEquals(favoriteRepository.findAll().size,1)
     }
+
+    @Test
+    fun `recursion`(){
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe = recipeService.createRecipe(recipeDto,author.id!!)
+
+        val recipeGet1 = recipeService.getRecipe(recipe.id!!)
+
+        favoriteService.favoriteRecipe(author.id!!,recipeGet1.id!!)
+
+        val recipeGet2 = recipeService.getRecipe(recipe.id!!)
+    }
 }
