@@ -86,7 +86,7 @@ class Recipe(
     @JsonIgnore
     var ratingsOfRecipe: MutableSet<Rating> = mutableSetOf()
 
-    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL],orphanRemoval = true, fetch = FetchType.EAGER)
     var categories: MutableSet<CategoryRecipe> = mutableSetOf()
 
     @Formula(value = "(select coalesce(avg(rating.value),0) from rating where rating.recipe_id = id)")

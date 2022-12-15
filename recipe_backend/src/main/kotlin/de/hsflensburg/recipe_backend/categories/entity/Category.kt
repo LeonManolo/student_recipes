@@ -18,20 +18,19 @@ class Category(
     @Column(name = "title", nullable = false)
     var title: String,
 
+    @Id
+    @Column(name = "id")
+    val id: Long,
+
     @Column(name = "description", nullable = true)
     var description: String? = null,
 
     @Column(name = "image_url", nullable = true)
     var imageUrl: String? = null,
 
-
 ){
-
     @OneToMany(mappedBy = "category", cascade = [CascadeType.ALL])
     var recipes: MutableSet<CategoryRecipe> = mutableSetOf()
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long? = null
+
 }

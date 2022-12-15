@@ -267,10 +267,12 @@ internal class RecipeServiceTest @Autowired constructor(
                         IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
                     )
                 )
-            )
+            ),
+            null,
+            listOf<Long>(1)
         )
         assertTrue(recipeDto.isValid())
-        val result = recipeService.createRecipe(recipeDto,1)
+        val result = recipeService.createRecipe(recipeDto,author.id!!)
 
         val updatedRecipeDto = CreateRecipeRequestDto(
             "title2",
@@ -292,7 +294,8 @@ internal class RecipeServiceTest @Autowired constructor(
                         IngredientInfoDto(ingredientTomato.id!!, 100.0, "g"),
                     )
                 )
-            )
+            ), null,
+            listOf<Long>(2)
         )
         assertTrue(updatedRecipeDto.isValid())
 
@@ -300,6 +303,7 @@ internal class RecipeServiceTest @Autowired constructor(
         //TODO: aktuelles datum abspeichern und schauen ob es einträge vor diesem datum gibt
         val id = recipeService.updateRecipe(result.id!!, updatedRecipeDto,1).id!!
         val updatedResult = recipeRepository.findById(id).get()
+        assertTrue(updatedResult.categories.first().id == 2L)
         assertTrue(updatedResult.title == "title2")
         assertTrue(updatedResult.description == "description2")
         assertTrue(updatedResult.steps.size == 3)
