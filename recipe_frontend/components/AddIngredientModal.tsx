@@ -5,16 +5,16 @@ import CreateIngredientRequestDto from "../utils/dto/CreateIngredientRequestDto"
 import IngredientDto from "../utils/dto/IngredientDto";
 import UserDto from "../utils/dto/UserDto";
 import StudentRecipesClient from "../utils/StudentRecipesClient";
+import LoadingDots from "./LoadingDots";
 
 export default function AddIngredientModal({
   onAddIngredientClick,
   modalId,
 }: {
-  onAddIngredientClick: (ingredient: IngredientDto) => void,
-  modalId: string,
+  onAddIngredientClick: (ingredient: IngredientDto) => void;
+  modalId: string;
 }) {
   const [tab, setTab] = useState(0);
-  const [user, setUser] = useState<UserDto>();
 
   return (
     <div className="justify-center">
@@ -32,8 +32,7 @@ export default function AddIngredientModal({
               Zutat erstellen
             </a>
           </div>
-
-          {tab == 0 ? <SearchIngredient onAddIngredientClick={onAddIngredientClick}/> : <CreateIngredient />}
+          {tab == 0 ? <SearchIngredient onAddIngredientClick={onAddIngredientClick} /> : <CreateIngredient />}
           <div className="modal-action">
             <a href="#" className="btn">
               Abbrechen
@@ -43,27 +42,9 @@ export default function AddIngredientModal({
       </div>
     </div>
   );
-
-  async function createIngredient(): Promise<void> {
-    console.log("pressed createIngredient");
-    const ingredient: CreateIngredientRequestDto = {
-      title: "Kartoffel",
-      calories: 12,
-      protein: 22,
-      carbohydrates: 12,
-      fat: 33,
-    };
-    try {
-      const recipeClient = new StudentRecipesClient();
-      const success = await recipeClient.createIngredient(ingredient);
-      console.log(success);
-    } catch (e: any) {
-      console.log(e?.message);
-    }
-  }
 }
 
-function SearchIngredient({onAddIngredientClick}: {onAddIngredientClick: (x: IngredientDto) => void}) {
+function SearchIngredient({ onAddIngredientClick }: { onAddIngredientClick: (x: IngredientDto) => void }) {
   const [ingredients, setIngredients] = useState<IngredientDto[]>([]);
   const [isLoading, setLoading] = useState(false);
   let searchText = "";
@@ -79,24 +60,140 @@ function SearchIngredient({onAddIngredientClick}: {onAddIngredientClick: (x: Ing
         }}
         className="input input-bordered w-full max-w-xs"
       />
-      {isLoading ? "Loading..." : ""}
-      {ingredients.map((e) => (
-        <a href="#" onClick={() => onAddIngredientClick(e)} key={e.id}>{e.title}</a>
-      ))}
+      {isLoading ? (
+        <LoadingDots />
+      ) : (
+        ingredients.map((e) => (
+          <a href="#" className="pt-6" onClick={() => onAddIngredientClick(e)} key={e.id}>
+            {e.title}
+          </a>
+        ))
+      )}
     </div>
   );
 
   async function fetchIngredients(): Promise<void> {
     setLoading(true);
     const recipeClient = new StudentRecipesClient();
-    //TODO hier searchText
-    console.log(searchText);
-    const fetchedIngredients = await recipeClient.getIngredients(); //TODO: filter hinzufügen
+    const fetchedIngredients = await recipeClient.getIngredients(searchText); //TODO: filter hinzufügen
     setLoading(false);
     setIngredients(fetchedIngredients);
   }
 }
 
 function CreateIngredient() {
-  return <div>NAda</div>;
+  const [ingredient, setIngredient] = useState<CreateIngredientRequestDto>({
+    title: "",
+    calories: 0,
+    protein: 0,
+    carbohydrates: 0,
+    fat: 0,
+  });
+
+  return (
+    <form onSubmit={handleCreateIngredientSubmit}>
+      <InputField
+        title={"Title"}
+        type={"text"}
+        value={ingredient.title}
+        onChange={(v) => {
+          ingredient.title = v;
+          setIngredient({ ...ingredient });
+        }}
+      />
+      <InputField
+        title={"Protein"}
+        type={"number"}
+        min={0}
+        max={100}
+        value={ingredient.protein}
+        onChange={(v) => {
+          ingredient.protein = parseInt(v);
+          setIngredient({ ...ingredient });
+        }}
+      />
+      <InputField
+        title={"Fett"}
+        type={"number"}
+        min={0}
+        max={100}
+        value={ingredient.fat}
+        onChange={(v) => {
+          ingredient.fat = parseInt(v);
+          setIngredient({ ...ingredient });
+        }}
+      />
+      <InputField
+        title={"Kohlenhydrate"}
+        type={"number"}
+        min={0}
+        max={100}
+        value={ingredient.carbohydrates}
+        onChange={(v) => {
+          ingredient.carbohydrates = parseInt(v);
+          setIngredient({ ...ingredient });
+        }}
+      />
+      <InputField
+        title={"Kalorien"}
+        type={"number"}
+        min={0}
+        max={5000}
+        value={ingredient.calories}
+        onChange={(v) => {
+          ingredient.calories = parseInt(v);
+          setIngredient({ ...ingredient });
+        }}
+      />
+      <button className="btn mt-4" type="submit">
+        Erstellen und Hinzufügen
+      </button>
+    </form>
+  );
+
+  async function handleCreateIngredientSubmit() {
+    event?.preventDefault();
+    try {
+      const recipeClient = new StudentRecipesClient();
+      //TODO: hier ingredient mit id holen
+      await recipeClient.createIngredient(ingredient);
+    } catch (e: any) {
+      console.log(e?.message);
+      alert(e?.message);
+    }
+  }
+}
+
+function InputField({
+  title,
+  type,
+  min,
+  max,
+  value,
+  onChange,
+}: {
+  title: string;
+  type: string;
+  min?: number;
+  max?: number;
+  value: string | number;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="form-control w-full">
+      <label className="label">
+        <span className="label-text">{title}</span>
+      </label>
+      <input
+        value={value}
+        min={min}
+        max={max}
+        onChange={(v) => onChange(v.target.value)}
+        type={type}
+        placeholder="0..."
+        className="input input-bordered w-full"
+        required={true}
+      />
+    </div>
+  );
 }

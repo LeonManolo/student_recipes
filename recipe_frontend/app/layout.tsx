@@ -1,4 +1,3 @@
-//'use client';
 import "./globals.css";
 import Link from "next/link";
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -102,7 +101,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </ul>
             </div>
             <div className="navbar-end pr-2 ">
-              <Link className="btn btn-ghost normal-case text-xl bg-custom-first hover:bg-custom-second" href="/profile">Profil</Link>
+              <Link
+                className="btn btn-ghost normal-case text-xl bg-custom-first hover:bg-custom-second"
+                href="/profile"
+              >
+                Profil
+              </Link>
               {/*               <Link href="/recipes/123">Rezept mit id 123</Link> */}
             </div>
           </div>

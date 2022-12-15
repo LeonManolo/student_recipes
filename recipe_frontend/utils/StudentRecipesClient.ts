@@ -1,23 +1,29 @@
+import Cookies from "js-cookie";
 import CreateIngredientRequestDto from "./dto/CreateIngredientRequestDto";
 import CreateRecipeRequestDto from "./dto/CreateRecipeRequestDto";
 import IngredientDto from "./dto/IngredientDto";
 import LoginRequestDto from "./dto/LoginRequestDto";
 import RecipeResponseDto from "./dto/RecipeResponseDto";
 import RegisterRequestDto from "./dto/RegisterRequestDto";
-
+import { getCookie } from "cookies-next";
 /**
  * This class contains all functions that are necessary for all of the
  * API requests. To do this, the functions use the associated dto's.
  */
 export default class StudentRecipesClient {
   private readonly BASE_URL = "https://sea-turtle-app-hqisk.ondigitalocean.app";
-  private readonly DEFAULT_HEADER = {
+  private DEFAULT_HEADER = {
     "Content-Type": "application/json",
+    Authorization: `Bearer ${getCookie("token")}`,
   };
 
-  async getIngredients(): Promise<IngredientDto[]> {
-    const result = await fetch(`${this.BASE_URL}/api/ingredients`, {
-      headers: this.DEFAULT_HEADER,
+  async getIngredients(keyword?: string): Promise<IngredientDto[]> {
+    let url = this.BASE_URL + "/api/ingredients";
+    if (keyword) {
+      url += "?keyword=" + keyword;
+    }
+    const result = await fetch(url, {
+      headers: this.setHeader(),
     });
     const ingredients: IngredientDto[] = await result.json();
     return await this.returnIfSuccessElseError(result, ingredients);
@@ -55,16 +61,8 @@ export default class StudentRecipesClient {
     const result = await fetch(`${this.BASE_URL}/api/recipes/rating/${userId}/${recipeId}`, {
       headers: this.DEFAULT_HEADER,
     });
-    const text = await result.text()
+    const text = await result.text();
     return await this.returnIfSuccessElseError(result, parseInt(text));
-  }
-
-  async getFavorites(userId: number): Promise<RecipeResponseDto[]> {
-    const result = await fetch(`${this.BASE_URL}/api/recipes/favorites/ofUser/${userId}`, {
-      headers: this.DEFAULT_HEADER,
-    });
-    const recipes: RecipeResponseDto[] = await result.json();
-    return await this.returnIfSuccessElseError(result, recipes);
   }
 
   async getRecipes(): Promise<RecipeResponseDto[]> {
@@ -75,9 +73,12 @@ export default class StudentRecipesClient {
     return await this.returnIfSuccessElseError(result, recipes);
   }
 
-  async getRecipe(id: String): Promise<RecipeResponseDto> {
+  async getRecipe(id: String, test: String = "nicht"): Promise<RecipeResponseDto> {
     const result = await fetch(`${this.BASE_URL}/api/recipes/${id}`, {
-      headers: this.DEFAULT_HEADER,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
     });
     const recipe: RecipeResponseDto = await result.json();
     return await this.returnIfSuccessElseError(result, recipe);
@@ -85,9 +86,9 @@ export default class StudentRecipesClient {
 
   async createRecipe(recipe: CreateRecipeRequestDto): Promise<void> {
     const json = JSON.stringify(recipe);
+    console.log("in create recipe " + getCookie("token"));
     const result = await fetch(`${this.BASE_URL}/api/recipes`, {
       method: "POST",
-      headers: this.DEFAULT_HEADER,
       body: json,
     });
     await this.returnIfSuccessElseError(result, true);
@@ -103,9 +104,12 @@ export default class StudentRecipesClient {
         type: "application/json",
       })
     );
-    const result = await fetch(`http://localhost:8080/api/recipes`, {
+    const result = await fetch(`${this.BASE_URL}/api/recipes`, {
       method: "POST",
       body: formData,
+      headers: {
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
     });
     await this.returnIfSuccessElseError(result, true);
   }
@@ -128,6 +132,26 @@ export default class StudentRecipesClient {
     await this.returnIfSuccessElseError(result, true);
   }
 
+  async favoriteRecipe(recipeId: number): Promise<void> {
+    const result = await fetch(`${this.BASE_URL}/api/recipes/favorites/${recipeId}`, {
+      method: "POST",
+      headers: this.setHeader(),
+    });
+    await this.returnIfSuccessElseError(result, true);
+  }
+
+  async unfavoriteRecipe(recipeId: number): Promise<void> {
+    // TODO
+  }
+
+  async getFavoriteRecipes(): Promise<RecipeResponseDto[]> {
+    const result = await fetch(`${this.BASE_URL}/api/recipes/ofUser`, {
+      headers: this.setHeader(),
+    });
+    const recipe: RecipeResponseDto[] = await result.json();
+    return await this.returnIfSuccessElseError(result, recipe);
+  }
+
   async register(registerDto: RegisterRequestDto): Promise<boolean> {
     const json = JSON.stringify(registerDto);
     const result = await fetch(`${this.BASE_URL}/api/auth/register`, {
@@ -135,18 +159,21 @@ export default class StudentRecipesClient {
       headers: this.DEFAULT_HEADER,
       body: json,
     });
-    console.log(result.headers.get("set-cookie"));
     return this.returnIfSuccessElseError(result, true);
   }
 
-  async login(loginDto: LoginRequestDto): Promise<boolean> {
+  async login(loginDto: LoginRequestDto): Promise<any> {
     const json = JSON.stringify(loginDto);
     const result = await fetch(`${this.BASE_URL}/api/auth/login`, {
       method: "POST",
       headers: this.DEFAULT_HEADER,
       body: json,
     });
-    return this.returnIfSuccessElseError(result, true);
+    const responseBody = await result.json();
+
+    Cookies.set("token", responseBody.token);
+
+    return this.returnIfSuccessElseError(result, responseBody);
   }
 
   async logout(): Promise<boolean> {
@@ -158,11 +185,25 @@ export default class StudentRecipesClient {
   }
 
   private async returnIfSuccessElseError<T>(response: Response, success: T): Promise<T> {
+    let error = "";
+    console.log(response.status);
     if (response.ok) {
       return success;
     }
-    const error = await response.text();
+    if (response.bodyUsed) {
+      response.body;
+    } else {
+      error = await response.json();
+      error = JSON.stringify(error);
+    }
     throw new StudentRecipesClientError(error);
+  }
+
+  private setHeader(): any {
+    return {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getCookie("token")}`,
+    };
   }
 }
 
