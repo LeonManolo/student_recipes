@@ -77,7 +77,7 @@ class RecipeController(
         } else
             recipeService.getRecipesForCategory(sortBy, category)
 
-        return recipes.subList(0, limit!!)
+        return recipes.take(limit!!)
     }
 
     @PatchMapping("/{id}", consumes = ["multipart/form-data"])
