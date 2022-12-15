@@ -37,7 +37,7 @@ class RecipeController(
     @PostMapping(consumes = ["multipart/form-data"])
     fun createRecipe(@RequestPart("file") file: MultipartFile, @RequestPart("recipe") @Valid recipe: CreateRecipeRequestDto) {
         val image = fileService.uploadFile(file.bytes, file.originalFilename!!);
-        recipe.image = image.publicUrl
+        recipe.imageUrl = image.publicUrl
         recipeService.createRecipe(recipe, getIdOfAuthenticatedUser())
     }
 
@@ -83,7 +83,7 @@ class RecipeController(
     @PatchMapping("/{id}", consumes = ["multipart/form-data"])
     fun updateRecipe(@PathVariable id:Long, @RequestPart("file") file: MultipartFile, @RequestPart("recipe") @Valid recipe: CreateRecipeRequestDto) {
         val image = fileService.uploadFile(file.bytes, file.originalFilename!!);
-        recipe.image = image.publicUrl
+        recipe.imageUrl = image.publicUrl
         recipeService.updateRecipe(id, recipe, getIdOfAuthenticatedUser())
     }
 

@@ -58,6 +58,9 @@ class Recipe(
 
     @Column(name = "cooking_time", nullable = false)
     var cookTime : Int = 0,
+
+    @Column(name = "image_Url", nullable = true)
+    var imageUrl : String? = null
     ) {
 
     @Id

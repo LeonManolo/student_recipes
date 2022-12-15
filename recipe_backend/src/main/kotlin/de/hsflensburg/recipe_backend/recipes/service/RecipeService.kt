@@ -2,8 +2,6 @@ package de.hsflensburg.recipe_backend.recipes.service
 
 import de.hsflensburg.recipe_backend.categories.CategoryRepository
 import de.hsflensburg.recipe_backend.categories.entity.CategoryRecipe
-import de.hsflensburg.recipe_backend.recipes.repository.FavoriteRepository
-import de.hsflensburg.recipe_backend.recipes.repository.RatingRepository
 import de.hsflensburg.recipe_backend.ingredients.IngredientRepository
 import de.hsflensburg.recipe_backend.ingredients.entity.IngredientInfo
 import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
@@ -11,7 +9,6 @@ import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeFilter
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeStep
 import de.hsflensburg.recipe_backend.recipes.repository.RecipeRepository
-import de.hsflensburg.recipe_backend.shared.getIdOfAuthenticatedUser
 import de.hsflensburg.recipe_backend.users.UserRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -52,7 +49,8 @@ class RecipeService(
             servings = recipe.servings,
             author = user,
             price = recipe.price,
-            cookTime = recipe.cookTime
+            cookTime = recipe.cookTime,
+            imageUrl = recipe.imageUrl
         )
         val savedRecipe = recipeRepository.save(recipeToSave)
 
@@ -165,6 +163,7 @@ class RecipeService(
             recipe.servings = recipeDTO.servings
             recipe.price = recipeDTO.price
             recipe.cookTime = recipeDTO.cookTime
+            recipe.imageUrl = recipeDTO.imageUrl
 
             return recipe
         }else throw ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author")

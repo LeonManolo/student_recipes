@@ -1,6 +1,5 @@
 package de.hsflensburg.recipe_backend.recipes.dto
 
-import de.hsflensburg.recipe_backend.categories.entity.Category
 import javax.validation.Valid
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
@@ -22,7 +21,7 @@ data class CreateRecipeRequestDto(
     @field:Valid
     val steps: List<RecipeStepDto>,
     //val tags: List<String> = emptyList(),
-    var image: String? = null,
+    var imageUrl: String? = null,
 
     val categories: List<Long> = emptyList(),
 
