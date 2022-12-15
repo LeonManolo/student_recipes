@@ -65,9 +65,13 @@ export default class StudentRecipesClient {
     return await this.returnIfSuccessElseError(result, parseInt(text));
   }
 
-  async getRecipes(): Promise<RecipeResponseDto[]> {
+  async getRecipes(limit?: number): Promise<RecipeResponseDto[]> {
+    let url = this.BASE_URL + "/api/recipes";
+    if (url !== undefined) {
+      url += "limit=" + limit;
+    }
     const result = await fetch(`${this.BASE_URL}/api/recipes`, {
-      headers: this.DEFAULT_HEADER,
+      headers: this.setHeader(),
     });
     const recipes: RecipeResponseDto[] = await result.json();
     return await this.returnIfSuccessElseError(result, recipes);
@@ -181,6 +185,7 @@ export default class StudentRecipesClient {
       method: "POST",
       headers: this.DEFAULT_HEADER,
     });
+    Cookies.remove("token");
     return this.returnIfSuccessElseError(result, true);
   }
 
