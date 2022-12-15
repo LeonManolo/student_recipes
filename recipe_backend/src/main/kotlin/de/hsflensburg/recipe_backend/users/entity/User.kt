@@ -57,7 +57,7 @@ class User (
     val id: Long? = null
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
-    @JsonManagedReference
+    @JsonIgnore
     var favoriteRecipes: MutableSet<Favorite> = mutableSetOf()
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
