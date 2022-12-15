@@ -6,8 +6,10 @@ import CreateRecipeRequestDto, { IngredientInfoDto, RecipeStepDto } from "../../
 import IngredientDto from "../../../utils/dto/IngredientDto";
 import StudentRecipesClient, { StudentRecipesClientError } from "../../../utils/StudentRecipesClient";
 
+/* Page to create a new recipe. */
 export default function CreateRecipePage() {
   let recipeSteps: RecipeStepDto[] = [];
+  /* State hooks to set recipe details provided by user. */
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [servings, setServings] = useState<number>(0);
@@ -26,6 +28,7 @@ export default function CreateRecipePage() {
 
         <div className="flex flex-row w-full space-x-4">
           <div className="flex items-center w-full aspect-square rounded-lg text-center justify-center bg-base-200">
+            {/* User can upload own picture and will be prompt to do so, if no image has been provided. */}
             {filebase64 ? (
               <img className="w-full aspect-square object-cover rounded-lg" alt="recipe image" src={filebase64} />
             ) : (

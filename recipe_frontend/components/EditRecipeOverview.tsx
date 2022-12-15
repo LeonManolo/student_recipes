@@ -14,7 +14,7 @@ export default function EditRecipeOverview({ recipe }: { recipe: RecipeResponseD
     const recipeClient = new StudentRecipesClient()
     return (
         <div className="card card-compact w-96 h-max shadow-xl bg-base-100 ">
-            <Image className='rounded-t-xl ' src={img} alt="recipe" width={500} height={500} />
+            {recipe && <Image className='rounded-t-xl ' src={recipe.imageUrl!!} alt="recipe" width={500} height={500} />}
             <div className="card-body">
                 <div className='flex flex-col'>
                     <h1 className="card-title text-3xl">{recipe.title}</h1>

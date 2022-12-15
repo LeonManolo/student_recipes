@@ -17,12 +17,16 @@ import { cookies } from "next/headers";
 import { getCookie, setCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 
+/* Page to show all detailed information of a single recipe. 
+  @params params Contains a Recipe. */
+
 export default function RecipeDetail({ params }: any) {
   const [recipe, setRecipe] = useState<RecipeResponseDto>();
   const [liked, setLiked] = useState(false);
   //const recipe = (await fetchRecipe(params.id))!!;
   //const rating = await fetchRating(recipe.author.id, params.id);
 
+  /* State hook to set current recipe. */
   useEffect(() => {
     fetchRecipe();
   }, []);
@@ -58,13 +62,18 @@ export default function RecipeDetail({ params }: any) {
             </div>
           </div>
           <div className="w-1/2">
+            {/* Table of all necessary steps to cook recipe. */}
+
             <RecipeTable recipe={recipe} />
           </div>
+          {/* Table of recipes nutrional value e.g. proteins, carbohydrates, fats etc. */}
           <NutritionTable recipe={recipe} />
         </div>
       </div>
     </div>
   );
+
+  /* Fetches a single recipe by id. */
   async function fetchRecipe(): Promise<void> {
     const recipeClient = new StudentRecipesClient();
     try {
@@ -78,6 +87,7 @@ export default function RecipeDetail({ params }: any) {
     }
   }
 
+  /* Fetches the rating from 1 to 5 of a recipe by recipe id and user id. */
   async function fetchRating(userId: number, recipeId: number): Promise<number> {
     const recipeClient = new StudentRecipesClient();
     const rating = await recipeClient.getRating(userId, recipeId);

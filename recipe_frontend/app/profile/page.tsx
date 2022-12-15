@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import UpdateUserRequestDto from "../../utils/dto/UpdateUserRequestDto";
 import { InputField } from "../../components/AddIngredientModal";
 
+/* Profile page where user can see all on register provided information and change the profile picture. */
 export default function Profile() {
   const [file, setFile] = useState<File>();
   const [filebase64, setFileBase64] = useState<string>("");
@@ -41,6 +42,7 @@ export default function Profile() {
     }
   }
 
+  /* Calls endpoint to logout user. */
   async function logout(): Promise<void> {
     const recipeClient = new StudentRecipesClient();
     await recipeClient.logout();

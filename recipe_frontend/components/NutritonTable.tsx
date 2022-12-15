@@ -13,6 +13,7 @@ import React from 'react';
 import RecipeResponseDto from '../utils/dto/RecipeResponseDto';
 import StudentRecipesClient from '../utils/StudentRecipesClient';
 
+/* Component that provides an overview of all nutritional information of a recipe made vivid with icons. */
 export default function NutritionTable({ recipe }: { recipe: RecipeResponseDto }) {
     return (
         <div className="card card-compact w-96 h-max shadow-xl bg-base-100 ">

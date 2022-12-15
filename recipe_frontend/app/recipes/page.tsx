@@ -8,11 +8,12 @@ import RecipeResponseDto from "../../utils/dto/RecipeResponseDto";
 import { useEffect, useState } from "react";
 import { RecipeFilter } from "../../utils/dto/RecipeFilter";
 
-// Mapped zu der Route "/recipes" ohne eine id also nicht "recipes/123"
+/* Page to show all recipes on the site. */
 export default function Recipes() {
   const [recipes, setRecipes] = useState<RecipeResponseDto[]>([]);
-  let filter = RecipeFilter.NEWEST
+  let filter = RecipeFilter.NEWEST;
 
+  /* State hook calls fetRecipes() only when component is initially rendered. */
   useEffect(() => {
     fetchRecipes();
   }, []);
@@ -36,6 +37,8 @@ export default function Recipes() {
           {recipes.map((recipe, index) => (
             <div key={index} className="flex p-4 hover:scale-105 transition-all duration-500 cursor-pointer">
               <Link href={`recipes/${recipe.id}`}>
+                {/* Provides every recipe as overview component in a loop. */}
+                {/* Dynamically links to detail page of recipe when clicked. */}
                 <RecipeOverview recipe={recipe} />{" "}
               </Link>
             </div>
@@ -44,6 +47,8 @@ export default function Recipes() {
       </div>
     </div>
   );
+
+  /* Fetches all recipes from endpoint. */
   async function fetchRecipes(filter: RecipeFilter = RecipeFilter.NEWEST): Promise<void> {
     const recipeClient = new StudentRecipesClient();
     const recipesFetched = await recipeClient.getRecipes(1000, filter);

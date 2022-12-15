@@ -4,6 +4,10 @@ import { HiStar } from "react-icons/hi";
 import Link from 'next/link';
 import React, { useState } from 'react';
 
+/**
+ * This component returns the main layout of the profile page containg the users info.
+ * 
+ */
 export default function CreateAvatar({ children, ...props }: any) {
     return (
         <div className="card card-side shadow-xl p-10">

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { RecipeFilter } from "../utils/dto/RecipeFilter";
 
+/* Component that changes the order of recipes.  */
 export default function Tab({ onTabChange }: { onTabChange: (x: RecipeFilter) => void }) {
   const [tab, setTab] = useState(0);
   return (

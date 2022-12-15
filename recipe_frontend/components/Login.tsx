@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { setCookie } from "cookies-next";
 
+/* Component to enter credentials of existing account. */
 export default function Login({ children, ...props }: any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

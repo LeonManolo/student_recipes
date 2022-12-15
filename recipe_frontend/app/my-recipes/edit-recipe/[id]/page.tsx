@@ -6,6 +6,7 @@ import IngredientDto from "../../../../utils/dto/IngredientDto";
 import StudentRecipesClient, { StudentRecipesClientError } from "../../../../utils/StudentRecipesClient";
 import EditRecipeStepsComponent from "./EditRecipeStep";
 
+/* Page to edit data of a recipe that has already been created by user. */
 export default function EditRecipePage({ params }: any) {
   const recipeId = params.id;
   const [recipeSteps, setRecipeSteps] = useState<RecipeStepDto[]>([]);
@@ -18,6 +19,7 @@ export default function EditRecipePage({ params }: any) {
   const [file, setFile] = useState<File>();
   const [filebase64, setFileBase64] = useState<string>("");
 
+  /* State hooks to set initial value. */
   useEffect(() => {
     fetchInitialRecipeAndUpdate();
   }, []);

@@ -3,6 +3,7 @@ import { useState } from "react";
 import StudentRecipesClient from "../utils/StudentRecipesClient";
 import RegisterRequestDto from "../utils/dto/RegisterRequestDto";
 
+/* Component for a form where the user can register a new account. */
 export default function Register({ children, ...props }: any) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");

@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* This file provides Preflight, which is a set of basestyles for the whole project. */
+/* Setting font and headers size globally. */
+
 @layer base {
   html {
     font-family: Dunbar Tall, system-ui, sans-serif;

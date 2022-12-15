@@ -1,5 +1,10 @@
 "use client"
 import { useState } from "react"
+
+/**
+ * Component to filter recipes by categories.
+ * @returns A dropdown menu of filter.
+ */
 export default function DropDown() {
     const [tab, setFilter] = useState(0)
     return (
