@@ -6,6 +6,7 @@ import LoginRequestDto from "./dto/LoginRequestDto";
 import RecipeResponseDto from "./dto/RecipeResponseDto";
 import RegisterRequestDto from "./dto/RegisterRequestDto";
 import { getCookie } from "cookies-next";
+import UpdateUserRequestDto from "./dto/UpdateUserRequestDto";
 /**
  * This class contains all functions that are necessary for all of the
  * API requests. To do this, the functions use the associated dto's.
@@ -37,14 +38,15 @@ export default class StudentRecipesClient {
     return await this.returnIfSuccessElseError(result, ingredient);
   }
 
-  async createIngredient(ingredient: CreateIngredientRequestDto): Promise<void> {
-    const json = JSON.stringify(ingredient);
+  async createIngredient(createIngredient: CreateIngredientRequestDto): Promise<IngredientDto> {
+    const json = JSON.stringify(createIngredient);
     const result = await fetch(`${this.BASE_URL}/api/ingredients`, {
       method: "POST",
       headers: this.DEFAULT_HEADER,
       body: json,
     });
-    await this.returnIfSuccessElseError(result, true);
+    const ingredient: IngredientDto = await result.json();
+    return await this.returnIfSuccessElseError(result, ingredient);
   }
 
   async updateIngredient(ingredient: CreateIngredientRequestDto, ingredientId: number): Promise<boolean> {
@@ -154,6 +156,26 @@ export default class StudentRecipesClient {
     });
     const recipe: RecipeResponseDto[] = await result.json();
     return await this.returnIfSuccessElseError(result, recipe);
+  }
+
+  async updateUserWithImage(user: UpdateUserRequestDto, image: File): Promise<void> {
+    const json = JSON.stringify(user);
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append(
+      "user",
+      new Blob([json], {
+        type: "application/json",
+      })
+    );
+    const result = await fetch(`${this.BASE_URL}/api/user`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
+    });
+    await this.returnIfSuccessElseError(result, true);
   }
 
   async register(registerDto: RegisterRequestDto): Promise<boolean> {

@@ -29,7 +29,7 @@ class UserController(val userService: UserService, val fileService: FileService)
      * @param file the file to be uploaded( The profile picture)
      * @param user the Recipe object to be created
      */
-    @PostMapping(consumes = ["multipart/form-data"])
+    @PatchMapping(consumes = ["multipart/form-data"])
     fun updateUser(@RequestPart("file") file: MultipartFile, @RequestPart("user") @Valid user: UpdateUserDto) {
         val image = fileService.uploadFile(file.bytes, file.originalFilename!!);
         user.imageUrl = image.publicUrl
