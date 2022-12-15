@@ -68,7 +68,7 @@ class RecipeController(
 
     @GetMapping
     fun getRecipes(
-        @RequestParam("limit") limit: Int = 100,
+        @RequestParam("limit") limit: Int? = 100,
         @RequestParam("category") category: Long? = null,
         @Valid @RequestParam("sort_by") sortBy: RecipeFilter? = null
     ): List<Recipe> {
@@ -77,7 +77,7 @@ class RecipeController(
         } else
             recipeService.getRecipesForCategory(sortBy, category)
 
-        return recipes.subList(0, limit)
+        return recipes.subList(0, limit!!)
     }
 
     @PatchMapping("/{id}", consumes = ["multipart/form-data"])
