@@ -79,13 +79,11 @@ class Recipe(
     var views: Int = 0
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
-    @JsonBackReference
     @JsonIgnore
     var favoritedBy: MutableSet<Favorite> = mutableSetOf()
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
     @JsonIgnore
-    @JsonBackReference
     var ratingsOfRecipe: MutableSet<Rating> = mutableSetOf()
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
