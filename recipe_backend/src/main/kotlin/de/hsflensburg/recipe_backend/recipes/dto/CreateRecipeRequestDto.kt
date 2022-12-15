@@ -21,7 +21,12 @@ data class CreateRecipeRequestDto(
     @field:Valid
     val steps: List<RecipeStepDto>,
     //val tags: List<String> = emptyList(),
-    var image: String? = null
+    var imageUrl: String? = null,
+
+    val categories: List<Long> = emptyList(),
+
+    val price: Double = 0.0,
+    val cookTime: Int = 0
 )
 
 

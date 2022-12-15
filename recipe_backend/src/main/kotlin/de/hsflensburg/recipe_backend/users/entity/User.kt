@@ -44,7 +44,7 @@ class User (
 
 ){
     @OneToMany(mappedBy = "author", orphanRemoval = true)
-    @JsonBackReference
+    @JsonIgnore
     val recipes: MutableSet<Recipe> = mutableSetOf()
 
     @CreationTimestamp
@@ -57,9 +57,10 @@ class User (
     val id: Long? = null
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
-    @JsonManagedReference
+    @JsonIgnore
     var favoriteRecipes: MutableSet<Favorite> = mutableSetOf()
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+    @JsonIgnore
     var ratingsCreatedByUser: MutableSet<Rating> = mutableSetOf()
 }

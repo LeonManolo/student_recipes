@@ -1,5 +1,6 @@
 package de.hsflensburg.recipe_backend.recipes.entity
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import de.hsflensburg.recipe_backend.users.entity.User
 import org.hibernate.annotations.CreationTimestamp
@@ -24,10 +25,12 @@ import javax.persistence.*
 class Favorite (
 
     @ManyToOne(optional = false)
+    @JsonManagedReference
     @JoinColumn(name = "user_id", nullable = false)
     var user: User? = null,
 
     @ManyToOne(optional = false)
+    @JsonManagedReference
     @JoinColumn(name = "recipe_id", nullable = false)
     var recipe: Recipe? = null
         ){

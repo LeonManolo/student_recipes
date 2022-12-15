@@ -74,21 +74,21 @@ internal class FavoriteServiceTest @Autowired constructor(
             )
         )
 
-        val id = recipeService.createRecipe(recipeDto,1).id!!
+        val id = recipeService.createRecipe(recipeDto,author.id!!).id!!
 
-        favoriteService.favoriteRecipe(1,id)
+        favoriteService.favoriteRecipe(author.id!!,id)
 
-        val favorites = favoriteService.getFavoriteRecipes(1)
+        val favorites = favoriteService.getFavoriteRecipes(author.id!!)
 
         assertEquals(1,favorites.size)
         assertEquals("title",favorites[0].title)
+        assertEquals("Pasta",favorites[0].steps.toList()[0].title)
 
     }
 
     @Test
     fun `getting empty Favorites`(){
-        val favorites = favoriteService.getFavoriteRecipes(1)
-
+        val favorites = favoriteService.getFavoriteRecipes(author.id!!)
         assertEquals(0,favorites.size)
     }
 
@@ -261,5 +261,34 @@ internal class FavoriteServiceTest @Autowired constructor(
         //recipeRepository.save(recipe)
 
         assertEquals(favoriteRepository.findAll().size,1)
+    }
+
+    @Test
+    fun `recursion`(){
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe = recipeService.createRecipe(recipeDto,author.id!!)
+
+        val recipeGet1 = recipeService.getRecipe(recipe.id!!)
+
+        favoriteService.favoriteRecipe(author.id!!,recipeGet1.id!!)
+
+        val recipeGet2 = recipeService.getRecipe(recipe.id!!)
     }
 }

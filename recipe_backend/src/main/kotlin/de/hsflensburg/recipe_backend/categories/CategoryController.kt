@@ -63,7 +63,16 @@ class CategoryController(
      */
     @PostConstruct
     private fun init() {
-        val category = Category("Vegan","Vegane Rezepte")
-        categoryRepository.save(category)
+        val category1 = Category("Vegan",1,"Vegane Rezepte")
+        categoryRepository.save(category1)
+        val category2 = Category("Fleisch",2)
+        categoryRepository.save(category2)
+        val category3 = Category("Kuchen",3)
+        categoryRepository.save(category3)
+        val category4 = Category("Nudeln",4)
+        categoryRepository.save(category4)
+        val category5 = Category("Reis",5)
+        categoryRepository.save(category5)
+
     }
 }

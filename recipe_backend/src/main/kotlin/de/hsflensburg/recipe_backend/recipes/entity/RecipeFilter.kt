@@ -9,8 +9,10 @@ enum class RecipeFilter {
     MOST_VIEWED,
     @field:JsonProperty("best_rated")
     BEST_RATED,
-    @field:JsonProperty("most_favorites")
-    MOST_FAVORITES,
+
+    //@field:JsonProperty("most_favorites")
+    //MOST_FAVORITES,
+
     @field:JsonProperty("fast_to_cook")
     FAST_TO_COOK,
     @field:JsonProperty("cheap")

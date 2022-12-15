@@ -1,7 +1,7 @@
 package de.hsflensburg.recipe_backend.recipes.service
 
-import de.hsflensburg.recipe_backend.recipes.repository.FavoriteRepository
-import de.hsflensburg.recipe_backend.recipes.repository.RatingRepository
+import de.hsflensburg.recipe_backend.categories.CategoryRepository
+import de.hsflensburg.recipe_backend.categories.entity.CategoryRecipe
 import de.hsflensburg.recipe_backend.ingredients.IngredientRepository
 import de.hsflensburg.recipe_backend.ingredients.entity.IngredientInfo
 import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
@@ -9,7 +9,6 @@ import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeFilter
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeStep
 import de.hsflensburg.recipe_backend.recipes.repository.RecipeRepository
-import de.hsflensburg.recipe_backend.shared.getIdOfAuthenticatedUser
 import de.hsflensburg.recipe_backend.users.UserRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -31,6 +30,7 @@ class RecipeService(
     private val recipeRepository: RecipeRepository,
     private val ingredientRepository: IngredientRepository,
     private val userRepository: UserRepository,
+    private val categoryRepository: CategoryRepository
 ) {
     /**
      * Creates a new [Recipe] with the information provided in the [CreateRecipeRequestDto].
@@ -48,6 +48,9 @@ class RecipeService(
             description = recipe.description,
             servings = recipe.servings,
             author = user,
+            price = recipe.price,
+            cookTime = recipe.cookTime,
+            imageUrl = recipe.imageUrl
         )
         val savedRecipe = recipeRepository.save(recipeToSave)
 
@@ -71,6 +74,10 @@ class RecipeService(
             }.toMutableSet()
 
         }
+        recipe.categories.map { index ->
+            val category = categoryRepository.findById(index).get()
+            savedRecipe.categories.add(CategoryRecipe(category,savedRecipe))
+        }
         return recipeRepository.save(savedRecipe)
 
     }
@@ -89,22 +96,22 @@ class RecipeService(
             RecipeFilter.MOST_VIEWED -> recipeRepository.findAllByOrderByViewsDesc()
             RecipeFilter.FAST_TO_COOK -> recipeRepository.findAllByOrderByCookTimeDesc() //recipeRepository.findAllByOrderByRatingDesc()
             RecipeFilter.CHEAP -> recipeRepository.findAllByOrderByPriceDesc() //recipeRepository.findAllByOrderByFavoritesDesc()
+            RecipeFilter.BEST_RATED -> recipeRepository.findByOrderByAverageRatingDesc()
             else -> {
                 recipeRepository.findAll()
             }
         }
     }
 
-    fun getRecipesForCategory(filter: RecipeFilter?, id: Long): List<Recipe> {
+    fun getRecipesForCategory(filter: RecipeFilter?,categoryId: Long): List<Recipe> {
         return when (filter){
-            RecipeFilter.NEWEST -> recipeRepository.findByCategories_IdOrderByCreatedAtDesc(id)
-            RecipeFilter.MOST_VIEWED -> recipeRepository.findByCategories_IdOrderByViewsDesc(id)
-            RecipeFilter.BEST_RATED -> TODO()
-            RecipeFilter.MOST_FAVORITES -> TODO()
-            RecipeFilter.FAST_TO_COOK -> recipeRepository.findByCategories_IdOrderByCookTimeDesc(id)
-            RecipeFilter.CHEAP -> recipeRepository.findByCategories_IdOrderByPriceDesc(id)
+            RecipeFilter.NEWEST -> recipeRepository.findByCategories_Category_IdOrderByCreatedAtDesc(categoryId)
+            RecipeFilter.MOST_VIEWED -> recipeRepository.findByCategories_Category_IdOrderByViewsDesc(categoryId)
+            RecipeFilter.BEST_RATED -> recipeRepository.findByCategories_Category_IdOrderByAverageRatingDesc(categoryId)
+            RecipeFilter.FAST_TO_COOK -> recipeRepository.findByCategories_Category_IdOrderByCookTimeDesc(categoryId)
+            RecipeFilter.CHEAP -> recipeRepository.findByCategories_Category_IdOrderByPriceDesc(categoryId)
             else -> {
-                recipeRepository.findByCategories_Id(id)
+                recipeRepository.findByCategories_Category_Id(categoryId)
             }
         }
     }
@@ -145,11 +152,24 @@ class RecipeService(
                 recipe.steps.add(recipeStep)
             }
 
+            recipe.categories.clear()
+            recipeDTO.categories.map { index ->
+                val category = categoryRepository.findById(index).get()
+                recipe.categories.add(CategoryRecipe(category,recipe))
+            }
+
             recipe.title = recipeDTO.title
             recipe.description = recipeDTO.description
             recipe.servings = recipeDTO.servings
+            recipe.price = recipeDTO.price
+            recipe.cookTime = recipeDTO.cookTime
+            recipe.imageUrl = recipeDTO.imageUrl
 
             return recipe
         }else throw ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author")
+    }
+
+    fun getRecipesOfUser(id: Long): List<Recipe> {
+        return recipeRepository.findByAuthor_Id(id)
     }
 }

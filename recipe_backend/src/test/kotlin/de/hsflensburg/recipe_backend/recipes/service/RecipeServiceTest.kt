@@ -267,10 +267,12 @@ internal class RecipeServiceTest @Autowired constructor(
                         IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
                     )
                 )
-            )
+            ),
+            null,
+            listOf<Long>(1)
         )
         assertTrue(recipeDto.isValid())
-        val result = recipeService.createRecipe(recipeDto,1)
+        val result = recipeService.createRecipe(recipeDto,author.id!!)
 
         val updatedRecipeDto = CreateRecipeRequestDto(
             "title2",
@@ -292,7 +294,8 @@ internal class RecipeServiceTest @Autowired constructor(
                         IngredientInfoDto(ingredientTomato.id!!, 100.0, "g"),
                     )
                 )
-            )
+            ), null,
+            listOf<Long>(2)
         )
         assertTrue(updatedRecipeDto.isValid())
 
@@ -300,6 +303,7 @@ internal class RecipeServiceTest @Autowired constructor(
         //TODO: aktuelles datum abspeichern und schauen ob es einträge vor diesem datum gibt
         val id = recipeService.updateRecipe(result.id!!, updatedRecipeDto,1).id!!
         val updatedResult = recipeRepository.findById(id).get()
+        assertTrue(updatedResult.categories.first().id == 2L)
         assertTrue(updatedResult.title == "title2")
         assertTrue(updatedResult.description == "description2")
         assertTrue(updatedResult.steps.size == 3)
@@ -333,6 +337,75 @@ internal class RecipeServiceTest @Autowired constructor(
         assertTrue(oldIngredientInfo2.isEmpty)
         val ingredientInfoCount = ingredientInfoRepository.count()
         assertEquals(3, ingredientInfoCount)
+    }
+
+
+
+    @Test
+    fun `should get all recipes of user`(){
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe1 = recipeService.createRecipe(recipeDto,author.id!!)
+
+        val recipeDto2 = CreateRecipeRequestDto(
+            "title2",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe2 = recipeService.createRecipe(recipeDto2,author.id!!)
+
+        val recipeDto3 = CreateRecipeRequestDto(
+            "title3",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe3 = recipeService.createRecipe(recipeDto3,author.id!!)
+
+        val recipes = recipeService.getRecipesOfUser(author.id!!)
+
+        assertEquals(3, recipes.size)
     }
 
 }

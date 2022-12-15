@@ -1,12 +1,14 @@
-package de.hsflensburg.recipe_backend.recipes.service
+package de.hsflensburg.recipe_backend.categories
 
 import de.hsflensburg.recipe_backend.ingredients.IngredientRepository
 import de.hsflensburg.recipe_backend.ingredients.entity.Ingredient
 import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
 import de.hsflensburg.recipe_backend.recipes.dto.IngredientInfoDto
 import de.hsflensburg.recipe_backend.recipes.dto.RecipeStepDto
-import de.hsflensburg.recipe_backend.recipes.repository.RatingRepository
-import de.hsflensburg.recipe_backend.recipes.repository.RecipeRepository
+import de.hsflensburg.recipe_backend.recipes.entity.RecipeFilter
+import de.hsflensburg.recipe_backend.recipes.repository.FavoriteRepository
+import de.hsflensburg.recipe_backend.recipes.service.FavoriteService
+import de.hsflensburg.recipe_backend.recipes.service.RecipeService
 import de.hsflensburg.recipe_backend.shared.LanguageSelection
 import de.hsflensburg.recipe_backend.users.UserRepository
 import de.hsflensburg.recipe_backend.users.entity.User
@@ -16,16 +18,16 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
 @AutoConfigureEmbeddedDatabase(refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD)
-internal class RatingServiceTest @Autowired constructor(
-    private val ratingService: RatingService,
-    private val recipeService: RecipeService,
-    private val ratingRepository: RatingRepository,
+internal class CategoryTest@Autowired constructor(
     private val userRepository: UserRepository,
+    private val favoriteRepository: FavoriteRepository,
     private val ingredientRepository: IngredientRepository,
-    private val recipeRepository: RecipeRepository
+    private val favoriteService: FavoriteService,
+    private val recipeService: RecipeService,
 ) {
 
     private lateinit var author: User
@@ -52,7 +54,7 @@ internal class RatingServiceTest @Autowired constructor(
     }
 
     @Test
-    fun `should create Rating for Recipe`(){
+    fun `should create recipe with category`() {
         val recipeDto = CreateRecipeRequestDto(
             "title",
             "description",
@@ -68,112 +70,28 @@ internal class RatingServiceTest @Autowired constructor(
                         IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
                     )
                 )
-            )
+            ),
+            null,
+            listOf<Long>(1,2,3)
         )
 
-        val recipe = recipeService.createRecipe(recipeDto,1)
+        val recipe = recipeService.createRecipe(recipeDto, author.id!!)
 
-        assertEquals(ratingRepository.findAll().size,0)
-        ratingService.rateRecipe(5,author.id!!, recipe.id!!)
-        assertEquals(ratingRepository.findAll().size,1)
-    }
+        val recipeFetched = recipeService.getRecipe(recipe.id!!)
+        assertEquals(3,recipeFetched.categories.size)
+        println(recipeFetched.categories.toList()[0].category?.title)
+        println(recipeFetched.categories.toList()[1].category?.title)
+        println(recipeFetched.categories.toList()[2].category?.title)
 
-
-    @Test
-    fun `should get average rating or 00 if no ratings exist`(){
-
-        val author2 = userRepository.save(
-            User("test", "test", "hans@b.de", "password")
-        )
-        val recipeDto = CreateRecipeRequestDto(
-            "title",
-            "description",
-            2,
-            listOf(
-                RecipeStepDto(
-                    "Pasta", "cook pasta", listOf(
-                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
-                    )
-                ),
-                RecipeStepDto(
-                    "Tomato", "cut tomato", listOf(
-                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
-                    )
-                )
-            )
-        )
-
-        val recipe = recipeService.createRecipe(recipeDto,1)
-        val recipeNoRating = recipeRepository.findById(recipe.id!!)
-        assertEquals(0.0,recipeNoRating.get().averageRating)
-
-        ratingService.rateRecipe(5,author.id!!, recipe.id!!)
-        val recipeWithRating = recipeRepository.findById(recipe.id!!)
-        assertEquals(5.0,recipeWithRating.get().averageRating)
-
-        ratingService.rateRecipe(1,author2.id!!,recipe.id!!)
-        val recipeWith2Rating = recipeRepository.findById(recipe.id!!)
-        assertEquals(3.0,recipeWith2Rating.get().averageRating)
-    }
-    @Test
-    fun `should get correct own rating value for recipe`(){
-        val recipeDto = CreateRecipeRequestDto(
-            "title",
-            "description",
-            2,
-            listOf(
-                RecipeStepDto(
-                    "Pasta", "cook pasta", listOf(
-                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
-                    )
-                ),
-                RecipeStepDto(
-                    "Tomato", "cut tomato", listOf(
-                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
-                    )
-                )
-            )
-        )
-
-        val recipe = recipeService.createRecipe(recipeDto,1)
-
-        assertEquals(ratingRepository.findAll().size,0)
-        ratingService.rateRecipe(5,author.id!!, recipe.id!!)
-        assertEquals(ratingRepository.findAll().size,1)
-
-        val rating = ratingService.getRating(author.id!!,recipe.id!!)
-        assertEquals(5,rating)
-    }
-    @Test
-    fun `should get standard value for recipe`(){
-        val recipeDto = CreateRecipeRequestDto(
-            "title",
-            "description",
-            2,
-            listOf(
-                RecipeStepDto(
-                    "Pasta", "cook pasta", listOf(
-                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
-                    )
-                ),
-                RecipeStepDto(
-                    "Tomato", "cut tomato", listOf(
-                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
-                    )
-                )
-            )
-        )
-
-        val recipe = recipeService.createRecipe(recipeDto,1)
-
-        assertEquals(ratingRepository.findAll().size,0)
-
-        val ratingNotFound = ratingService.getRating(author.id!!,recipe.id!!)
-        assertEquals(3,ratingNotFound)
+        val shouldContain = recipeService.getRecipesForCategory(null,1)
+        assertEquals(1,shouldContain.size)
+        val shouldEmpty = recipeService.getRecipesForCategory(null,4)
+        assertEquals(0,shouldEmpty.size)
     }
 
     @Test
-    fun `should delete Rating`(){
+    @Transactional
+    fun `should order by filter and get for category`(){
         val recipeDto = CreateRecipeRequestDto(
             "title",
             "description",
@@ -189,16 +107,75 @@ internal class RatingServiceTest @Autowired constructor(
                         IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
                     )
                 )
-            )
+            ), null,
+            emptyList(),
+            10.0,
+            5
+
         )
 
-        val recipe = recipeService.createRecipe(recipeDto,1)
+        val id = recipeService.createRecipe(recipeDto,author.id!!).id!!
 
-        assertEquals(ratingRepository.findAll().size,0)
-        ratingService.rateRecipe(5,author.id!!, recipe.id!!)
-        assertEquals(ratingRepository.findAll().size,1)
+        val recipeDto2 = CreateRecipeRequestDto(
+            "title2",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            ),null,
+            listOf<Long>(1),
+            20.0,
+            1
+        )
 
-        ratingService.deleteRating(author.id!!,recipe.id!!)
-        assertEquals(ratingRepository.findAll().size,0)
+        val id2 = recipeService.createRecipe(recipeDto2,author.id!!).id!!
+
+        val recipeDto3 = CreateRecipeRequestDto(
+            "title3",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            ),null,
+            listOf<Long>(1),
+            3.0,
+            20
+        )
+
+        val id3 = recipeService.createRecipe(recipeDto3,author.id!!).id!!
+
+        val recipesOrderByPriceDec = recipeService.getRecipes(RecipeFilter.CHEAP)
+        assertEquals(3,recipesOrderByPriceDec.size)
+        assertTrue(recipesOrderByPriceDec[0].id == id2)
+        assertTrue(recipesOrderByPriceDec[1].id == id)
+        assertTrue(recipesOrderByPriceDec[2].id == id3)
+
+        val check = recipeService.getRecipesForCategory(null,1)
+        assertEquals(2,check.size)
+
+        val recipesPriceDescCat1 = recipeService.getRecipesForCategory(RecipeFilter.CHEAP,1)
+        assertEquals(2,recipesPriceDescCat1.size)
+        assertTrue(recipesPriceDescCat1[0].id == id2 )
+        assertTrue(recipesPriceDescCat1[1].id == id3 )
     }
+
+
 }

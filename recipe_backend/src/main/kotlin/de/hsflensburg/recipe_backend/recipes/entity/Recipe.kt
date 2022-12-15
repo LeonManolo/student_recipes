@@ -1,5 +1,7 @@
 package de.hsflensburg.recipe_backend.recipes.entity
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import de.hsflensburg.recipe_backend.categories.entity.CategoryRecipe
 import de.hsflensburg.recipe_backend.ingredients.dto.IngredientResponseDto
@@ -8,6 +10,7 @@ import de.hsflensburg.recipe_backend.recipes.extension.updateNutritionalData
 import de.hsflensburg.recipe_backend.users.entity.User
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.Formula
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import javax.persistence.*
@@ -55,6 +58,9 @@ class Recipe(
 
     @Column(name = "cooking_time", nullable = false)
     var cookTime : Int = 0,
+
+    @Column(name = "image_Url", nullable = true)
+    var imageUrl : String? = null
     ) {
 
     @Id
@@ -76,13 +82,18 @@ class Recipe(
     var views: Int = 0
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
+    @JsonIgnore
     var favoritedBy: MutableSet<Favorite> = mutableSetOf()
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
+    @JsonIgnore
     var ratingsOfRecipe: MutableSet<Rating> = mutableSetOf()
 
-    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL],orphanRemoval = true, fetch = FetchType.EAGER)
     var categories: MutableSet<CategoryRecipe> = mutableSetOf()
+
+    @Formula(value = "(select coalesce(avg(rating.value),0) from rating where rating.recipe_id = id)")
+    var averageRating: Double = 0.0
 
     //@Formula(RecipeConstants.CALORIES_FORMULA)
     var totalCalories: Double = 0.0
@@ -93,6 +104,7 @@ class Recipe(
     //@Transient
     val ingredients: MutableList<IngredientResponseDto>
         get() = sumIngredients()
+
 
     @PrePersist
     @PreUpdate

@@ -13,7 +13,6 @@ class UserDetailsServiceImpl(private val userRepository: UserRepository) :
 
 
     override fun loadUserByUsername(email: String): UserDetails? {
-        println("geht er hier rein?")
         val user = userRepository.findByEmail(email)
         if (user != null) {
             return UserDetailsImpl(user.id!!, user.email, user.password) // TODO: unsafe
