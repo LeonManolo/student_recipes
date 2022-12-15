@@ -152,4 +152,8 @@ class RecipeService(
             return recipe
         }else throw ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the author")
     }
+
+    fun getRecipesOfUser(id: Long): List<Recipe> {
+        return recipeRepository.findByAuthor_Id(id)
+    }
 }

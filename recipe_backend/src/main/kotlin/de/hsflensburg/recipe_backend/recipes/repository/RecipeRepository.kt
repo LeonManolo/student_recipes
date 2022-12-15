@@ -34,4 +34,7 @@ interface RecipeRepository: JpaRepository<Recipe, Long> {
 
     fun findByCategories_IdOrderByCreatedAtDesc(id: Long): List<Recipe>
 
+
+    fun findByAuthor_Id(id: Long): List<Recipe>
+
 }

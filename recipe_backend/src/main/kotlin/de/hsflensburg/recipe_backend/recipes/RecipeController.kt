@@ -99,11 +99,17 @@ class RecipeController(
     }
 
 
+    @GetMapping("myrecipes")
+    fun getUserRecipes() : List<Recipe>{
+        return recipeService.getRecipesOfUser(getIdOfAuthenticatedUser())
+    }
+
     @GetMapping("favorites/ofUser")
     fun getFavoritesOfUser(): List<Recipe>{
         return favoriteService.getFavoriteRecipes(getIdOfAuthenticatedUser())
     }
 
+    // Not in use anymore, instead use field averageRating in recipe entity
     @GetMapping("/rating/{recipeId}")
     fun getRating(@PathVariable recipeId: Long): Int {
         val userId = getIdOfAuthenticatedUser()

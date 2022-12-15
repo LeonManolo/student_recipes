@@ -335,4 +335,73 @@ internal class RecipeServiceTest @Autowired constructor(
         assertEquals(3, ingredientInfoCount)
     }
 
+
+
+    @Test
+    fun `should get all recipes of user`(){
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe1 = recipeService.createRecipe(recipeDto,author.id!!)
+
+        val recipeDto2 = CreateRecipeRequestDto(
+            "title2",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe2 = recipeService.createRecipe(recipeDto2,author.id!!)
+
+        val recipeDto3 = CreateRecipeRequestDto(
+            "title3",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe3 = recipeService.createRecipe(recipeDto3,author.id!!)
+
+        val recipes = recipeService.getRecipesOfUser(author.id!!)
+
+        assertEquals(3, recipes.size)
+    }
+
 }
