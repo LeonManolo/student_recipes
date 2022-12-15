@@ -6,6 +6,7 @@ import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
 import de.hsflensburg.recipe_backend.recipes.dto.IngredientInfoDto
 import de.hsflensburg.recipe_backend.recipes.dto.RecipeStepDto
 import de.hsflensburg.recipe_backend.recipes.repository.RatingRepository
+import de.hsflensburg.recipe_backend.recipes.repository.RecipeRepository
 import de.hsflensburg.recipe_backend.shared.LanguageSelection
 import de.hsflensburg.recipe_backend.users.UserRepository
 import de.hsflensburg.recipe_backend.users.entity.User
@@ -24,6 +25,7 @@ internal class RatingServiceTest @Autowired constructor(
     private val ratingRepository: RatingRepository,
     private val userRepository: UserRepository,
     private val ingredientRepository: IngredientRepository,
+    private val recipeRepository: RecipeRepository
 ) {
 
     private lateinit var author: User
@@ -76,8 +78,45 @@ internal class RatingServiceTest @Autowired constructor(
         assertEquals(ratingRepository.findAll().size,1)
     }
 
+
     @Test
-    fun `should get correct value for recipe`(){
+    fun `should get average rating or 00 if no ratings exist`(){
+
+        val author2 = userRepository.save(
+            User("test", "test", "hans@b.de", "password")
+        )
+        val recipeDto = CreateRecipeRequestDto(
+            "title",
+            "description",
+            2,
+            listOf(
+                RecipeStepDto(
+                    "Pasta", "cook pasta", listOf(
+                        IngredientInfoDto(ingredientPasta.id!!, 80.0, "g"), // 50.0 * noch nicht beachtet!!!
+                    )
+                ),
+                RecipeStepDto(
+                    "Tomato", "cut tomato", listOf(
+                        IngredientInfoDto(ingredientTomato.id!!, 50.0, "g"),
+                    )
+                )
+            )
+        )
+
+        val recipe = recipeService.createRecipe(recipeDto,1)
+        val recipeNoRating = recipeRepository.findById(recipe.id!!)
+        assertEquals(0.0,recipeNoRating.get().averageRating)
+
+        ratingService.rateRecipe(5,author.id!!, recipe.id!!)
+        val recipeWithRating = recipeRepository.findById(recipe.id!!)
+        assertEquals(5.0,recipeWithRating.get().averageRating)
+
+        ratingService.rateRecipe(1,author2.id!!,recipe.id!!)
+        val recipeWith2Rating = recipeRepository.findById(recipe.id!!)
+        assertEquals(3.0,recipeWith2Rating.get().averageRating)
+    }
+    @Test
+    fun `should get correct own rating value for recipe`(){
         val recipeDto = CreateRecipeRequestDto(
             "title",
             "description",

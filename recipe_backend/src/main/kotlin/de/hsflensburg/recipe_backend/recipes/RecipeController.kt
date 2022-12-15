@@ -92,6 +92,12 @@ class RecipeController(
         favoriteService.favoriteRecipe(userId, recipeId)
     }
 
+    @PostMapping("favorites/unfavorite/{recipeId}")
+    fun deleteFavorite(@PathVariable recipeId: Long) {
+        val userId = getIdOfAuthenticatedUser()
+        favoriteService.unfavoriteRecipe(userId, recipeId)
+    }
+
 
     @GetMapping("favorites/ofUser")
     fun getFavoritesOfUser(): List<Recipe>{
@@ -103,5 +109,12 @@ class RecipeController(
         val userId = getIdOfAuthenticatedUser()
         return ratingService.getRating(userId,recipeId)
     }
+
+    @PostMapping("/rating/{recipeId}")
+    fun updateRating(@PathVariable recipeId: Long, @RequestParam("rating") rating: Int) {
+        ratingService.updateRating(rating, getIdOfAuthenticatedUser(), recipeId)
+    }
+
+
 
 }

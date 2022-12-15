@@ -6,6 +6,7 @@ import LoginRequestDto from "./dto/LoginRequestDto";
 import RecipeResponseDto from "./dto/RecipeResponseDto";
 import RegisterRequestDto from "./dto/RegisterRequestDto";
 import { getCookie } from "cookies-next";
+import UpdateUserRequestDto from "./dto/UpdateUserRequestDto";
 /**
  * This class contains all functions that are necessary for all of the
  * API requests. To do this, the functions use the associated dto's.
@@ -44,18 +45,16 @@ export default class StudentRecipesClient {
     const ingredient: IngredientDto = await result.json();
     return await this.returnIfSuccessElseError(result, ingredient);
   }
-/**
- * Creates a new ingredient.
- * @param ingredient A selfmade data transfer object.
- */
-  async createIngredient(ingredient: CreateIngredientRequestDto): Promise<void> {
-    const json = JSON.stringify(ingredient);
+
+  async createIngredient(createIngredient: CreateIngredientRequestDto): Promise<IngredientDto> {
+    const json = JSON.stringify(createIngredient);
     const result = await fetch(`${this.BASE_URL}/api/ingredients`, {
       method: "POST",
       headers: this.DEFAULT_HEADER,
       body: json,
     });
-    await this.returnIfSuccessElseError(result, true);
+    const ingredient: IngredientDto = await result.json();
+    return await this.returnIfSuccessElseError(result, ingredient);
   }
 /**
  * Updates an ingredient.
@@ -85,13 +84,14 @@ export default class StudentRecipesClient {
     const text = await result.text();
     return await this.returnIfSuccessElseError(result, parseInt(text));
   }
-/**
- * Gives all existing recipes.
- * @returns A list of all recipes.
- */
-  async getRecipes(): Promise<RecipeResponseDto[]> {
+
+  async getRecipes(limit?: number): Promise<RecipeResponseDto[]> {
+    let url = this.BASE_URL + "/api/recipes";
+    if (url !== undefined) {
+      url += "limit=" + limit;
+    }
     const result = await fetch(`${this.BASE_URL}/api/recipes`, {
-      headers: this.DEFAULT_HEADER,
+      headers: this.setHeader(),
     });
     const recipes: RecipeResponseDto[] = await result.json();
     return await this.returnIfSuccessElseError(result, recipes);
@@ -199,6 +199,26 @@ export default class StudentRecipesClient {
     const recipe: RecipeResponseDto[] = await result.json();
     return await this.returnIfSuccessElseError(result, recipe);
   }
+
+  async updateUserWithImage(user: UpdateUserRequestDto, image: File): Promise<void> {
+    const json = JSON.stringify(user);
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append(
+      "user",
+      new Blob([json], {
+        type: "application/json",
+      })
+    );
+    const result = await fetch(`${this.BASE_URL}/api/user`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
+    });
+    await this.returnIfSuccessElseError(result, true);
+  }
 /**
  * Registers a user allowing them to log in.
  * @param registerDto A selfmade data transfer object.
@@ -240,6 +260,7 @@ export default class StudentRecipesClient {
       method: "POST",
       headers: this.DEFAULT_HEADER,
     });
+    Cookies.remove("token");
     return this.returnIfSuccessElseError(result, true);
   }
 /**

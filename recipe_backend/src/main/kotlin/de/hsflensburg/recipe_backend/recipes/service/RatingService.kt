@@ -27,7 +27,7 @@ class RatingService(
         val rating = ratingRepository.findByUserAndRecipe(user, recipe)
 
         rating!!.value = value
-        ratingRepository.save(rating!!)
+        ratingRepository.save(rating)
     }
 
     @Transactional

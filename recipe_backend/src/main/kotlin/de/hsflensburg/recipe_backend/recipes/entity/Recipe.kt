@@ -8,6 +8,7 @@ import de.hsflensburg.recipe_backend.recipes.extension.updateNutritionalData
 import de.hsflensburg.recipe_backend.users.entity.User
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.Formula
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import javax.persistence.*
@@ -84,6 +85,9 @@ class Recipe(
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
     var categories: MutableSet<CategoryRecipe> = mutableSetOf()
 
+    @Formula(value = "(select coalesce(avg(rating.value),0) from rating where rating.recipe_id = id)")
+    var averageRating: Double = 0.0
+
     //@Formula(RecipeConstants.CALORIES_FORMULA)
     var totalCalories: Double = 0.0
     var totalProtein: Double = 0.0
@@ -93,6 +97,7 @@ class Recipe(
     //@Transient
     val ingredients: MutableList<IngredientResponseDto>
         get() = sumIngredients()
+
 
     @PrePersist
     @PreUpdate
