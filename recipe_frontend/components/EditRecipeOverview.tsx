@@ -48,7 +48,7 @@ export default function EditRecipeOverview({ recipe }: { recipe: RecipeResponseD
                         }
                     }} className="btn bg-custom-first hover:bg-custom-second">Löschen</button>
                 </div>
-                <Link href="/edit-recipe">
+                <Link href={`/my-recipes/edit-recipe/${recipe.id}`}>
                     <button className="btn bg-custom-first hover:bg-custom-second">
                         Bearbeiten
                     </button>

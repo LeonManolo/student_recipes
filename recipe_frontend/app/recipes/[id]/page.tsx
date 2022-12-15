@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 
 export default function RecipeDetail({ params }: any) {
   const [recipe, setRecipe] = useState<RecipeResponseDto>();
+  const [liked, setLiked] = useState(false);
   //const recipe = (await fetchRecipe(params.id))!!;
   //const rating = await fetchRating(recipe.author.id, params.id);
 
@@ -26,8 +27,7 @@ export default function RecipeDetail({ params }: any) {
     fetchRecipe();
   }, []);
 
-  if(recipe === undefined)
-  return <>Loading</>
+  if (recipe === undefined) return <>Loading</>;
 
   return (
     <div className="flex justify-center mt-4">

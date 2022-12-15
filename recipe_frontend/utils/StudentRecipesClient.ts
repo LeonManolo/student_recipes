@@ -7,6 +7,8 @@ import RecipeResponseDto from "./dto/RecipeResponseDto";
 import RegisterRequestDto from "./dto/RegisterRequestDto";
 import { getCookie } from "cookies-next";
 import UpdateUserRequestDto from "./dto/UpdateUserRequestDto";
+import UserDto from "./dto/UserDto";
+import { RecipeFilter } from "./dto/RecipeFilter";
 /**
  * This class contains all functions that are necessary for all of the
  * API requests. To do this, the functions use the associated dto's.
@@ -67,12 +69,10 @@ export default class StudentRecipesClient {
     return await this.returnIfSuccessElseError(result, parseInt(text));
   }
 
-  async getRecipes(limit?: number): Promise<RecipeResponseDto[]> {
-    let url = this.BASE_URL + "/api/recipes";
-    if (url !== undefined) {
-      url += "limit=" + limit;
-    }
-    const result = await fetch(`${this.BASE_URL}/api/recipes`, {
+  async getRecipes(limit?: number, sortBy: RecipeFilter = RecipeFilter.NEWEST): Promise<RecipeResponseDto[]> {
+    let url = this.BASE_URL + "/api/recipes?sort_by=" + sortBy;
+
+    const result = await fetch(url, {
       headers: this.setHeader(),
     });
     const recipes: RecipeResponseDto[] = await result.json();
@@ -81,13 +81,18 @@ export default class StudentRecipesClient {
 
   async getRecipe(id: String, test: String = "nicht"): Promise<RecipeResponseDto> {
     const result = await fetch(`${this.BASE_URL}/api/recipes/${id}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getCookie("token")}`,
-      },
+      headers: this.setHeader(),
     });
     const recipe: RecipeResponseDto = await result.json();
     return await this.returnIfSuccessElseError(result, recipe);
+  }
+
+  async getRecipesOfUser(): Promise<RecipeResponseDto[]> {
+    const result = await fetch(`${this.BASE_URL}/api/recipes/myrecipes`, {
+      headers: this.setHeader(),
+    });
+    const recipes: RecipeResponseDto[] = await result.json();
+    return await this.returnIfSuccessElseError(result, recipes);
   }
 
   async createRecipe(recipe: CreateRecipeRequestDto): Promise<void> {
@@ -120,12 +125,21 @@ export default class StudentRecipesClient {
     await this.returnIfSuccessElseError(result, true);
   }
 
-  async updateRecipe(recipe: CreateRecipeRequestDto, recipeId: number): Promise<void> {
+  async updateRecipe(recipe: CreateRecipeRequestDto, recipeId: number, image: File): Promise<void> {
     const json = JSON.stringify(recipe);
-    const result = await fetch(`${this.BASE_URL}/api/recipes${recipeId}`, {
+    const formData = new FormData();
+
+    formData.append(
+      "recipe",
+      new Blob([json], {
+        type: "application/json",
+      })
+    );
+    formData.append("file", image);
+    const result = await fetch(`${this.BASE_URL}/api/recipes/${recipeId}`, {
       method: "PATCH",
-      headers: this.DEFAULT_HEADER,
-      body: json,
+      body: formData,
+      headers: this.setHeader(),
     });
     await this.returnIfSuccessElseError(result, true);
   }
@@ -133,7 +147,7 @@ export default class StudentRecipesClient {
   async deleteRecipe(recipeId: number): Promise<void> {
     const result = await fetch(`${this.BASE_URL}/api/recipes/${recipeId}`, {
       method: "DELETE",
-      headers: this.DEFAULT_HEADER,
+      headers: this.setHeader(),
     });
     await this.returnIfSuccessElseError(result, true);
   }
@@ -147,11 +161,15 @@ export default class StudentRecipesClient {
   }
 
   async unfavoriteRecipe(recipeId: number): Promise<void> {
-    // TODO
+    const result = await fetch(`${this.BASE_URL}/api/recipes/favorites/unfavorite/${recipeId}`, {
+      method: "POST",
+      headers: this.setHeader(),
+    });
+    await this.returnIfSuccessElseError(result, true);
   }
 
   async getFavoriteRecipes(): Promise<RecipeResponseDto[]> {
-    const result = await fetch(`${this.BASE_URL}/api/recipes/ofUser`, {
+    const result = await fetch(`${this.BASE_URL}/api/recipes/favorites/ofUser`, {
       headers: this.setHeader(),
     });
     const recipe: RecipeResponseDto[] = await result.json();
@@ -168,14 +186,22 @@ export default class StudentRecipesClient {
         type: "application/json",
       })
     );
-    const result = await fetch(`${this.BASE_URL}/api/user`, {
-      method: "POST",
+    const result = await fetch(`${this.BASE_URL}/api/users`, {
+      method: "PATCH",
       body: formData,
       headers: {
         Authorization: `Bearer ${getCookie("token")}`,
       },
     });
     await this.returnIfSuccessElseError(result, true);
+  }
+
+  async getUser(): Promise<UserDto> {
+    const result = await fetch(`${this.BASE_URL}/api/users`, {
+      headers: this.setHeader(),
+    });
+    const user: UserDto = await result.json();
+    return await this.returnIfSuccessElseError(result, user);
   }
 
   async register(registerDto: RegisterRequestDto): Promise<boolean> {

@@ -173,18 +173,20 @@ function CreateIngredient({ onIngredientClick }: { onIngredientClick: (v: Ingred
   }
 }
 
-function InputField({
+export function InputField({
   title,
   type,
   min,
   max,
   value,
+  placeholder,
   onChange,
 }: {
   title: string;
   type: string;
   min?: number;
   max?: number;
+  placeholder?: string;
   value: string | number;
   onChange: (value: string) => void;
 }) {
@@ -199,7 +201,7 @@ function InputField({
         max={max}
         onChange={(v) => onChange(v.target.value)}
         type={type}
-        placeholder="0..."
+        placeholder={placeholder ?? ""}
         className="input input-bordered w-full"
         required={true}
       />

@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import AddIngredientModal from "../../../components/AddIngredientModal";
 import CreateRecipeRequestDto, { IngredientInfoDto, RecipeStepDto } from "../../../utils/dto/CreateRecipeRequestDto";
 import IngredientDto from "../../../utils/dto/IngredientDto";
@@ -12,9 +13,11 @@ export default function CreateRecipePage() {
   const [servings, setServings] = useState<number>(0);
   const [cookTime, setCookTime] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
 
   const [file, setFile] = useState<File>();
   const [filebase64, setFileBase64] = useState<string>("");
+  const router = useRouter();
 
   return (
     <div className="flex flex-row justify-center w-full p-4">
@@ -129,7 +132,7 @@ export default function CreateRecipePage() {
         />
         <div className="flex flex-col w-full border-opacity-50">
           <div className="divider">Speichern</div>
-          <button type="submit" className="btn">
+          <button type="submit" className={`btn ${loading ? "loading" : ""}`}>
             Rezept Speichern
           </button>
         </div>
@@ -145,7 +148,7 @@ export default function CreateRecipePage() {
       description: description,
       cookTime: cookTime,
       servings: servings,
-      authorId: 1,
+      price: price,
       steps: recipeSteps,
     };
     console.log(recipe);
@@ -154,6 +157,7 @@ export default function CreateRecipePage() {
       if (file === undefined) throw new StudentRecipesClientError("Image missing!");
       const client = new StudentRecipesClient();
       await client.createRecipeWithImage(recipe, file);
+      router.push("/recipes");
     } catch (recipeError: any) {
       if (recipeError instanceof StudentRecipesClientError) {
         const err = recipeError as StudentRecipesClientError;

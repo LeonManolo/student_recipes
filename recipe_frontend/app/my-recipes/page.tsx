@@ -37,7 +37,7 @@ export default function MyRecipes({ params }: any) {
   
   async function fetchRecipes(): Promise<void> {
     const recipeClient = new StudentRecipesClient();
-    const recipesFetched = await recipeClient.getRecipes();
+    const recipesFetched = await recipeClient.getRecipesOfUser();
     setRecipes(recipesFetched);
   }
 }

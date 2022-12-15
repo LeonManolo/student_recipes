@@ -6,10 +6,12 @@ import Link from "next/link";
 import StudentRecipesClient from "../../utils/StudentRecipesClient";
 import RecipeResponseDto from "../../utils/dto/RecipeResponseDto";
 import { useEffect, useState } from "react";
+import { RecipeFilter } from "../../utils/dto/RecipeFilter";
 
 // Mapped zu der Route "/recipes" ohne eine id also nicht "recipes/123"
 export default function Recipes() {
   const [recipes, setRecipes] = useState<RecipeResponseDto[]>([]);
+  let filter = RecipeFilter.NEWEST
 
   useEffect(() => {
     fetchRecipes();
@@ -22,7 +24,7 @@ export default function Recipes() {
           <div className="card-body">
             <h2>Filter</h2>
             <div className="flex">
-              <Tab />
+              <Tab onTabChange={(f) => fetchRecipes(f)} />
             </div>
             <h2>Kategorie</h2>
             <div className="flex">
@@ -42,9 +44,9 @@ export default function Recipes() {
       </div>
     </div>
   );
-  async function fetchRecipes(): Promise<void> {
+  async function fetchRecipes(filter: RecipeFilter = RecipeFilter.NEWEST): Promise<void> {
     const recipeClient = new StudentRecipesClient();
-    const recipesFetched = await recipeClient.getRecipes();
+    const recipesFetched = await recipeClient.getRecipes(1000, filter);
     setRecipes(recipesFetched);
   }
 }
