@@ -77,7 +77,7 @@ class RecipeController(
         } else
             recipeService.getRecipesForCategory(sortBy, category)
 
-        return recipes.take(limit!!)
+        return recipes.take(limit ?: 1000)
     }
 
     @PatchMapping("/{id}", consumes = ["multipart/form-data"])
