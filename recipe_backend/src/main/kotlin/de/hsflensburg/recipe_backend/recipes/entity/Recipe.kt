@@ -1,5 +1,7 @@
 package de.hsflensburg.recipe_backend.recipes.entity
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import de.hsflensburg.recipe_backend.categories.entity.CategoryRecipe
 import de.hsflensburg.recipe_backend.ingredients.dto.IngredientResponseDto
@@ -77,9 +79,13 @@ class Recipe(
     var views: Int = 0
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
+    @JsonBackReference
+    @JsonIgnore
     var favoritedBy: MutableSet<Favorite> = mutableSetOf()
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
+    @JsonIgnore
+    @JsonBackReference
     var ratingsOfRecipe: MutableSet<Rating> = mutableSetOf()
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
