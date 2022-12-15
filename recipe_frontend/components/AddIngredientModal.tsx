@@ -32,7 +32,11 @@ export default function AddIngredientModal({
               Zutat erstellen
             </a>
           </div>
-          {tab == 0 ? <SearchIngredient onAddIngredientClick={onAddIngredientClick} /> : <CreateIngredient />}
+          {tab == 0 ? (
+            <SearchIngredient onAddIngredientClick={onAddIngredientClick} />
+          ) : (
+            <CreateIngredient onIngredientClick={onAddIngredientClick} />
+          )}
           <div className="modal-action">
             <a href="#" className="btn">
               Abbrechen
@@ -81,7 +85,7 @@ function SearchIngredient({ onAddIngredientClick }: { onAddIngredientClick: (x: 
   }
 }
 
-function CreateIngredient() {
+function CreateIngredient({ onIngredientClick }: { onIngredientClick: (v: IngredientDto) => void }) {
   const [ingredient, setIngredient] = useState<CreateIngredientRequestDto>({
     title: "",
     calories: 0,
@@ -91,7 +95,7 @@ function CreateIngredient() {
   });
 
   return (
-    <form onSubmit={handleCreateIngredientSubmit}>
+    <div>
       <InputField
         title={"Title"}
         type={"text"}
@@ -145,10 +149,14 @@ function CreateIngredient() {
           setIngredient({ ...ingredient });
         }}
       />
-      <button className="btn mt-4" type="submit">
+      <a
+        href="#"
+        className={`btn ${ingredient.title.length > 0 ? "" : "btn-disabled"} mt-4`}
+        onClick={handleCreateIngredientSubmit}
+      >
         Erstellen und Hinzufügen
-      </button>
-    </form>
+      </a>
+    </div>
   );
 
   async function handleCreateIngredientSubmit() {
@@ -156,7 +164,8 @@ function CreateIngredient() {
     try {
       const recipeClient = new StudentRecipesClient();
       //TODO: hier ingredient mit id holen
-      await recipeClient.createIngredient(ingredient);
+      const ingredientFetched = await recipeClient.createIngredient(ingredient);
+      onIngredientClick(ingredientFetched);
     } catch (e: any) {
       console.log(e?.message);
       alert(e?.message);
