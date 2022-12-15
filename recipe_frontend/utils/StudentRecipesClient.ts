@@ -45,7 +45,11 @@ export default class StudentRecipesClient {
     const ingredient: IngredientDto = await result.json();
     return await this.returnIfSuccessElseError(result, ingredient);
   }
-
+/**
+ * Creates a new ingredient.
+ * @param createIngredient A selfmade data transfer object.
+ * @return The created ingredient.
+ */
   async createIngredient(createIngredient: CreateIngredientRequestDto): Promise<IngredientDto> {
     const json = JSON.stringify(createIngredient);
     const result = await fetch(`${this.BASE_URL}/api/ingredients`, {
@@ -84,7 +88,11 @@ export default class StudentRecipesClient {
     const text = await result.text();
     return await this.returnIfSuccessElseError(result, parseInt(text));
   }
-
+/**
+ * Gives a specified number of recipes.
+ * @param limit Any number.
+ * @returns A list of recipes with the amount determined by the limit.
+ */
   async getRecipes(limit?: number): Promise<RecipeResponseDto[]> {
     let url = this.BASE_URL + "/api/recipes";
     if (url !== undefined) {
@@ -101,6 +109,7 @@ export default class StudentRecipesClient {
  * @param id Any number.
  * @returns The recipe with its corresponding attributes matching the id.
  */
+//TODO param test wegmachen!
   async getRecipe(id: String, test: String = "nicht"): Promise<RecipeResponseDto> {
     const result = await fetch(`${this.BASE_URL}/api/recipes/${id}`, {
       headers: {
@@ -199,7 +208,11 @@ export default class StudentRecipesClient {
     const recipe: RecipeResponseDto[] = await result.json();
     return await this.returnIfSuccessElseError(result, recipe);
   }
-
+/**
+ * Updates a profile with an image.
+ * @param user A selfmade data transfer object.
+ * @param image Any file.
+ */
   async updateUserWithImage(user: UpdateUserRequestDto, image: File): Promise<void> {
     const json = JSON.stringify(user);
     const formData = new FormData();
