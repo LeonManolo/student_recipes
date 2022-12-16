@@ -28,7 +28,6 @@ export default function RecipeDetail({ params }: any) {
   /* State hook to set current recipe. */
   useEffect(() => {
     fetchRecipe();
-    fetchRating();
   }, []);
 
   if (recipe === undefined) return <>Loading</>;
@@ -38,7 +37,7 @@ export default function RecipeDetail({ params }: any) {
       <div className="card shadow-xl">
         <div className="card-body flex-row justify-center">
           <div className="card card-compact w-96 h-max shadow-xl bg-base-100 ">
-            <Image className="rounded-t-xl " src={img} alt="recipe" width={500} height={500} />
+            <Image className="rounded-t-xl " src={recipe.imageUrl!!} alt="recipe" width={500} height={500} />
             <div className="card-body">
               <div className="flex flex-col">
                 <div className="flex flex-row flex-wrap">
@@ -89,16 +88,21 @@ export default function RecipeDetail({ params }: any) {
       const recipeFetched = await recipeClient.getRecipe(params.id, Cookies.get("token"));
       //const ratingFetched = await recipeClient.getRating(1, params.id); // TODO: HARDCODE ÄNDERN°
       setRecipe(recipeFetched);
+      fetchRating(recipeFetched.id);
     } catch (e: any) {
       console.log("IM ERROR!");
       console.log(e.message);
     }
   }
 
-  async function fetchRating(): Promise<void> {
+  async function fetchRating(recipeId: number): Promise<void> {
     const recipeClient = new StudentRecipesClient();
-    const fetchedRating = await recipeClient.getRating(recipe?.id!!);
-    setRating(fetchedRating);
+    try {
+      const fetchedRating = await recipeClient.getRating(recipeId);
+      setRating(fetchedRating);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /* Fetches the rating from 1 to 5 of a recipe by recipe id and user id. */

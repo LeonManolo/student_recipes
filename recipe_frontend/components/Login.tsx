@@ -74,20 +74,13 @@ export default function Login({ children, ...props }: any) {
 
       console.log(result);
       console.log(result.token);
+      setCookie("token", result.token);
 
-      //Cookies.set("token", result.token);
-      /*router.push("/recipes?token=hallo", { // ? mit parameter? 
-        
-      });
-      */
-      //router.refresh();
-      setCookie("token", result.token)
-
-      window.location.reload()
+      window.location.reload();
 
       //props.onSuccessfulLogin();
     } catch (e) {
-      alert(e);
+      alert("Falsches Passwort oder Email");
     }
   }
 }

@@ -91,7 +91,7 @@ export default function Register({ children, ...props }: any) {
       })
       .catch((e) => {
         console.log(e.toString());
-        alert(e);
+        alert(e.message);
       });
   }
 }

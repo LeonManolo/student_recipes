@@ -70,7 +70,7 @@ class RecipeController(
     @GetMapping
     fun getRecipes(
         @RequestParam("limit") limit: Int? = 100,
-        @RequestParam("category") category: Long? = null,
+        @RequestParam("category", required = false) category: Long? = null,
         @Valid @RequestParam("sort_by") sortBy: RecipeFilter? = null
     ): List<Recipe> {
         val recipes: List<Recipe> = if (category == null){

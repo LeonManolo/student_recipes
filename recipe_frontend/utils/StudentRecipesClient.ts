@@ -88,12 +88,12 @@ export default class StudentRecipesClient {
     const result = await fetch(`${this.BASE_URL}/api/recipes/rating/${recipeId}`, {
       headers: this.DEFAULT_HEADER,
     });
-    const text = await result.text();
-    return await this.returnIfSuccessElseError(result, parseInt(text));
+    const json = await result.json();
+    return await this.returnIfSuccessElseError(result, parseInt(json.rating));
   }
 
   async createRating(recipeId: number, rating: number): Promise<void> {
-    const result = await fetch(`${this.BASE_URL}/api/rating/${recipeId}?rating=${rating}`, {
+    const result = await fetch(`${this.BASE_URL}/api/recipes/rating/${recipeId}?rating=${rating}`, {
       method: "POST",
       headers: this.DEFAULT_HEADER,
     });
@@ -108,7 +108,7 @@ export default class StudentRecipesClient {
   async getRecipes(
     limit?: number,
     sortBy: RecipeFilter = RecipeFilter.NEWEST,
-    category?: string,
+    category?: string
   ): Promise<RecipeResponseDto[]> {
     let url = this.BASE_URL + "/api/recipes?sort_by=" + sortBy;
     if (category !== undefined) {
@@ -290,7 +290,9 @@ export default class StudentRecipesClient {
     const json = JSON.stringify(registerDto);
     const result = await fetch(`${this.BASE_URL}/api/auth/register`, {
       method: "POST",
-      headers: this.DEFAULT_HEADER,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: json,
     });
     return this.returnIfSuccessElseError(result, true);

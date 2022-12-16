@@ -9,12 +9,14 @@ export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/_next")) return NextResponse.next();
   //console.log("middlware: " + localStorage.getItem("token"));
 
-  const token = request.cookies.get("token")?.value ?? null;
+  let jwtToken = request.cookies.get("token")?.value;
   let isAuthenticated = false;
   //console.log("Hallo");
-  if (token !== null) {
-    request.cookies.set("token", token);
-    var decoded = jwt_decode<JwtPayload>(token!!);
+  if (jwtToken != undefined && jwtToken !== "undefined") {
+    console.log(typeof jwtToken);
+    console.log("token: " + jwtToken);
+    request.cookies.set("token", jwtToken);
+    var decoded = jwt_decode<JwtPayload>(jwtToken);
     isAuthenticated = !(Date.now() / 1000 >= (decoded.exp ?? 0));
     /*
     if (Date.now() >= (decoded.exp ?? 0)) {

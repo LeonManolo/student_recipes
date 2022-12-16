@@ -12,7 +12,7 @@ export default function Login_Register({ children, ...props }: any) {
 
   useEffect(() => {
     const cookie = Cookies.get("token");
-    if (cookie !== undefined) {
+    if (cookie !== undefined && cookie.length > 10) {
       setIsLoggedIn(true);
     }
   }, []);
