@@ -1,5 +1,6 @@
 package de.hsflensburg.recipe_backend.categories.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import javax.persistence.*
 /**
@@ -19,6 +20,7 @@ class CategoryRecipe(
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "recipe_id", nullable = false)
+    @JsonIgnore
     var recipe: Recipe? = null
 ) {
     @Id
