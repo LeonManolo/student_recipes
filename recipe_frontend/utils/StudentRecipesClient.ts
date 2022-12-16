@@ -19,11 +19,11 @@ export default class StudentRecipesClient {
     "Content-Type": "application/json",
     Authorization: `Bearer ${getCookie("token")}`,
   };
-/**
- * Searches for ingredients by a keyword.
- * @param keyword Any string.
- * @returns A list of ingredients matching the keyword.
- */
+  /**
+   * Searches for ingredients by a keyword.
+   * @param keyword Any string.
+   * @returns A list of ingredients matching the keyword.
+   */
   async getIngredients(keyword?: string): Promise<IngredientDto[]> {
     let url = this.BASE_URL + "/api/ingredients";
     if (keyword) {
@@ -35,11 +35,11 @@ export default class StudentRecipesClient {
     const ingredients: IngredientDto[] = await result.json();
     return await this.returnIfSuccessElseError(result, ingredients);
   }
-/**
- * Searches for a specific ingredient by id.
- * @param id Any number.
- * @returns The ingredient with its corresponding attributes matching the id.
- */
+  /**
+   * Searches for a specific ingredient by id.
+   * @param id Any number.
+   * @returns The ingredient with its corresponding attributes matching the id.
+   */
   async getIngredient(id: number): Promise<IngredientDto> {
     const result = await fetch(`${this.BASE_URL}/api/ingredients${id}`, {
       headers: this.DEFAULT_HEADER,
@@ -47,11 +47,11 @@ export default class StudentRecipesClient {
     const ingredient: IngredientDto = await result.json();
     return await this.returnIfSuccessElseError(result, ingredient);
   }
-/**
- * Creates a new ingredient.
- * @param createIngredient A selfmade data transfer object.
- * @return The created ingredient.
- */
+  /**
+   * Creates a new ingredient.
+   * @param createIngredient A selfmade data transfer object.
+   * @return The created ingredient.
+   */
   async createIngredient(createIngredient: CreateIngredientRequestDto): Promise<IngredientDto> {
     const json = JSON.stringify(createIngredient);
     const result = await fetch(`${this.BASE_URL}/api/ingredients`, {
@@ -62,12 +62,12 @@ export default class StudentRecipesClient {
     const ingredient: IngredientDto = await result.json();
     return await this.returnIfSuccessElseError(result, ingredient);
   }
-/**
- * Updates an ingredient.
- * @param ingredient A selfmade data transfer object.
- * @param ingredientId Any number.
- * @returns A confirmation if the update was successful.
- */
+  /**
+   * Updates an ingredient.
+   * @param ingredient A selfmade data transfer object.
+   * @param ingredientId Any number.
+   * @returns A confirmation if the update was successful.
+   */
   async updateIngredient(ingredient: CreateIngredientRequestDto, ingredientId: number): Promise<boolean> {
     const json = JSON.stringify(ingredient);
     const result = await fetch(`${this.BASE_URL}/api/ingredients${ingredientId}`, {
@@ -77,12 +77,12 @@ export default class StudentRecipesClient {
     });
     return await this.returnIfSuccessElseError(result, true);
   }
-/**
- * Gives the rating for any recipe given by any user.
- * @param userId Any number.
- * @param recipeId Any number.
- * @returns The corresponding rating matching the userId and recipeId
- */
+  /**
+   * Gives the rating for any recipe given by any user.
+   * @param userId Any number.
+   * @param recipeId Any number.
+   * @returns The corresponding rating matching the userId and recipeId
+   */
   async getRating(userId: number, recipeId: number): Promise<number> {
     const result = await fetch(`${this.BASE_URL}/api/recipes/rating/${userId}/${recipeId}`, {
       headers: this.DEFAULT_HEADER,
@@ -92,12 +92,19 @@ export default class StudentRecipesClient {
   }
 
   /**
- * Gives a specified number of recipes.
- * @param limit Any number.
- * @returns A list of recipes with the amount determined by the limit.
- */
-  async getRecipes(limit?: number, sortBy: RecipeFilter = RecipeFilter.NEWEST): Promise<RecipeResponseDto[]> {
+   * Gives a specified number of recipes.
+   * @param limit Any number.
+   * @returns A list of recipes with the amount determined by the limit.
+   */
+  async getRecipes(
+    limit?: number,
+    sortBy: RecipeFilter = RecipeFilter.NEWEST,
+    category?: string,
+  ): Promise<RecipeResponseDto[]> {
     let url = this.BASE_URL + "/api/recipes?sort_by=" + sortBy;
+    if (category !== undefined) {
+      url += "&category=" + category;
+    }
 
     const result = await fetch(url, {
       headers: this.setHeader(),
@@ -105,12 +112,12 @@ export default class StudentRecipesClient {
     const recipes: RecipeResponseDto[] = await result.json();
     return await this.returnIfSuccessElseError(result, recipes);
   }
-/**
- * Searches for a specific recipe by id.
- * @param id Any number.
- * @returns The recipe with its corresponding attributes matching the id.
- */
-//TODO param test wegmachen!
+  /**
+   * Searches for a specific recipe by id.
+   * @param id Any number.
+   * @returns The recipe with its corresponding attributes matching the id.
+   */
+  //TODO param test wegmachen!
   async getRecipe(id: String, test: String = "nicht"): Promise<RecipeResponseDto> {
     const result = await fetch(`${this.BASE_URL}/api/recipes/${id}`, {
       headers: this.setHeader(),
@@ -127,10 +134,10 @@ export default class StudentRecipesClient {
     return await this.returnIfSuccessElseError(result, recipes);
   }
 
-/**
- * Creates a new recipe.
- * @param recipe A selfmade data transfer object.
- */
+  /**
+   * Creates a new recipe.
+   * @param recipe A selfmade data transfer object.
+   */
   async createRecipe(recipe: CreateRecipeRequestDto): Promise<void> {
     const json = JSON.stringify(recipe);
     console.log("in create recipe " + getCookie("token"));
@@ -140,11 +147,11 @@ export default class StudentRecipesClient {
     });
     await this.returnIfSuccessElseError(result, true);
   }
-/**
- * Creates a new recipe with an image.
- * @param recipe A selfmade data transfer object.
- * @param image Any File.
- */
+  /**
+   * Creates a new recipe with an image.
+   * @param recipe A selfmade data transfer object.
+   * @param image Any File.
+   */
   async createRecipeWithImage(recipe: CreateRecipeRequestDto, image: File): Promise<void> {
     const json = JSON.stringify(recipe);
     const formData = new FormData();
@@ -166,10 +173,10 @@ export default class StudentRecipesClient {
   }
 
   /**
- * Updates a recipe.
- * @param recipe A selfmade data transfer object.
- * @param recipeId Any number.
- */
+   * Updates a recipe.
+   * @param recipe A selfmade data transfer object.
+   * @param recipeId Any number.
+   */
   async updateRecipe(recipe: CreateRecipeRequestDto, recipeId: number, image: File): Promise<void> {
     const json = JSON.stringify(recipe);
     const formData = new FormData();
@@ -181,17 +188,20 @@ export default class StudentRecipesClient {
       })
     );
     formData.append("file", image);
+
     const result = await fetch(`${this.BASE_URL}/api/recipes/${recipeId}`, {
       method: "PATCH",
       body: formData,
-      headers: this.setHeader(),
+      headers: {
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
     });
     await this.returnIfSuccessElseError(result, true);
   }
-/**
- * Deletes a recipe.
- * @param recipeId Any number.
- */
+  /**
+   * Deletes a recipe.
+   * @param recipeId Any number.
+   */
   async deleteRecipe(recipeId: number): Promise<void> {
     const result = await fetch(`${this.BASE_URL}/api/recipes/${recipeId}`, {
       method: "DELETE",
@@ -199,10 +209,10 @@ export default class StudentRecipesClient {
     });
     await this.returnIfSuccessElseError(result, true);
   }
-/**
- * Adds a recipe to the 'Favorites' tab.
- * @param recipeId Any number.
- */
+  /**
+   * Adds a recipe to the 'Favorites' tab.
+   * @param recipeId Any number.
+   */
   async favoriteRecipe(recipeId: number): Promise<void> {
     const result = await fetch(`${this.BASE_URL}/api/recipes/favorites/${recipeId}`, {
       method: "POST",
@@ -218,10 +228,10 @@ export default class StudentRecipesClient {
     });
     await this.returnIfSuccessElseError(result, true);
   }
-/**
- * Gives all recipes from the 'Favorites' tab.
- * @returns A list off all recipes added to the 'Favorites' tab.
- */
+  /**
+   * Gives all recipes from the 'Favorites' tab.
+   * @returns A list off all recipes added to the 'Favorites' tab.
+   */
   async getFavoriteRecipes(): Promise<RecipeResponseDto[]> {
     const result = await fetch(`${this.BASE_URL}/api/recipes/favorites/ofUser`, {
       headers: this.setHeader(),
@@ -229,11 +239,11 @@ export default class StudentRecipesClient {
     const recipe: RecipeResponseDto[] = await result.json();
     return await this.returnIfSuccessElseError(result, recipe);
   }
-/**
- * Updates a profile with an image.
- * @param user A selfmade data transfer object.
- * @param image Any file.
- */
+  /**
+   * Updates a profile with an image.
+   * @param user A selfmade data transfer object.
+   * @param image Any file.
+   */
   async updateUserWithImage(user: UpdateUserRequestDto, image: File): Promise<void> {
     const json = JSON.stringify(user);
     const formData = new FormData();
@@ -262,11 +272,11 @@ export default class StudentRecipesClient {
     return await this.returnIfSuccessElseError(result, user);
   }
 
-/**
- * Registers a user allowing them to log in.
- * @param registerDto A selfmade data transfer object.
- * @returns A confirmation if the registration was successful.
- */
+  /**
+   * Registers a user allowing them to log in.
+   * @param registerDto A selfmade data transfer object.
+   * @returns A confirmation if the registration was successful.
+   */
   async register(registerDto: RegisterRequestDto): Promise<boolean> {
     const json = JSON.stringify(registerDto);
     const result = await fetch(`${this.BASE_URL}/api/auth/register`, {
@@ -276,11 +286,11 @@ export default class StudentRecipesClient {
     });
     return this.returnIfSuccessElseError(result, true);
   }
-/**
- * Logs a user in.
- * @param loginDto A selfmade data transfer object. 
- * @returns A JSON Web Token.
- */
+  /**
+   * Logs a user in.
+   * @param loginDto A selfmade data transfer object.
+   * @returns A JSON Web Token.
+   */
   async login(loginDto: LoginRequestDto): Promise<any> {
     const json = JSON.stringify(loginDto);
     const result = await fetch(`${this.BASE_URL}/api/auth/login`, {
@@ -294,10 +304,10 @@ export default class StudentRecipesClient {
 
     return this.returnIfSuccessElseError(result, responseBody);
   }
-/**
- * Logs a user out.
- * @returns A confirmation if the logout was successful.
- */
+  /**
+   * Logs a user out.
+   * @returns A confirmation if the logout was successful.
+   */
   async logout(): Promise<boolean> {
     const result = await fetch(`${this.BASE_URL}/api/auth/signout`, {
       method: "POST",
@@ -306,12 +316,12 @@ export default class StudentRecipesClient {
     Cookies.remove("token");
     return this.returnIfSuccessElseError(result, true);
   }
-/**
- * Checks if any request was successful.
- * @param response A response to a API-request.
- * @param success A simple parameter to let you know if everything worked as intended.
- * @returns A confirmation if the request was successful or throws an error if it was not. 
- */
+  /**
+   * Checks if any request was successful.
+   * @param response A response to a API-request.
+   * @param success A simple parameter to let you know if everything worked as intended.
+   * @returns A confirmation if the request was successful or throws an error if it was not.
+   */
   private async returnIfSuccessElseError<T>(response: Response, success: T): Promise<T> {
     let error = "";
     console.log(response.status);
@@ -326,10 +336,10 @@ export default class StudentRecipesClient {
     }
     throw new StudentRecipesClientError(error);
   }
-/**
- * Sets the header, reads the cookie and authorizes the user.
- * @returns The JSON Web Token which is used for authorization.
- */
+  /**
+   * Sets the header, reads the cookie and authorizes the user.
+   * @returns The JSON Web Token which is used for authorization.
+   */
   private setHeader(): any {
     return {
       "Content-Type": "application/json",

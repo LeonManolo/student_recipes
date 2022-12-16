@@ -22,7 +22,7 @@ export default function Favorites({ params }: any) {
       <div className="flex flex-row">
         <div className="flex flex-row flex-wrap w-full">
           <h1 className="w-full mx-4">Meine Favoriten</h1>
-          <div className="flex flex-row-reverse flex-wrap w-full">
+          <div className="flex flex-row flex-wrap w-full">
             {/* Dynamically loops over each overview of recipe to render. */}
             {recipes.map((recipe, index) => (
               <div key={index} className="flex p-4 hover:scale-105 transition-all duration-500 cursor-pointer">

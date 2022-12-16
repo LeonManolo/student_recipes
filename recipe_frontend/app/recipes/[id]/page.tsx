@@ -83,7 +83,6 @@ export default function RecipeDetail({ params }: any) {
     } catch (e: any) {
       console.log("IM ERROR!");
       console.log(e.message);
-      console.log(e.message);
     }
   }
 

@@ -16,6 +16,7 @@ export default function CreateRecipePage() {
   const [cookTime, setCookTime] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
   const [loading, setLoading] = useState(false);
+  let category = 1;
 
   const [file, setFile] = useState<File>();
   const [filebase64, setFileBase64] = useState<string>("");
@@ -80,18 +81,35 @@ export default function CreateRecipePage() {
           </div>
         </div>
 
-        <div className="form-control w-full">
-          <label className="label">
-            <span className="label-text">Beschreibung</span>
-          </label>
-          <input
-            value={description}
-            onChange={(v) => setDescription(v.target.value)}
-            type="text"
-            placeholder="Beschreibung..."
-            className="input input-bordered w-full"
-            required={true}
-          />
+        <div className="flex flex-row space-x-4">
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Beschreibung</span>
+            </label>
+            <input
+              value={description}
+              onChange={(v) => setDescription(v.target.value)}
+              type="text"
+              placeholder="Beschreibung..."
+              className="input input-bordered w-full"
+              required={true}
+            />
+          </div>
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Kategorie</span>
+            </label>
+            <select onChange={(v) => parseInt(v.target.value)} className="select select-bordered">
+              <option disabled selected>
+                Kategorie
+              </option>
+              <option value={1}>Vegan</option>
+              <option value={2}>Fleisch</option>
+              <option value={3}>Kuchen</option>
+              <option value={4}>Nudeln</option>
+              <option value={5}>Reis</option>
+            </select>
+          </div>
         </div>
 
         <div className="flex flex-row space-x-4">
@@ -152,6 +170,7 @@ export default function CreateRecipePage() {
       cookTime: cookTime,
       servings: servings,
       price: price,
+      categories: [category],
       steps: recipeSteps,
     };
     console.log(recipe);

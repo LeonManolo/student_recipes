@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import AddIngredientModal from "../../../../components/AddIngredientModal";
 import CreateRecipeRequestDto, { RecipeStepDto, IngredientInfoDto } from "../../../../utils/dto/CreateRecipeRequestDto";
@@ -15,9 +16,11 @@ export default function EditRecipePage({ params }: any) {
   const [servings, setServings] = useState<number>(0);
   const [cookTime, setCookTime] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
+  const [imageUrl, setImageUrl] = useState<string>();
 
   const [file, setFile] = useState<File>();
   const [filebase64, setFileBase64] = useState<string>("");
+  const router = useRouter();
 
   /* State hooks to set initial value. */
   useEffect(() => {
@@ -31,10 +34,13 @@ export default function EditRecipePage({ params }: any) {
 
         <div className="flex flex-row w-full space-x-4">
           <div className="flex items-center w-full aspect-square rounded-lg text-center justify-center bg-base-200">
-            {filebase64 ? (
-              <img className="w-full aspect-square object-cover rounded-lg" alt="recipe image" src={filebase64} />
+            {filebase64 === "" && imageUrl !== undefined ? (
+              <img className="w-full aspect-square object-cover rounded-lg" alt="recipe image" src={imageUrl} />
             ) : (
-              "Kein Bild ausgewählt"
+              ""
+            )}
+            {filebase64 && (
+              <img className="w-full aspect-square object-cover rounded-lg" alt="recipe image" src={filebase64} />
             )}
           </div>
           <div className="flex justify-center form-control w-full">
@@ -131,6 +137,7 @@ export default function EditRecipePage({ params }: any) {
         <EditRecipeStepsComponent
           initialRecipeSteps={recipeSteps}
           onRecipeStepChange={(steps) => {
+            console.log("STEP CHANGE!");
             setRecipeSteps([...steps]);
             console.log("STEP ADDED!");
             console.log(steps);
@@ -173,6 +180,7 @@ export default function EditRecipePage({ params }: any) {
       setServings(recipe.servings);
       setCookTime(recipe.cookTime);
       setPrice(recipe.price);
+      setImageUrl(recipe.imageUrl);
       setRecipeSteps([...initialRecipeSteps]);
     } catch (e) {}
   }
@@ -194,6 +202,7 @@ export default function EditRecipePage({ params }: any) {
       if (file === undefined) throw new StudentRecipesClientError("Image missing!");
       const client = new StudentRecipesClient();
       await client.updateRecipe(recipe, recipeId, file);
+      router.push("/recipes");
     } catch (recipeError: any) {
       if (recipeError instanceof StudentRecipesClientError) {
         const err = recipeError as StudentRecipesClientError;

@@ -5,6 +5,7 @@ export default interface CreateRecipeRequestDto {
   servings: number;
   price: number;
   steps: RecipeStepDto[];
+  categories?: number[]
 }
 
 export interface RecipeStepDto {

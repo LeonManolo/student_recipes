@@ -29,7 +29,7 @@ export default function Recipes() {
             </div>
             <h2>Kategorie</h2>
             <div className="flex">
-              <Filter />
+              <Filter onCategoryChange={(category) => {}}/>
             </div>
           </div>
         </div>

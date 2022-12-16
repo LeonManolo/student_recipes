@@ -66,6 +66,6 @@ export default function RecipeTable({ recipe }: { recipe: RecipeResponseDto }) {
     } else {
       await client.favoriteRecipe(recipe.id);
     }
-    setIsLiked(isLiked === true);
+    setIsLiked(!isLiked);
   }
 }
