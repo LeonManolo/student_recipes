@@ -22,13 +22,13 @@ export default function HomePage() {
     <div>
       <div className="hero min-h-screen bg-base-200" style={{ backgroundImage: `url("/cooking.jpg")` }}>
         <div className="hero-overlay bg-opacity-60"></div>
-        <div className="hero-content flex flex-row gap-x-32 lg:flex-row-reverse ">
-          {/* Component where user can switch between login and register. */}
-          <Login_Register />
+        <div className="hero-content flex flex-row justify-center ">
           <div className="text-center text-white">
             <h1 className="text-5xl font-bold ">Studentenkueche</h1>
             <p className="py-6">Leckere Rezepte für leckere Studenten</p>
           </div>
+          {/* Component where user can switch between login and register. */}
+          <Login_Register />
         </div>
       </div>
       <div className="flex justify-center">

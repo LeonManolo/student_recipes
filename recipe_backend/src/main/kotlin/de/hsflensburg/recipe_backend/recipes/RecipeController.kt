@@ -2,6 +2,7 @@ package de.hsflensburg.recipe_backend.recipes
 
 import de.hsflensburg.recipe_backend.files.FileService
 import de.hsflensburg.recipe_backend.recipes.dto.CreateRecipeRequestDto
+import de.hsflensburg.recipe_backend.recipes.dto.RecipeRatingResponseDto
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import de.hsflensburg.recipe_backend.recipes.entity.RecipeFilter
 import de.hsflensburg.recipe_backend.recipes.service.FavoriteService
@@ -119,14 +120,15 @@ class RecipeController(
 
     // Not in use anymore, instead use field averageRating in recipe entity
     @GetMapping("/rating/{recipeId}")
-    fun getRating(@PathVariable recipeId: Long): Int {
+    fun getRating(@PathVariable recipeId: Long): RecipeRatingResponseDto {
         val userId = getIdOfAuthenticatedUser()
         return ratingService.getRating(userId,recipeId)
     }
 
     @PostMapping("/rating/{recipeId}")
-    fun updateRating(@PathVariable recipeId: Long, @RequestParam("rating") rating: Int) {
-        ratingService.updateRating(rating, getIdOfAuthenticatedUser(), recipeId)
+    fun addRating(@PathVariable recipeId: Long, @RequestParam("rating") rating: Int) {
+        val userId = getIdOfAuthenticatedUser()
+        ratingService.rateRecipe(rating, userId, recipeId)
     }
 
 

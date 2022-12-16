@@ -8,6 +8,7 @@ export default interface RecipeResponseDto {
     servings: number;
     author: UserDto; // Der Author
     price: number;
+    averageRating: number;
     cookTime: number;
     imageUrl?: string;
     views: number;

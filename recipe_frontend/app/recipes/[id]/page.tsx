@@ -10,25 +10,25 @@ import RecipeResponseDto from "../../../utils/dto/RecipeResponseDto";
 import StudentRecipesClient from "../../../utils/StudentRecipesClient";
 import NutritionTable from "../../../components/NutritonTable";
 import { HiOutlineFaceSmile } from "react-icons/hi2";
-import Rating from "../../../components/Rating";
 import { notFound } from "next/navigation";
 import Cookies from "js-cookie";
 import { cookies } from "next/headers";
 import { getCookie, setCookie } from "cookies-next";
 import { useEffect, useState } from "react";
+import { Rating } from "@mui/material";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
 
 /* Page to show all detailed information of a single recipe. 
   @params params Contains a Recipe. */
 
 export default function RecipeDetail({ params }: any) {
   const [recipe, setRecipe] = useState<RecipeResponseDto>();
-  const [liked, setLiked] = useState(false);
-  //const recipe = (await fetchRecipe(params.id))!!;
-  //const rating = await fetchRating(recipe.author.id, params.id);
+  const [rating, setRating] = useState(0);
 
   /* State hook to set current recipe. */
   useEffect(() => {
     fetchRecipe();
+    fetchRating();
   }, []);
 
   if (recipe === undefined) return <>Loading</>;
@@ -46,6 +46,15 @@ export default function RecipeDetail({ params }: any) {
                 </div>
                 {/*<Rating rating={rating}></Rating>*/}
               </div>
+              <Rating
+                readOnly={false}
+                name="size-medium"
+                defaultValue={recipe.averageRating}
+                value={rating}
+                icon={<BsHeartFill className="mr-1" color="#570df8" />}
+                emptyIcon={<BsHeart className="mr-1" color="#570df8" />}
+                onChange={(e, v) => v && onRatingChange(v)}
+              />
               <h3 className="text-slate-500">{recipe.description}</h3>
               <div className="flex flex-row">
                 <HiFire size="20" className="mr-1"></HiFire>
@@ -86,10 +95,16 @@ export default function RecipeDetail({ params }: any) {
     }
   }
 
-  /* Fetches the rating from 1 to 5 of a recipe by recipe id and user id. */
-  async function fetchRating(userId: number, recipeId: number): Promise<number> {
+  async function fetchRating(): Promise<void> {
     const recipeClient = new StudentRecipesClient();
-    const rating = await recipeClient.getRating(userId, recipeId);
-    return rating;
+    const fetchedRating = await recipeClient.getRating(recipe?.id!!);
+    setRating(fetchedRating);
+  }
+
+  /* Fetches the rating from 1 to 5 of a recipe by recipe id and user id. */
+  async function onRatingChange(rating: number): Promise<void> {
+    const recipeClient = new StudentRecipesClient();
+    await recipeClient.createRating(recipe?.id!!, rating);
+    setRating(rating);
   }
 }

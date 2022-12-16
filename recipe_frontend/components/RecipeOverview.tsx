@@ -9,6 +9,8 @@ import React from "react";
 import RecipeResponseDto from "../utils/dto/RecipeResponseDto";
 import StudentRecipesClient from "../utils/StudentRecipesClient";
 import { HiOutlineCurrencyEuro } from "react-icons/hi2";
+import { Rating } from "@mui/material";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
 
 /* Component that renders an overview of most relevant data of a recipe.
     Used in most pages where an overview of a recipe is needed. 
@@ -22,13 +24,13 @@ export default function RecipeOverview({ recipe }: { recipe: RecipeResponseDto }
           <div className="flex flex-row flex-wrap">
             <h1 className="card-title text-3xl">{recipe.title}</h1>
           </div>
-          <div className="rating gap-1 mt-4">
-            <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
-            <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
-            <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
-            <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
-            <input type="radio" name="rating-3" className="mask mask-heart bg-custom-first" />
-          </div>
+          <Rating
+            readOnly={true}
+            name="size-medium"
+            defaultValue={recipe.averageRating}
+            icon={<BsHeartFill className="mr-1" color="#570df8" />}
+            emptyIcon={<BsHeart className="mr-1" color="#570df8" />}
+          />
         </div>
         <h3 className="text-slate-500">{recipe.description}</h3>
         <div className="flex flex-row">

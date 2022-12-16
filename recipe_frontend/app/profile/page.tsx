@@ -106,12 +106,12 @@ export default function Profile() {
                 <div className="flex flex-col w-full space-x-4">
                   <div className="flex items-center w-32 aspect-square rounded-lg text-center justify-center bg-base-200">
                     {filebase64 === "" && imageUrl !== undefined ? (
-                      <img className="object-cover rounded-lg" alt="recipe image" src={imageUrl} />
+                      <img className="object-cover rounded-lg" alt="profile image" src={imageUrl} />
                     ) : (
                       ""
                     )}
                     {filebase64 && (
-                      <img className="object-cover rounded-lg" alt="recipe image" src={filebase64} />
+                      <img className="object-cover rounded-lg" alt="profile image" src={filebase64} />
                     )}
                   </div>
                   <div className="flex justify-center form-control w-full">

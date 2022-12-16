@@ -11,7 +11,8 @@ import { RecipeFilter } from "../../utils/dto/RecipeFilter";
 /* Page to show all recipes on the site. */
 export default function Recipes() {
   const [recipes, setRecipes] = useState<RecipeResponseDto[]>([]);
-  let filter = RecipeFilter.NEWEST;
+  let filter = RecipeFilter.CHEAP;
+  let category: string | undefined;
 
   /* State hook calls fetRecipes() only when component is initially rendered. */
   useEffect(() => {
@@ -25,11 +26,21 @@ export default function Recipes() {
           <div className="card-body">
             <h2>Filter</h2>
             <div className="flex">
-              <Tab onTabChange={(f) => fetchRecipes(f)} />
+              <Tab
+                onTabChange={(f) => {
+                  filter = f;
+                  fetchRecipes();
+                }}
+              />
             </div>
             <h2>Kategorie</h2>
             <div className="flex">
-              <Filter />
+              <Filter
+                onCategoryChange={(c) => {
+                  category = c.toString();
+                  fetchRecipes();
+                }}
+              />
             </div>
           </div>
         </div>
@@ -49,9 +60,9 @@ export default function Recipes() {
   );
 
   /* Fetches all recipes from endpoint. */
-  async function fetchRecipes(filter: RecipeFilter = RecipeFilter.NEWEST): Promise<void> {
+  async function fetchRecipes(): Promise<void> {
     const recipeClient = new StudentRecipesClient();
-    const recipesFetched = await recipeClient.getRecipes(1000, filter);
+    const recipesFetched = await recipeClient.getRecipes(1000, filter, category);
     setRecipes(recipesFetched);
   }
 }

@@ -9,6 +9,7 @@ import { getCookie } from "cookies-next";
 import UpdateUserRequestDto from "./dto/UpdateUserRequestDto";
 import UserDto from "./dto/UserDto";
 import { RecipeFilter } from "./dto/RecipeFilter";
+
 /**
  * This class contains all functions that are necessary for all of the
  * API requests. To do this, the functions use the associated dto's.
@@ -83,21 +84,36 @@ export default class StudentRecipesClient {
    * @param recipeId Any number.
    * @returns The corresponding rating matching the userId and recipeId
    */
-  async getRating(userId: number, recipeId: number): Promise<number> {
-    const result = await fetch(`${this.BASE_URL}/api/recipes/rating/${userId}/${recipeId}`, {
+  async getRating(recipeId: number): Promise<number> {
+    const result = await fetch(`${this.BASE_URL}/api/recipes/rating/${recipeId}`, {
       headers: this.DEFAULT_HEADER,
     });
     const text = await result.text();
     return await this.returnIfSuccessElseError(result, parseInt(text));
   }
 
+  async createRating(recipeId: number, rating: number): Promise<void> {
+    const result = await fetch(`${this.BASE_URL}/api/rating/${recipeId}?rating=${rating}`, {
+      method: "POST",
+      headers: this.DEFAULT_HEADER,
+    });
+    await this.returnIfSuccessElseError(result, true);
+  }
+
   /**
- * Gives a specified number of recipes.
- * @param limit Any number.
- * @returns A list of recipes with the amount determined by the limit.
- */
-   async getRecipes(limit?: number, sortBy: RecipeFilter = RecipeFilter.NEWEST): Promise<RecipeResponseDto[]> {
+   * Gives a specified number of recipes.
+   * @param limit Any number.
+   * @returns A list of recipes with the amount determined by the limit.
+   */
+  async getRecipes(
+    limit?: number,
+    sortBy: RecipeFilter = RecipeFilter.NEWEST,
+    category?: string,
+  ): Promise<RecipeResponseDto[]> {
     let url = this.BASE_URL + "/api/recipes?sort_by=" + sortBy;
+    if (category !== undefined) {
+      url += "&category=" + category;
+    }
 
     const result = await fetch(url, {
       headers: this.setHeader(),

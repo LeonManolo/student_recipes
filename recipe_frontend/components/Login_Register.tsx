@@ -22,9 +22,13 @@ export default function Login_Register({ children, ...props }: any) {
   }
   //{tab == 0 ? <Login onchangeRegister={() => setTab(1)} /> : <Register onchangeRegister={() => setTab(0)}
 
-  return tab === 0 ? (
-    <Login onchangeRegister={() => setTab(1)} onSuccessfulLogin={() => setIsLoggedIn(true)} />
-  ) : (
-    <Register onchangeRegister={() => setTab(0)} />
+  return (
+    <div className="ml-32">
+      {tab === 0 ? (
+        <Login onchangeRegister={() => setTab(1)} onSuccessfulLogin={() => setIsLoggedIn(true)} />
+      ) : (
+        <Register onchangeRegister={() => setTab(0)} />
+      )}
+    </div>
   );
 }
