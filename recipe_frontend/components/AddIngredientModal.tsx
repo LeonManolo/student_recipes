@@ -100,6 +100,7 @@ function CreateIngredient({ onIngredientClick }: { onIngredientClick: (v: Ingred
         title={"Title"}
         type={"text"}
         value={ingredient.title}
+        maxlength={255}
         onChange={(v) => {
           ingredient.title = v;
           setIngredient({ ...ingredient });

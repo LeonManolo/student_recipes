@@ -17,6 +17,7 @@ export default function EditRecipePage({ params }: any) {
   const [cookTime, setCookTime] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState<string>();
+  const [category, setCategory] = useState(0);
 
   const [file, setFile] = useState<File>();
   const [filebase64, setFileBase64] = useState<string>("");
@@ -88,18 +89,37 @@ export default function EditRecipePage({ params }: any) {
           </div>
         </div>
 
-        <div className="form-control w-full">
-          <label className="label">
-            <span className="label-text">Beschreibung</span>
-          </label>
-          <input
-            value={description}
-            onChange={(v) => setDescription(v.target.value)}
-            type="text"
-            placeholder="Beschreibung..."
-            className="input input-bordered w-full"
-            required={true}
-          />
+        <div className="flex flex-row space-x-4">
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Beschreibung</span>
+            </label>
+            <input
+              value={description}
+              onChange={(v) => setDescription(v.target.value)}
+              type="text"
+              placeholder="Beschreibung..."
+              className="input input-bordered w-full"
+              required={true}
+              maxLength={255}
+            />
+          </div>
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Kategorie</span>
+            </label>
+            <select
+              onChange={(v) => setCategory(parseInt(v.target.value.at(0) ?? "1"))}
+              defaultValue={1}
+              className="select select-bordered"
+            >
+              <option defaultValue={1}>1. Vegan</option>
+              <option defaultValue={2}>2. Fleisch</option>
+              <option defaultValue={3}>3. Kuchen</option>
+              <option defaultValue={4}>4. Nudeln</option>
+              <option defaultValue={5}>5. Reis</option>
+            </select>
+          </div>
         </div>
 
         <div className="flex flex-row space-x-4">
@@ -183,6 +203,8 @@ export default function EditRecipePage({ params }: any) {
 
   async function handleSubmit() {
     event?.preventDefault();
+    console.log(category);
+
     console.log("Submit clicked!");
     const recipe: CreateRecipeRequestDto = {
       title: title,
@@ -190,6 +212,7 @@ export default function EditRecipePage({ params }: any) {
       price: price,
       cookTime: cookTime,
       servings: servings,
+      categories: category != 0 ? [category] : [],
       steps: recipeSteps,
     };
 

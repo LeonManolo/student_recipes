@@ -52,6 +52,7 @@ export default function EditRecipeStepsComponent({
                   updateSteps();
                 }}
                 type="text"
+                maxLength={255}
                 placeholder="Reis sorgfältig für etwa 2 Minuten waschen..."
                 className="input input-bordered w-full"
                 required={true}

@@ -16,7 +16,7 @@ export default function CreateRecipePage() {
   const [cookTime, setCookTime] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
   const [loading, setLoading] = useState(false);
-  let category = 1;
+  const [category, setCategory] = useState(0);
 
   const [file, setFile] = useState<File>();
   const [filebase64, setFileBase64] = useState<string>("");
@@ -63,6 +63,7 @@ export default function CreateRecipePage() {
               placeholder="Nudeln mit Pesto..."
               className="input input-bordered w-full"
               required={true}
+              maxLength={255}
             />
           </div>
           <div className="form-control w-full">
@@ -93,21 +94,23 @@ export default function CreateRecipePage() {
               placeholder="Beschreibung..."
               className="input input-bordered w-full"
               required={true}
+              maxLength={255}
             />
           </div>
           <div className="form-control w-full">
             <label className="label">
               <span className="label-text">Kategorie</span>
             </label>
-            <select onChange={(v) => parseInt(v.target.value)} defaultValue={1} className="select select-bordered">
-              <option disabled={false}>
-                Kategorie
-              </option>
-              <option defaultValue={1}>Vegan</option>
-              <option defaultValue={2}>Fleisch</option>
-              <option defaultValue={3}>Kuchen</option>
-              <option defaultValue={4}>Nudeln</option>
-              <option defaultValue={5}>Reis</option>
+            <select
+              onChange={(v) => setCategory(parseInt(v.target.value.at(0) ?? "1"))}
+              defaultValue={1}
+              className="select select-bordered"
+            >
+              <option defaultValue={1}>1. Vegan</option>
+              <option defaultValue={2}>2. Fleisch</option>
+              <option defaultValue={3}>3. Kuchen</option>
+              <option defaultValue={4}>4. Nudeln</option>
+              <option defaultValue={5}>5. Reis</option>
             </select>
           </div>
         </div>
@@ -161,6 +164,7 @@ export default function CreateRecipePage() {
 
   async function handleSubmit() {
     event?.preventDefault();
+    console.log(category);
     const recipe: CreateRecipeRequestDto = {
       title: title,
       description: description,
@@ -233,6 +237,7 @@ function RecipeStepsComponent({ onRecipeStepChange }: { onRecipeStepChange: (ste
                 placeholder="Reis waschen..."
                 className="input input-bordered w-full"
                 required={true}
+                maxLength={255}
               />
             </div>
             <div className="form-control w-full">
@@ -249,6 +254,7 @@ function RecipeStepsComponent({ onRecipeStepChange }: { onRecipeStepChange: (ste
                 placeholder="Reis sorgfältig für etwa 2 Minuten waschen..."
                 className="input input-bordered w-full"
                 required={true}
+                maxLength={255}
               />
             </div>
           </div>
@@ -356,7 +362,7 @@ function IngredientInfoComponent({
             value={ingredient.unit}
             onChange={(v) => {
               ingredient.unit = v.target.value;
-              onIngredientChange(ingredient );
+              onIngredientChange(ingredient);
             }}
             type="text"
             placeholder="g"
