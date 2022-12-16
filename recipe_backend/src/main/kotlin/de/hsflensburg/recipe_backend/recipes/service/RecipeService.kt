@@ -92,10 +92,10 @@ class RecipeService(
 
     fun getRecipes(filter: RecipeFilter?): List<Recipe> {
         return when (filter) {
-            RecipeFilter.NEWEST -> recipeRepository.findAllByOrderByCreatedAtDesc()
+            RecipeFilter.NEWEST -> recipeRepository.findAllByOrderByCreatedAtAsc()
             RecipeFilter.MOST_VIEWED -> recipeRepository.findAllByOrderByViewsDesc()
-            RecipeFilter.FAST_TO_COOK -> recipeRepository.findAllByOrderByCookTimeDesc() //recipeRepository.findAllByOrderByRatingDesc()
-            RecipeFilter.CHEAP -> recipeRepository.findAllByOrderByPriceDesc() //recipeRepository.findAllByOrderByFavoritesDesc()
+            RecipeFilter.FAST_TO_COOK -> recipeRepository.findAllByOrderByCookTimeAsc() //recipeRepository.findAllByOrderByRatingDesc()
+            RecipeFilter.CHEAP -> recipeRepository.findAllByOrderByPriceAsc() //recipeRepository.findAllByOrderByFavoritesDesc()
             RecipeFilter.BEST_RATED -> recipeRepository.findByOrderByAverageRatingDesc()
             else -> {
                 recipeRepository.findAll()
@@ -105,11 +105,11 @@ class RecipeService(
 
     fun getRecipesForCategory(filter: RecipeFilter?,categoryId: Long): List<Recipe> {
         return when (filter){
-            RecipeFilter.NEWEST -> recipeRepository.findByCategories_Category_IdOrderByCreatedAtDesc(categoryId)
+            RecipeFilter.NEWEST -> recipeRepository.findByCategories_Category_IdOrderByCreatedAtAsc(categoryId)
             RecipeFilter.MOST_VIEWED -> recipeRepository.findByCategories_Category_IdOrderByViewsDesc(categoryId)
             RecipeFilter.BEST_RATED -> recipeRepository.findByCategories_Category_IdOrderByAverageRatingDesc(categoryId)
-            RecipeFilter.FAST_TO_COOK -> recipeRepository.findByCategories_Category_IdOrderByCookTimeDesc(categoryId)
-            RecipeFilter.CHEAP -> recipeRepository.findByCategories_Category_IdOrderByPriceDesc(categoryId)
+            RecipeFilter.FAST_TO_COOK -> recipeRepository.findByCategories_Category_IdOrderByCookTimeAsc(categoryId)
+            RecipeFilter.CHEAP -> recipeRepository.findByCategories_Category_IdOrderByPriceAsc(categoryId)
             else -> {
                 recipeRepository.findByCategories_Category_Id(categoryId)
             }

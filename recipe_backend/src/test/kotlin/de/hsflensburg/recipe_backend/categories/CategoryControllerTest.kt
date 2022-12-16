@@ -162,19 +162,19 @@ internal class CategoryTest@Autowired constructor(
 
         val id3 = recipeService.createRecipe(recipeDto3,author.id!!).id!!
 
-        val recipesOrderByPriceDec = recipeService.getRecipes(RecipeFilter.CHEAP)
-        assertEquals(3,recipesOrderByPriceDec.size)
-        assertTrue(recipesOrderByPriceDec[0].id == id2)
-        assertTrue(recipesOrderByPriceDec[1].id == id)
-        assertTrue(recipesOrderByPriceDec[2].id == id3)
+        val recipesOrderByPriceAsc = recipeService.getRecipes(RecipeFilter.CHEAP)
+        assertEquals(3,recipesOrderByPriceAsc.size)
+        assertTrue(recipesOrderByPriceAsc[2].id == id2)
+        assertTrue(recipesOrderByPriceAsc[1].id == id)
+        assertTrue(recipesOrderByPriceAsc[0].id == id3)
 
         val check = recipeService.getRecipesForCategory(null,1)
         assertEquals(2,check.size)
 
-        val recipesPriceDescCat1 = recipeService.getRecipesForCategory(RecipeFilter.CHEAP,1)
-        assertEquals(2,recipesPriceDescCat1.size)
-        assertTrue(recipesPriceDescCat1[0].id == id2 )
-        assertTrue(recipesPriceDescCat1[1].id == id3 )
+        val recipesPriceAscCat1 = recipeService.getRecipesForCategory(RecipeFilter.CHEAP,1)
+        assertEquals(2,recipesPriceAscCat1.size)
+        assertTrue(recipesPriceAscCat1[1].id == id2 )
+        assertTrue(recipesPriceAscCat1[0].id == id3 )
     }
 
 

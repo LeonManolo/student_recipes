@@ -8,10 +8,10 @@ interface RecipeRepository: JpaRepository<Recipe, Long> {
 
 
 
-    fun findAllByOrderByPriceDesc(): List<Recipe>
+    fun findAllByOrderByPriceAsc(): List<Recipe>
     fun findAllByOrderByViewsDesc(): List<Recipe>
-    fun findAllByOrderByCookTimeDesc(): List<Recipe>
-    fun findAllByOrderByCreatedAtDesc(): List<Recipe>
+    fun findAllByOrderByCookTimeAsc(): List<Recipe>
+    fun findAllByOrderByCreatedAtAsc(): List<Recipe>
     fun findByOrderByAverageRatingDesc(): List<Recipe>
 
 
@@ -27,16 +27,16 @@ interface RecipeRepository: JpaRepository<Recipe, Long> {
     fun findByCategories_Category_Id(id: Long): List<Recipe>
 
 
-    fun findByCategories_Category_IdOrderByPriceDesc(id: Long): List<Recipe>
+    fun findByCategories_Category_IdOrderByPriceAsc(id: Long): List<Recipe>
 
 
     fun findByCategories_Category_IdOrderByViewsDesc(id: Long): List<Recipe>
 
 
-    fun findByCategories_Category_IdOrderByCookTimeDesc(id: Long): List<Recipe>
+    fun findByCategories_Category_IdOrderByCookTimeAsc(id: Long): List<Recipe>
 
 
-    fun findByCategories_Category_IdOrderByCreatedAtDesc(id: Long): List<Recipe>
+    fun findByCategories_Category_IdOrderByCreatedAtAsc(id: Long): List<Recipe>
 
 
 

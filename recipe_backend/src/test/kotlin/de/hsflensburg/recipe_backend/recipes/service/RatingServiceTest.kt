@@ -142,7 +142,7 @@ internal class RatingServiceTest @Autowired constructor(
         assertEquals(ratingRepository.findAll().size,1)
 
         val rating = ratingService.getRating(author.id!!,recipe.id!!)
-        assertEquals(5,rating)
+        assertEquals(5,rating.rating)
     }
     @Test
     fun `should get standard value for recipe`(){
@@ -169,7 +169,7 @@ internal class RatingServiceTest @Autowired constructor(
         assertEquals(ratingRepository.findAll().size,0)
 
         val ratingNotFound = ratingService.getRating(author.id!!,recipe.id!!)
-        assertEquals(3,ratingNotFound)
+        assertEquals(0,ratingNotFound.rating)
     }
 
     @Test
