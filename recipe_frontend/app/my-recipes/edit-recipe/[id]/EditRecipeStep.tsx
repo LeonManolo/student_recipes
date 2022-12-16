@@ -11,10 +11,11 @@ export default function EditRecipeStepsComponent({
   onRecipeStepChange: (steps: RecipeStepDto[]) => void;
   initialRecipeSteps: RecipeStepDto[];
 }) {
-  console.log("Das sind die inital steps " + JSON.stringify(initialRecipeSteps));
-  const [steps, setSteps] = useState<RecipeStepDto[]>(initialRecipeSteps);
+  const [steps, setSteps] = useState<RecipeStepDto[]>([]);
 
-  useEffect(() => setSteps(initialRecipeSteps), [initialRecipeSteps]);
+  useEffect(() => {
+    return setSteps(initialRecipeSteps);
+  }, [initialRecipeSteps]);
 
   return (
     <div>
@@ -67,9 +68,9 @@ export default function EditRecipeStepsComponent({
                 key={`step_${index}_ingr_${i}`}
                 ingredient={ingredient}
                 onIngredientChange={(updatedIngredient) => {
-                  steps[i].ingredients[i] = updatedIngredient;
-                  const ingredients = [...steps[i].ingredients];
-                  steps[i].ingredients = [...ingredients];
+                  steps[index].ingredients[i] = updatedIngredient;
+                  const ingredients = [...steps[index].ingredients];
+                  steps[index].ingredients = [...ingredients];
                   updateSteps();
                 }}
               />
@@ -96,7 +97,6 @@ export default function EditRecipeStepsComponent({
   }
 
   function onAddIngredientClick(ingredientDto: IngredientDto, stepIndex: number) {
-    console.log("on ingredient click");
     const ingredient: IngredientInfoDto = {
       ingredientId: ingredientDto.id,
       amount: 0,
@@ -108,7 +108,6 @@ export default function EditRecipeStepsComponent({
     steps[stepIndex].ingredients = [...ingredients];
     setSteps([...steps]);
     onRecipeStepChange(steps);
-    console.log(steps);
   }
 
   function onAddStepClick() {
@@ -119,8 +118,8 @@ export default function EditRecipeStepsComponent({
       description: "",
       ingredients: [],
     };
-    setSteps(steps.concat([step]));
-    onRecipeStepChange(steps); // Hier vielleicht fehler
+    setSteps([...steps.concat([step])]);
+    onRecipeStepChange([...steps.concat([step])]); // Hier vielleicht fehler
   }
 }
 

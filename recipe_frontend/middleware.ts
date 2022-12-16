@@ -7,14 +7,10 @@ import { getCookies, setCookie, deleteCookie, getCookie } from "cookies-next";
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/_next")) return NextResponse.next();
-  //console.log("middlware: " + localStorage.getItem("token"));
 
   let jwtToken = request.cookies.get("token")?.value;
   let isAuthenticated = false;
-  //console.log("Hallo");
   if (jwtToken != undefined && jwtToken !== "undefined") {
-    console.log(typeof jwtToken);
-    console.log("token: " + jwtToken);
     request.cookies.set("token", jwtToken);
     var decoded = jwt_decode<JwtPayload>(jwtToken);
     isAuthenticated = !(Date.now() / 1000 >= (decoded.exp ?? 0));

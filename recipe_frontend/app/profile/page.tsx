@@ -86,7 +86,6 @@ export default function Profile() {
     if (files) {
       const fileRef = files[0] || "";
       const fileType: string = fileRef.type || "";
-      console.log("This file upload is of type:", fileType);
       const reader = new FileReader();
       reader.readAsBinaryString(fileRef);
       reader.onload = (ev: any) => {

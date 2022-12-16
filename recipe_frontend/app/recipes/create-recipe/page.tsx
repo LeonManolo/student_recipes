@@ -99,15 +99,15 @@ export default function CreateRecipePage() {
             <label className="label">
               <span className="label-text">Kategorie</span>
             </label>
-            <select onChange={(v) => parseInt(v.target.value)} className="select select-bordered">
-              <option disabled selected>
+            <select onChange={(v) => parseInt(v.target.value)} defaultValue={1} className="select select-bordered">
+              <option disabled={false}>
                 Kategorie
               </option>
-              <option value={1}>Vegan</option>
-              <option value={2}>Fleisch</option>
-              <option value={3}>Kuchen</option>
-              <option value={4}>Nudeln</option>
-              <option value={5}>Reis</option>
+              <option defaultValue={1}>Vegan</option>
+              <option defaultValue={2}>Fleisch</option>
+              <option defaultValue={3}>Kuchen</option>
+              <option defaultValue={4}>Nudeln</option>
+              <option defaultValue={5}>Reis</option>
             </select>
           </div>
         </div>
@@ -147,8 +147,6 @@ export default function CreateRecipePage() {
         <RecipeStepsComponent
           onRecipeStepChange={(steps) => {
             recipeSteps = [...steps];
-            console.log("STEP ADDED!");
-            console.log(steps);
           }}
         />
         <div className="flex flex-col w-full border-opacity-50">
@@ -163,7 +161,6 @@ export default function CreateRecipePage() {
 
   async function handleSubmit() {
     event?.preventDefault();
-    console.log("Submit clicked!");
     const recipe: CreateRecipeRequestDto = {
       title: title,
       description: description,
@@ -173,7 +170,6 @@ export default function CreateRecipePage() {
       categories: [category],
       steps: recipeSteps,
     };
-    console.log(recipe);
 
     try {
       if (file === undefined) throw new StudentRecipesClientError("Image missing!");
@@ -202,7 +198,6 @@ export default function CreateRecipePage() {
     if (files) {
       const fileRef = files[0] || "";
       const fileType: string = fileRef.type || "";
-      console.log("This file upload is of type:", fileType);
       const reader = new FileReader();
       reader.readAsBinaryString(fileRef);
       reader.onload = (ev: any) => {
@@ -267,9 +262,9 @@ function RecipeStepsComponent({ onRecipeStepChange }: { onRecipeStepChange: (ste
                 key={`step_${index}_ingr_${i}`}
                 ingredient={ingredient}
                 onIngredientChange={(updatedIngredient) => {
-                  steps[i].ingredients[i] = updatedIngredient;
-                  const ingredients = [...steps[i].ingredients];
-                  steps[i].ingredients = [...ingredients];
+                  steps[index].ingredients[i] = { ...updatedIngredient };
+                  const ingredients = [...steps[index].ingredients];
+                  steps[index].ingredients = [...ingredients];
                   updateSteps();
                 }}
               />
@@ -291,12 +286,14 @@ function RecipeStepsComponent({ onRecipeStepChange }: { onRecipeStepChange: (ste
   );
 
   function updateSteps() {
-    setSteps([...steps]);
+    const refreshedSteps = steps.map((s) => {
+      return { ...s };
+    });
+    setSteps([...refreshedSteps]);
     onRecipeStepChange(steps);
   }
 
   function onAddIngredientClick(ingredientDto: IngredientDto, stepIndex: number) {
-    console.log("on ingredient click");
     const ingredient: IngredientInfoDto = {
       ingredientId: ingredientDto.id,
       amount: 0,
@@ -304,11 +301,10 @@ function RecipeStepsComponent({ onRecipeStepChange }: { onRecipeStepChange: (ste
       title: ingredientDto.title,
     };
     const ingredients = [...steps[stepIndex].ingredients];
-    ingredients.push(ingredient);
+    ingredients.push({ ...ingredient });
     steps[stepIndex].ingredients = [...ingredients];
     setSteps([...steps]);
     onRecipeStepChange(steps);
-    console.log(steps);
   }
 
   function onAddStepClick() {
@@ -360,7 +356,7 @@ function IngredientInfoComponent({
             value={ingredient.unit}
             onChange={(v) => {
               ingredient.unit = v.target.value;
-              onIngredientChange(ingredient);
+              onIngredientChange(ingredient );
             }}
             type="text"
             placeholder="g"

@@ -149,7 +149,6 @@ export default class StudentRecipesClient {
    */
   async createRecipe(recipe: CreateRecipeRequestDto): Promise<void> {
     const json = JSON.stringify(recipe);
-    console.log("in create recipe " + getCookie("token"));
     const result = await fetch(`${this.BASE_URL}/api/recipes`, {
       method: "POST",
       body: json,

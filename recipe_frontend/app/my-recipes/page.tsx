@@ -26,9 +26,7 @@ export default function MyRecipes({ params }: any) {
             {/* Dynamically loops recipe overview containg option to edit and delete recipe. */}
             {recipes.map((recipe, index) => (
               <div key={index} className="flex p-4 hover:scale-105 transition-all duration-500 cursor-pointer">
-                <Link href={`recipes/${recipe.id}`}>
                   <EditRecipeOverview recipe={recipe} />{" "}
-                </Link>
               </div>
             ))}
           </div>

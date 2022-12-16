@@ -50,8 +50,8 @@ export default function RecipeDetail({ params }: any) {
                 name="size-medium"
                 defaultValue={recipe.averageRating}
                 value={rating}
-                icon={<BsHeartFill className="mr-1" color="#570df8" />}
-                emptyIcon={<BsHeart className="mr-1" color="#570df8" />}
+                icon={<BsHeartFill className="mr-1" color="#C98474" />}
+                emptyIcon={<BsHeart className="mr-1" color="#C98474" />}
                 onChange={(e, v) => v && onRatingChange(v)}
               />
               <h3 className="text-slate-500">{recipe.description}</h3>

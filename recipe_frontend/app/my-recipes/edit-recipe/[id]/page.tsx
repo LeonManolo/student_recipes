@@ -137,10 +137,7 @@ export default function EditRecipePage({ params }: any) {
         <EditRecipeStepsComponent
           initialRecipeSteps={recipeSteps}
           onRecipeStepChange={(steps) => {
-            console.log("STEP CHANGE!");
             setRecipeSteps([...steps]);
-            console.log("STEP ADDED!");
-            console.log(steps);
           }}
         />
         <div className="flex flex-col w-full border-opacity-50">
@@ -174,7 +171,6 @@ export default function EditRecipePage({ params }: any) {
 
       /// TODO
 
-      console.log(recipeSteps);
       setTitle(recipe.title);
       setDescription(recipe.description);
       setServings(recipe.servings);
@@ -196,7 +192,6 @@ export default function EditRecipePage({ params }: any) {
       servings: servings,
       steps: recipeSteps,
     };
-    console.log(recipe);
 
     try {
       if (file === undefined) throw new StudentRecipesClientError("Image missing!");
@@ -225,7 +220,6 @@ export default function EditRecipePage({ params }: any) {
     if (files) {
       const fileRef = files[0] || "";
       const fileType: string = fileRef.type || "";
-      console.log("This file upload is of type:", fileType);
       const reader = new FileReader();
       reader.readAsBinaryString(fileRef);
       reader.onload = (ev: any) => {
