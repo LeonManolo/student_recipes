@@ -1,5 +1,6 @@
 package de.hsflensburg.recipe_backend.categories.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import de.hsflensburg.recipe_backend.recipes.entity.Recipe
 import javax.persistence.*
 
@@ -30,6 +31,7 @@ class Category(
 
 ){
     @OneToMany(mappedBy = "category", cascade = [CascadeType.ALL])
+    @JsonIgnore
     var recipes: MutableSet<CategoryRecipe> = mutableSetOf()
 
 

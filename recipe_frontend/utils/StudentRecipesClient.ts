@@ -92,19 +92,12 @@ export default class StudentRecipesClient {
   }
 
   /**
-   * Gives a specified number of recipes.
-   * @param limit Any number.
-   * @returns A list of recipes with the amount determined by the limit.
-   */
-  async getRecipes(
-    limit?: number,
-    sortBy: RecipeFilter = RecipeFilter.NEWEST,
-    category?: string,
-  ): Promise<RecipeResponseDto[]> {
+ * Gives a specified number of recipes.
+ * @param limit Any number.
+ * @returns A list of recipes with the amount determined by the limit.
+ */
+   async getRecipes(limit?: number, sortBy: RecipeFilter = RecipeFilter.NEWEST): Promise<RecipeResponseDto[]> {
     let url = this.BASE_URL + "/api/recipes?sort_by=" + sortBy;
-    if (category !== undefined) {
-      url += "&category=" + category;
-    }
 
     const result = await fetch(url, {
       headers: this.setHeader(),
